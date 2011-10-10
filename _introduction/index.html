@@ -1,0 +1,162 @@
+<!DOCTYPE html><html><head><title>Introduction</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>C++ Programming</h1></div><div class="slide"><h2>Overview</h2><ol><li>History</li><li>Applications</li></ol></div><div class="slide"><h2>C++ History</h2></div><div class="slide"><h2>C++ Applications</h2><ul><li>Game Engines<div>Source Engine (HL2, CS:S), id Tech 4 and 5 (Rage, Doom 4)</div></li><li>Mozilla<div>Firefox, Thunderbird</div></li><li>Google back-end</li><li>Adoby Systems<div>Photoshop, Illustrator</div></li><li>Parts of Mac OS X, Facebook</li></ul></div><div class="slide"><h2>C++ Characteristics?</h2><ul><li class="slide">It's fast<div>C++ is a superset of C, adds features like object-orientation, exception handling, generic programming, standard libary</div></li><li class="slide">Object-oriented programming<div>Encapsulation, Inheritance and polymorphism, build cleaner and more concise code than you would in C</div></li><li class="slide">Widely used</li></ul></div><div class="slide"><h2>Top 10 popular programming languages (09/11)</h2><img src="tpci_trends.png"/><p class="note">Rating based on the number of skilled engineers world-wide, courses and third party vendors. Used to make a strategic decision about what programming language should be adopted when starting to build a new software system.</p></div><div class="slide"><h2>C++ vs. Java</h2><table class="zebra-striped"><tr><th></th><th>C++</th><th>Java</th></tr><tr><td>Object-Orientation</td><td class="green">YES</td><td class="green">YES</td></tr><tr><td>Class Inheritance</td><td>Multiple Inheritance</td><td>Single Inheritance</td></tr><tr><td>Compiled to</td><td>Machine Code</td><td>Byte Code</td></tr><tr><td>Garbage Collection<div class="note">http://stackoverflow.com/questions/147130/why-doesnt-c-have-a-garbage-collector</div></td><td class="yellow">NO</td><td class="green">YES</td></tr><tr><td>Runtime Checks</td><td class="red">NO</td><td class="green">YES</td></tr></table></div><div class="slide"><h2>C++ vs. Java - Hello World</h2><table><tr><th>C++</th><th>Java</th></tr><tr><td><pre class="prettyprint">// Hello World example
+#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+ cout &lt;&lt; &quot;Hello World!&quot;;
+ return 0;
+}
+</pre></td><td><pre class="prettyprint">// Hello World example
+public class HelloWorld {
+ public static void main() {
+  System.out.println(&quot;Hello World!&quot;);
+ }
+}
+
+</pre></td></tr></table></div><div class="slide"><h2>Step-by-Step</h2><div class="note">a(href="http://www.cplusplus.com/doc/tutorial/program_structure/") Overview</div><pre class="prettyprint">// Hello World example
+
+</pre><div>Comments</div><pre class="prettyprint">// This is a single-line comment
+
+/* This is a single-line comment too! */
+
+/* 
+ This is a multi-line comment
+*/
+
+</pre><div>Must not be nested</div><pre class="prettyprint">/* 
+ Nested comment /* are not allowed! */
+*/
+
+</pre></div><div class="slide"><h2>Step-by-Step</h2><pre class="prettyprint">#include &lt;iostream&gt;
+
+</pre><div>Preprocessor directive <code>#include</code></div><pre class="prettyprint">#include &lt;string&gt; // Includes the string standard library
+#include &quot;Foo.h&quot; // Includes a file named Foo.h
+
+</pre></div><div class="slide"><h2>Step-by-Step</h2><pre class="prettyprint">using namespace std;
+
+</pre><p>Using a namespaces, see <code>cout</code></p></div><div class="slide"><h2>Step-by-Step</h2><pre class="prettyprint">int main() {}
+
+</pre><p>Main function declaration, main point where C++ programs starts their execution</p><div class="note">This line corresponds to the beginning of the definition of the main function. The main function is the point by where all C++ programs start their execution, independently of its location within the source code. It does not matter whether there are other functions with other names defined before or after it - the instructions contained within this function's definition will always be the first ones to be executed in any C++ program. For that same reason, it is essential that all C++ programs have a main function.</div></div><div class="slide"><h2>Step-by-Step</h2><pre class="prettyprint">cout &lt;&lt; &quot;Hello World!&quot;;
+
+</pre><p>inserts a sequence of characters into the standard output stream (corresponds to the screen), elements in the C++ standard library are in the namespace <code>std</code></p><div>With namespaces</div><pre class="prettyprint">using namespace std;
+cout &lt;&lt; &quot;Hello World&quot;;
+
+</pre><div>Without namespaces</div><pre class="prettyprint">std::cout &lt;&lt; &quot;Hello World&quot;;
+
+
+</pre></div><div class="slide"><h2>Step-by-Step</h2><pre class="prettyprint">return 0;
+
+</pre><p>Causes the main function to finish with return code 0, return code 0 is interpreted as the program worked as expected without any errors</p></div><div class="slide"><h2>C Compilation Model</h2><div class="span9"><ul><li>Pre-Processor<div>Removes Comments, Interprets preprocessor directives <code>#</code></div></li><li>Compiler<div>Translates source into assembly code</div></li><li>Assembler<div>Creates object code</div></li><li>Linker/Link Editor<div>Includes linked libraries, creates executable</div></li></ul></div><div class="span6"><img src="cmodel.gif"/></div></div><div class="slide"><h2>Variables</h2><pre class="prettyprint">float speed;
+int _count = 0;
+
+</pre><code>datatype identifier = initial_value;</code><ul><li>datatype<div>e.g. fundamental data type: int, float, char</div></li><li>identifier<div>Sequence of one or more letters, digits or underscore characters. Have to begin with a letter or underscore character. Must not equal reserved keywords</div></li><li>initial_value <span class="label important">Always initialize a variable!</span><div>Initialization is optional, but then value of a variable is undetermined</div></li></ul></div><div class="slide"><h2>Fundamental Data Types (32-bit)</h2><table class="zebra-striped"><tr><th>Name</th><th>Size</th></tr><tr><td>char</td><td>1 byte</td></tr><tr><td>short int</td><td>2 byte</td></tr><tr><td>int</td><td>4 byte</td></tr><tr><td>long int</td><td>4 byte</td></tr><tr><td>bool</td><td>1 byte</td></tr><tr><td>float</td><td>4 byte</td></tr><tr><td>double</td><td>8 byte</td></tr><tr><td>long double</td><td>8 byte</td></tr><tr><td>wchar_t</td><td>2 or 4 byte</td></tr></table><div class="note">a(href="http://www.cplusplus.com/doc/tutorial/variables/") Overview</div></div><div class="slide"><h2>Reserved Keywords</h2><p>asm, auto, bool, break, case, catch, char, class, const, const_cast, continue, default, delete, do, double, dynamic_cast, else, enum, explicit, export, extern, false, float, for, friend, goto, if, inline, int, long, mutable, namespace, new, operator, private, protected, public, register, reinterpret_cast, return, short, signed, sizeof, static, static_cast, struct, switch, template, this, throw, true, try, typedef, typeid, typename, union, unsigned, using, virtual, void, volatile, wchar_t, while</p></div><div class="slide"><h2>Arrays</h2><pre class="prettyprint">int quarterlySales[3];
+int yearlySales[3] = {100, 200, 300};
+
+</pre><p><code>type identifier[size];</code></p><div>Initialization</div><ul><li>Local arrays are not initialized to any value by default</li><li>Global and static arrays are initialized with zeros</li></ul><div>Accessing Values</div><pre class="prettyprint">int firstQuartalSale = quarterlySales[0];
+
+</pre><div class="alert-message error">No validity check of indices at run-time!</div></div><div class="slide"><h2>Strings</h2><p>Using string class from C++ language library</p><pre class="prettyprint">#include &lt;string&gt;
+...
+string aString = &quot;This is a string.&quot;;
+cout &lt;&lt; aString;
+
+</pre><div>Special string characters</div><table><tr><td>\n</td><td>new line</td></tr><tr><td>\t</td><td>tab</td></tr><tr><td>\\</td><td>backslash (\)</td></tr><tr><td>\"</td><td>double quote (")</td></tr></table></div><div class="slide"><h2>Constants</h2><pre class="prettyprint">#define PI 3.14159f // preprocessor directive
+
+const int width = 10; // use of const keyword
+width = 1; // results in a compiler error
+
+</pre><div>textural replacement of defines</div><pre class="prettyprint">#define PRICE 3+4
+
+float cost = PRICE * 4; // 3+4*4 = 19
+
+</pre></div><div class="slide"><h2>Operators</h2><table><tr><th>Operator</th><th>Example</th></tr><tr><td>=</td><td><pre class="prettyprint">a = 5;
+a = b = c = 5;
+</pre></td></tr><tr><td>+, -, *, /, %</td><td><pre class="prettyprint">a+b
+a*b
+</pre></td></tr><tr><td>&, |, ^, ~, <<, >><div class="note">Bitwise</div></td><td><pre class="prettyprint">int a = 1, b =2; // 1 = 01, 2 = 10
+a &amp; b 	// 00
+a | b 	// 11
+a ^ b	// 11
+~a	// 10
+a &lt;&lt; 1	// 10
+b &gt;&gt; 1	// 01
+
+</pre></td></tr></table></div><div class="slide"><h2>Operators</h2><table><tr><th>Operator</th><th>Example</th></tr><tr><td>++, --</td><td><pre class="prettyprint">int a = 0;
+a++ // 1
+a-- // -1
+</pre></td></tr><tr><td>==, !=, >, <, >=, <=, !, &&, ||</td><td><pre class="prettyprint">(3 != 2)     // true
+(6 &gt;= 6)     // true
+(5 &lt; 5)      // false
+</pre></td></tr><tr><td>+=, -=, *=, /=, %=, >>=, <<=, &=, ^=, |=<div class="note">Compound assignment</div></td><td><pre class="prettyprint">a += b // a = a+b
+a |= b // a = a | b
+
+</pre></td></tr></table><a href="http://www.cplusplus.com/doc/tutorial/operators/">http://www.cplusplus.com/doc/tutorial/operators/</a></div><div class="slide"><h2>In- and Output</h2><div>Use streams to perform in- and output declared in library<code>iostream</code></div><ul><li>Insert or extract characters to/from it</li><li>Default output is screen</li><li>Default input is keyboard</li></ul></div><div class="slide"><h2>Output</h2><div>Output with the insertion operator <code><<</code>&nbsp;and 
+<code>cout</code></div><pre class="prettyprint">#include &lt;iostream&gt;
+using namespace std;
+...
+cout &lt;&lt; &quot;Hello World!&quot;;
+cout &lt;&lt;	10;
+cout &lt;&lt; a;
+
+</pre><div>Insertion operator can be used more than once</div><pre class="prettyprint">cout &lt;&lt; &quot;Hello! My name is &quot; &lt;&lt; name;
+
+</pre><div>No implicit line break, use <code>\n</code>&nbsp;or
+<code>endl</code>&nbsp;instead
+</div><pre class="prettyprint">cout &lt;&lt; &quot;Hello World!\n&quot;;
+cout &lt;&lt; &quot;Hello World!&quot; &lt;&lt; endl;
+
+</pre></div><div class="slide"><h2>Input</h2><div>Input with the extraction operator <code>>></code>&nbsp;and 
+<code>cin</code></div><pre class="prettyprint">#include &lt;iostream&gt;
+using namespace std;
+...
+int a, b, c = 0;
+cin &gt;&gt; a;
+
+cin &gt;&gt; b &gt;&gt; c;
+cin &gt;&gt; b;
+cin &gt;&gt; c;
+
+</pre><ul><li>Waits until the RETURN key is pressed</li><li>Stops reading if any blank space is found</li></ul><pre class="prettyprint">string line;
+getline(cin, line);
+
+</pre></div><div class="slide"><h2>String Conversion</h2><p>Use library <code>sstream</code></p><div>Convert string to integer</div><pre class="prettyprint">#include &lt;sstream&gt;
+using namespace std;
+int value = 0;
+string myString = 10;
+
+stringstream sstream(myString);
+sstream &gt;&gt; value;
+</pre><div>Convert integer to string</div><pre class="prettyprint">int value = 1;
+string myString;
+
+stringstream sstream;
+sstream &lt;&lt; value;
+sstream &gt;&gt; myString;
+
+</pre></div><div class="slide"><h2>Control Structures</h2><ul><li>if/else</li><li>loops (while, for)</li><li>jump statements (switch, break, continue, goto)</li></ul></div><div class="slide"><h2>If/Else</h2><p><code>if (condition) statement</code></p><pre class="prettyprint">if( a &gt; 5){
+ a = 10;
+}
+
+if( a &lt; 5 ){
+ a = 0;
+}else{
+ a = 10;
+}
+
+//shorter
+a = a &lt; 5 ? 0 : 10;
+
+</pre><span class="alert-message error">Use brackets to avoid mistakes!</span></div><div class="slide"><h2>Loops (while)</h2><p><code>while (condition) statement</code></p><table><tr><td><pre class="prettyprint">int a = 5;
+while( a &lt; 5 ){
+ cout &lt;&lt; a;
+ a++;
+}
+//Output:
+</pre></td><td><pre class="prettyprint">int a = 5;
+do{
+ cout &lt;&lt; a;
+ a++;
+}while( a &lt; 5 );
+// Output: 5
+
+</pre></td></tr></table></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

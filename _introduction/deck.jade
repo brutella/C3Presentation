@@ -1,0 +1,539 @@
+
+.slide
+	h1 C++ Programming
+
+.slide
+	h2 Overview
+
+	ol
+		li History
+		li Applications
+
+.slide
+	h2 C++ History
+
+.slide
+	h2 C++ Applications
+
+	ul
+		li Game Engines
+			div Source Engine (HL2, CS:S), id Tech 4 and 5 (Rage, Doom 4)
+		li Mozilla
+			div Firefox, Thunderbird
+		li Google back-end
+		li Adoby Systems
+			div Photoshop, Illustrator
+		li Parts of Mac OS X, Facebook
+
+.slide
+	h2 C++ Characteristics?
+	
+	ul
+		li.slide It's fast
+			div C++ is a superset of C, adds features like object-orientation, exception handling, generic programming, standard libary
+			
+		li.slide Object-oriented programming
+			div Encapsulation, Inheritance and polymorphism, build cleaner and more concise code than you would in C
+		
+		li.slide Widely used
+		
+.slide
+	h2 Top 10 popular programming languages (09/11)
+	
+	img(src="tpci_trends.png")
+	
+	p.note Rating based on the number of skilled engineers world-wide, courses and third party vendors. Used to make a strategic decision about what programming language should be adopted when starting to build a new software system.
+
+.slide
+	h2 C++ vs. Java
+	
+	table.zebra-striped
+		tr
+			th
+			th C++
+			th Java
+		tr
+			td Object-Orientation
+			td.green YES
+			td.green YES
+		tr
+			td Class Inheritance
+			td Multiple Inheritance
+			td Single Inheritance
+		tr
+			td Compiled to
+			td Machine Code
+			td Byte Code
+		tr
+			td Garbage Collection
+				div.note http://stackoverflow.com/questions/147130/why-doesnt-c-have-a-garbage-collector
+			td.yellow NO
+			td.green YES
+		tr
+			td Runtime Checks
+			td.red NO
+			td.green YES
+
+.slide
+	h2 C++ vs. Java - Hello World
+
+	table
+		tr
+			th C++
+			th Java
+		tr
+			td
+				pre.prettyprint.
+					// Hello World example
+					#include <iostream>
+					using namespace std;
+					
+					int main(){
+						cout << "Hello World!";
+						return 0;
+					}
+			td 
+				pre.prettyprint.
+					// Hello World example
+					public class HelloWorld {
+						public static void main() {
+							System.out.println("Hello World!");
+						}
+					}
+					
+.slide
+	h2 Step-by-Step
+	div.note a(href="http://www.cplusplus.com/doc/tutorial/program_structure/") Overview
+	
+	pre.prettyprint.
+		// Hello World example
+
+	div Comments
+	pre.prettyprint.
+		// This is a single-line comment
+		
+		/* This is a single-line comment too! */
+		
+		/* 
+			This is a multi-line comment
+		*/
+		
+	div Must not be nested
+	pre.prettyprint.
+		/* 
+			Nested comment /* are not allowed! */
+		*/
+
+.slide
+	h2 Step-by-Step
+	
+	pre.prettyprint.
+		#include <iostream>
+
+	div Preprocessor directive 
+		code #include
+	
+	pre.prettyprint.
+		#include <string> // Includes the string standard library
+		#include "Foo.h" // Includes a file named Foo.h
+
+.slide
+	h2 Step-by-Step
+	
+	pre.prettyprint.
+		using namespace std;
+
+	p Using a namespaces, see 
+		code cout
+		
+.slide
+	h2 Step-by-Step
+	
+	pre.prettyprint.
+		int main() {}
+	
+	p Main function declaration, main point where C++ programs starts their execution
+	
+	div.note This line corresponds to the beginning of the definition of the main function. The main function is the point by where all C++ programs start their execution, independently of its location within the source code. It does not matter whether there are other functions with other names defined before or after it - the instructions contained within this function's definition will always be the first ones to be executed in any C++ program. For that same reason, it is essential that all C++ programs have a main function.
+	
+.slide
+	h2 Step-by-Step
+	
+	pre.prettyprint.
+		cout << "Hello World!";
+	
+	p inserts a sequence of characters into the standard output stream (corresponds to the screen), elements in the C++ standard library are in the namespace 
+		code std
+	
+	div With namespaces
+	pre.prettyprint.
+		using namespace std;
+		cout << "Hello World";
+	
+	div Without namespaces
+	pre.prettyprint.
+		std::cout << "Hello World";
+	
+	
+.slide
+	h2 Step-by-Step
+	
+	pre.prettyprint.
+		return 0;
+	
+	p Causes the main function to finish with return code 0, return code 0 is interpreted as the program worked as expected without any errors
+	
+.slide
+	h2 C Compilation Model
+
+	div.span9
+		ul
+			li Pre-Processor
+				div Removes Comments, Interprets preprocessor directives 
+					code #
+			li Compiler
+				div Translates source into assembly code
+			li Assembler
+				div Creates object code
+			li Linker/Link Editor
+				div Includes linked libraries, creates executable
+	div.span6
+		img(src="cmodel.gif") C Compilation Model
+
+.slide
+	h2 Variables
+	
+	pre.prettyprint.
+		float speed;
+		int _count = 0;
+		
+	code  datatype identifier = initial_value;
+	
+	ul
+		li datatype
+			div e.g. fundamental data type: int, float, char
+		li identifier
+			div Sequence of one or more letters, digits or underscore characters. Have to begin with a letter or underscore character. Must not equal reserved keywords
+		li initial_value 
+			span.label.important Always initialize a variable!
+			div	Initialization is optional, but then value of a variable is undetermined
+			
+.slide
+	h2 Fundamental Data Types (32-bit)
+	
+	table.zebra-striped
+		tr
+			th Name
+			th Size
+		tr
+			td char
+			td 1 byte
+		tr
+			td short int
+			td 2 byte
+		tr
+			td int
+			td 4 byte
+		tr
+			td long int
+			td 4 byte
+		tr
+			td bool
+			td 1 byte
+		tr
+			td float
+			td 4 byte
+		tr
+			td double
+			td 8 byte
+		tr
+			td long double
+			td 8 byte
+		tr
+			td wchar_t
+			td 2 or 4 byte
+
+	div.note a(href="http://www.cplusplus.com/doc/tutorial/variables/") Overview
+	
+.slide
+	h2 Reserved Keywords
+	
+	p asm, auto, bool, break, case, catch, char, class, const, const_cast, continue, default, delete, do, double, dynamic_cast, else, enum, explicit, export, extern, false, float, for, friend, goto, if, inline, int, long, mutable, namespace, new, operator, private, protected, public, register, reinterpret_cast, return, short, signed, sizeof, static, static_cast, struct, switch, template, this, throw, true, try, typedef, typeid, typename, union, unsigned, using, virtual, void, volatile, wchar_t, while
+	
+.slide
+	h2 Arrays
+	
+	pre.prettyprint.
+		int quarterlySales[3];
+		int yearlySales[3] = {100, 200, 300};
+		
+	p
+		code type identifier[size];
+	
+	div Initialization
+	ul 
+		li Local arrays are not initialized to any value by default
+		li Global and static arrays are initialized with zeros
+		
+	div Accessing Values
+	pre.prettyprint.
+		int firstQuartalSale = quarterlySales[0];
+	
+	div.alert-message.error No validity check of indices at run-time!
+	
+.slide
+
+	h2 Strings
+	
+	p Using string class from C++ language library
+	
+	pre.prettyprint.
+		#include <string>
+		...
+		string aString = "This is a string.";
+		cout << aString;
+	
+	div Special string characters
+	
+	table
+		tr
+			td \\n
+			td new line
+		tr
+			td \\t
+			td tab
+		tr
+			td \\\\
+			td backslash (\\)
+		tr
+			td \\"
+			td double quote (")
+
+.slide
+	h2 Constants
+	
+	pre.prettyprint.
+		#define PI 3.14159f // preprocessor directive
+		
+		const int width = 10; // use of const keyword
+		width = 1; // results in a compiler error
+
+	div textural replacement of defines
+	
+	pre.prettyprint.
+		#define PRICE 3+4
+		
+		float cost = PRICE * 4; // 3+4*4 = 19
+	
+.slide
+	h2 Operators
+	
+	table
+		tr
+			th Operator
+			th Example
+		tr
+			td =
+			td 
+				pre.prettyprint.
+					a = 5;
+					a = b = c = 5;
+		tr
+			td +, -, *, /, %
+			td 
+				pre.prettyprint.
+					a+b
+					a*b
+		tr
+			td &, |, ^, ~, <<, >>
+				div.note Bitwise
+			td 
+				pre.prettyprint.
+					int a = 1, b =2; // 1 = 01, 2 = 10
+					a & b 	// 00
+					a | b 	// 11
+					a ^ b	// 11
+					~a	// 10
+					a << 1	// 10
+					b >> 1	// 01
+	
+.slide
+	h2 Operators
+	
+	table
+		tr
+			th Operator
+			th Example
+		tr
+			td ++, --
+			td 
+				pre.prettyprint.
+					int a = 0;
+					a++ // 1
+					a-- // -1
+		tr
+			td ==, !=, >, <, >=, <=, !, &&, ||
+			td 
+				pre.prettyprint.
+					(3 != 2)     // true
+					(6 >= 6)     // true
+					(5 < 5)      // false
+		tr
+			td +=, -=, *=, /=, %=, >>=, <<=, &=, ^=, |=
+				div.note Compound assignment
+			td 
+				pre.prettyprint.
+					a += b // a = a+b
+					a |= b // a = a | b
+	
+	a(href="http://www.cplusplus.com/doc/tutorial/operators/") http://www.cplusplus.com/doc/tutorial/operators/
+	
+
+.slide
+	h2 In- and Output
+	
+	div Use streams to perform in- and output declared in library
+		code iostream
+	ul
+		li Insert or extract characters to/from it
+		li Default output is screen
+		li Default input is keyboard
+		
+.slide
+	h2 Output
+	
+	div Output with the insertion operator 
+		code \<\<
+		&nbsp;and 
+		code cout
+	
+	pre.prettyprint.
+		#include <iostream>
+		using namespace std;
+		...
+		cout << "Hello World!";
+		cout <<	10;
+		cout << a;
+	
+	div Insertion operator can be used more than once
+	
+	pre.prettyprint.
+		cout << "Hello! My name is " << name;
+
+	div No implicit line break, use 
+		code \\n
+		&nbsp;or
+		code endl
+		&nbsp;instead
+	
+	pre.prettyprint.
+		cout << "Hello World!\\n";
+		cout << "Hello World!" << endl;
+		
+.slide
+	h2 Input
+	
+	div Input with the extraction operator 
+		code \>\>
+		&nbsp;and 
+		code cin
+	
+	pre.prettyprint.
+		#include <iostream>
+		using namespace std;
+		...
+		int a, b, c = 0;
+		cin >> a;
+		
+		cin >> b >> c;
+		cin >> b;
+		cin >> c;
+		
+	ul
+		li Waits until the RETURN key is pressed
+		li Stops reading if any blank space is found
+		
+	pre.prettyprint.
+		string line;
+		getline(cin, line);
+
+.slide
+	h2 String Conversion
+	
+	p Use library 
+		code sstream
+	
+	div Convert string to integer
+	pre.prettyprint.
+		#include <sstream>
+		using namespace std;
+		int value = 0;
+		string myString = 10;
+		
+		stringstream sstream(myString);
+		sstream >> value;
+	div Convert integer to string
+	
+	pre.prettyprint.
+		int value = 1;
+		string myString;
+		
+		stringstream sstream;
+		sstream << value;
+		sstream >> myString;
+
+.slide
+	h2 Control Structures
+	
+	ul
+		li if/else
+		li loops (while, for)
+		li jump statements (switch, break, continue, goto)
+		
+.slide
+	h2 If/Else
+	
+	p
+		code if (condition) statement
+	
+	pre.prettyprint.
+		if( a > 5){
+			a = 10;
+		}
+		
+		if( a < 5 ){
+			a = 0;
+		}else{
+			a = 10;
+		}
+		
+		//shorter
+		a = a < 5 ? 0 : 10;
+		
+	span.alert-message.error Use brackets to avoid mistakes!
+	
+.slide
+	h2 Loops (while)
+	
+	p 
+		code while (condition) statement
+		
+	table
+		tr
+			td
+				pre.prettyprint.
+					int a = 5;
+					while( a < 5 ){
+						cout << a;
+						a++;
+					}
+					//Output:
+			td
+				pre.prettyprint.
+					int a = 5;
+					do{
+						cout << a;
+						a++;
+					}while( a < 5 );
+					// Output: 5
+
