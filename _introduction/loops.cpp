@@ -2,17 +2,13 @@
 
 using namespace std;
 
-int main(){
-	int a = 5;
-	while(a < 5){
-		cout << a;
-		a++;
-	}
+int main(){	
+	int i = 10;
+	while(i>0){
+	 i--;
+	 if(i % 2 == 0){ continue; }
+	 if(i == 5){ break; }
 
-	a = 5;
-	do{
-		cout << a;
-		a++;
-	}while(a < 5);
-	
+	 cout << i;
+	}
 }

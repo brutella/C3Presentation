@@ -488,7 +488,7 @@
 	ul
 		li if/else
 		li loops (while, for)
-		li jump statements (switch, break, continue, goto)
+		li jump statements (switch, break, continue)
 		
 .slide
 	h2 If/Else
@@ -512,6 +512,24 @@
 		
 	span.alert-message.error Use brackets to avoid mistakes!
 	
+.slide
+	h2 Loops (for)
+	
+	p 
+		code for (initialization; condition; increase) statement
+	
+	pre.prettyprint.
+		for( int i=0; i<10; i++){
+			cout << i;
+		}
+	
+	div More than one expression
+	pre.prettyprint.
+		int i,j = 0;
+		for ( i=0, j=100 ; i!=j ; i++, j-- ){
+			cout << i << "!=" << j;
+		}
+		
 .slide
 	h2 Loops (while)
 	
@@ -537,3 +555,69 @@
 					}while( a < 5 );
 					// Output: 5
 
+.slide
+	h2 Jump statements (break and continue)
+	
+	ul
+		li End a loop even the conditions is true with 
+			code break;
+		li Skip code with 
+			code continue;
+	
+	pre.prettyprint.
+		int i = 10;
+		while(i>0){
+			i--;
+			if(i % 2 == 0){ continue; }
+			if(i == 5){ break; }
+			
+			cout << i;
+		}
+		// Output: 97
+
+.slide
+	h2 Switch
+	
+	pre.prettyprint.
+		int a = 1;
+		
+		switch (a) {
+			case 1:
+				cout << "a is 1";
+				break;
+			default:
+				cout << "no case found";
+		}
+	p First match of expression with constant is used and executed until the 
+		code break;
+		&nbsp;is found
+		
+.slide
+	h2 Functions
+	
+	p
+		code type name ([parameter,...]){ statements }
+	
+	p Functions with no return value uses 
+		code void
+	
+	pre.prettyprint.
+		#include <iostream>
+		using namespace std;
+		
+		int add(int a,int b){
+			return a + b;
+		}
+		
+		void printValue(int value){
+			cout << value;
+		}
+		
+		int main(){
+			int a = 4;
+			int b = 5;
+			cout << a << " + " << b << " = " << add(a,b);
+			return 0;
+		}
+		// Output: 4 + 5 = 9
+	
