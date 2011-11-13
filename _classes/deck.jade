@@ -73,7 +73,7 @@
 		public:
 			void setCoordinates(int x, int y);
 			void setSize(int width, int height);
-			string computeArea();
+			int computeArea();
 		};
 		
 		#endif
@@ -101,7 +101,7 @@
 		public:
 			void setCoordinates(int x, int y);
 			void setSize(int width, int height);
-			string computeArea();
+			int computeArea();
 		};
 		
 		#endif
@@ -132,11 +132,10 @@
 			_height = height;
 		}
 		
-		string Rectangle::computeArea(){
+		int Rectangle::computeArea(){
 			return _width*_height;
 		}
-	
-	
+
 .slide
 	h2 Objects in C++
 	
@@ -155,7 +154,50 @@
 			
 			return 0;
 		}
+
+.slide
+	h2 Members (Variables, Functions)
+	
+	pre.prettyprint.
+		class Rectangle{
+		private:
+			int _x, _y; // Member variables
+			
+		protected:
+			int _width, _height; // Member variables
+			
+		public:
+			// Member functions
+			void setCoordinates(int x, int y); 
+			void setSize(int width, int height);
+			int computeArea();
+
+			void print() const; // Member const functions
+			static int defaultColor; // Static (class) variable			
+			static Rectangle add(Rectangle r1, Rectangle r2); // Static function
+		};
 		
+.slide
+	h2 Members (Variables, Functions)
+	
+	ul
+		li Non-Static members
+			div \- are bound to objects
+			div \- exists for every object
+			div \- member function declared 
+				code const
+				&nbsp;can't change object
+		li Static members (called class variables/functions)
+			div \- exist only once per class
+			div \- kind of global variables/functions
+		
+		pre.prettyprint.
+			int Rectangle::defaultColor = 255;
+			static void Rectangle::print() const{
+				...
+			}
+			
+			
 .slide
 	h2 Constructor
 	
@@ -246,7 +288,9 @@
 					Rectangle rect3 = rect1;
 					foo(rect1); // Argument
 					return rect1; // Return value
-					
+				
+	div.note In this example the copy constructor is implemented directly in the header file. Functions need not to be implemented in the .cpp file, but may increase the readability/maintainability of your project.
+		
 	div.note Note that object assignment operation only calls the copy constructor, if the object is not created yet. Otherwise the copy assignment operator is used.
 	
 	
@@ -271,6 +315,28 @@
 		Rectangle rect; 	// calls Rectangle(0,0,0,0)
 		Rectangle rect = 1; 	// calls Rectangle(1,0,0,0)
 		rect.intersection(5); 	// calls Rectangle(5,0,0,0)
+
+.slide	
+	h2 Constructor - Prevent implicit conversion
+	
+	ul
+		li Implicit constructor calls may be unwanted
+		li With keyword 
+			code explicit
+			&nbsp;unexpected constructor calls can be avoided
+		
+	pre.prettyprint.
+		class Rectangle{
+		public:
+			explicit Rectangle(int x = 0, int y = 0, int width = 0, int height = 0);
+			Rectangle intersection(Rectangle rect);
+		};
+	pre.prettyprint.
+		Rectangle rect; 	// calls Rectangle(0,0,0,0)
+		Rectangle rect = 1; 	// Compiler error
+		Rectangle rect(1); 	// calls Rectangle(1,0,0,0)
+		rect.intersection(5); 	// Compiler error
+		rect.intersection(static_cast<Rectangle>5); 	// calls Rectangle(5,0,0,0)
 
 .slide
 	h2 Destructor
