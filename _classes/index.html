@@ -1,0 +1,156 @@
+<!DOCTYPE html><html><head><title>Classes and Objects</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Objects and Classes in C++</h1></div><div class="slide"><h2>Classes</h2><p>What are classes?</p><Classes></Classes><ul><li>group data and functionality</li><li>formal description of objects</li><li>corresponds to the real world</li></ul><p>Why do we need classes?</p><Classes></Classes><ul><li>hide complexity</li><li>makes reusable code</li><li>helps to understand code better</li><li>imitate the real world</li></ul></div><div class="slide"><h2>Classes in C++</h2><div>Classes are basis of object oriented programming</div><pre class="prettyprint">class Car{
+private:
+ int horsepower;
+ int weight;
+ string brand;
+public:
+ void setHorsepower(int horsepower);
+ void setWeight(int weight);
+ void setBrand(string brand);
+ static int numberOfCars; // static
+};
+
+</pre><div>Objects are instances of classes</div><pre class="prettyprint">Car bmw;
+bmw.horsepower = 100;
+bmw.weight = 2000;
+bmw.brand = &quot;bmw&quot;;
+string description = bmw.description();
+
+</pre></div><div class="slide"><h2>Classes in C++</h2><p>Definition and implementation of classes is often split into separate files.</p><ul><li>Definition of class <code>Car</code>&nbsp;in header file
+<code>Car.h</code></li><li>Implementation in file <code>Car.cpp</code>, has to include the header file with 
+<code>#include "Car.h"</code></li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
+#define _RECTANGLE_H
+
+class Rectangle{
+private:
+ int _x, _y;
+protected:
+ int _width, _height;
+public:
+ void setCoordinates(int x, int y);
+ void setSize(int width, int height);
+ string computeArea();
+};
+
+#endif
+
+</pre><div>Include guards to prevent compiler errors</div><ul><li>Compilation fails if a class is defined multiple times (including a header file twice)</li><li>Use <code>#ifndef</code>&nbsp;and 
+<code>#define</code>&nbsp; to prevent this
+</li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
+#define _RECTANGLE_H
+
+class Rectangle{
+private:
+ int _x, _y;
+protected:
+ int _width, _height;
+public:
+ void setCoordinates(int x, int y);
+ void setSize(int width, int height);
+ string computeArea();
+};
+
+#endif
+
+</pre><div>Access specifier</div><ul><li>private: from within the class and friends</li><li>protected: from within the class, friend and derived class</li><li>public: from everywhere</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Use scope operator <code>::</code>&nbsp;to define members of the class from outside of the class defintion
+</li><li>Use default value for method arguments (called default arguments)</li></ul><pre class="prettyprint">void Rectangle::setCoordinates(int x = 0, int y = 0){
+ _x = x;
+ _y = y;
+}
+
+void Rectangle::setSize(int width = 0, int height = 0){
+ _width = width;
+ _height = height;
+}
+
+string Rectangle::computeArea(){
+ return _width*_height;
+}
+
+
+</pre></div><div class="slide"><h2>Objects in C++</h2><pre class="prettyprint">#include &lt;iostream&gt;
+#include &quot;Rectangle.h&quot;
+using namespace std;
+
+int main(){
+ Rectangle rectangle;
+ rectangle.setSize(5,10);
+ cout &lt;&lt; rectangle.computeArea();
+
+ rectangle.setSize(); // correct, using default arguments (0,0)
+ rectangle.setSize(5); // correct, using arguments (5,0)
+
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Constructor</h2><div>The constructor </div><ul><li>is a special method declared in a class</li><li>has the same name as the class</li><li>has no return type</li><li>is called when a new object is created</li></ul><div>There can be multiple constructor</div><table><tr><td><pre class="prettyprint">class Rectangle{
+private:
+ ...
+protected:
+ ...
+public:
+ Rectangle();
+ Rectangle(x,y);
+};
+</pre></td><td><pre class="prettyprint">Rectangle::Rectangle(){
+ _x = 0;
+ _y = 0;
+}
+
+Rectangle::Rectangle(x,y){
+ _x = x;
+ _y = y;
+}
+
+</pre></td></tr></table></div><div class="slide"><h2>Constructor</h2><pre class="prettyprint">#include &quot;Rectangle.h&quot;
+...
+Rectangle rectangle; // Calls Rectangle();
+Rectangle rectangle(); // Compiler error
+Rectangle rectangle(5,5); // Calls Rectangle(int x, int y);
+
+
+</pre><p>Only the explicitly (user defined) defined constructors can be called.</p><div>If class has no constructor, the compiler implicitly generates a</div><ul><li>default constructor (constructor with no arguments)</li><li>copy constructor</li><li>copy assignment operator (covered later in operator overloading)</li></ul></div><div class="slide"><h2>Copy Constructor</h2><ul><li>Is a special kind of constructor</li><li>Used to make a copy of an object</li></ul><p class="alert-message info">It's up to the programmer how to implement it!</p><table><tr><td><pre class="prettyprint">class Rectangle{
+private:
+ ...
+virtual:
+ ...
+public:
+ Rectangle(const Rectangle &amp;rect){
+  _x = rect._x; // private member
+  _y = rect._y;
+  ...
+ }
+};
+</pre></td><td><pre class="prettyprint">// x, y, width, height
+Rectangle rect1(0,0,10,40);
+
+// Examples of copy constructor
+Rectangle rect2(rect1);
+Rectangle rect3 = rect1;
+foo(rect1); // Argument
+return rect1; // Return value
+
+</pre></td></tr></table><div class="note">Note that object assignment operation only calls the copy constructor, if the object is not created yet. Otherwise the copy assignment operator is used.</div></div><div class="slide"><h2>Constructor - Implicit conversion</h2><div>Constructors </div><ul><li>may be called in unexpected situations</li><li>are implicitly called to perform type conversions</li></ul><pre class="prettyprint">class Rectangle{
+public:
+ // Constructor
+ Rectangle(int x = 0, int y = 0, int width = 0, int height = 0);
+
+ // Returns intersection
+ Rectangle intersection(Rectangle rect);
+};
+</pre><pre class="prettyprint">Rectangle rect; 	// calls Rectangle(0,0,0,0)
+Rectangle rect = 1; 	// calls Rectangle(1,0,0,0)
+rect.intersection(5); 	// calls Rectangle(5,0,0,0)
+
+</pre></div><div class="slide"><h2>Destructor</h2><div>The destructor </div><ul><li>is a special method declared in a class</li><li>has the same name as the class but preceded with a tilde sign (~)</li><li>has no return type and no arguments</li><li>is called when an object is destroyed</li></ul><div>There can only be one destructor per class</div><pre class="prettyprint">class Rectangle{
+private:
+ ...
+protected:
+ ...
+public:
+ Rectangle();
+ ~Rectangle();
+};
+
+</pre></div><div class="slide"><h2>Destructor</h2><p>If a class has no destructor, an implicit destructor is generated (calls the destructors of all non-static data members)</p><p>In the destructor, the class has to cleanup allocated memory (important on dynamically created memory)</p></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

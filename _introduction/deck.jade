@@ -29,13 +29,13 @@
 	h2 C++ Characteristics?
 	
 	ul
-		li.slide It's fast
+		li It's fast
 			div C++ is a superset of C, adds features like object-orientation, exception handling, generic programming, standard libary
 			
-		li.slide Object-oriented programming
+		li Object-oriented programming
 			div Encapsulation, Inheritance and polymorphism, build cleaner and more concise code than you would in C
 		
-		li.slide Widely used
+		li Widely used
 		
 .slide
 	h2 Top 10 popular programming languages (09/11)
@@ -57,23 +57,26 @@
 			td.green YES
 			td.green YES
 		tr
+			td Class-Orientation
+			td.green YES
+			td.green YES
+		tr
 			td Class Inheritance
 			td Multiple Inheritance
 			td Single Inheritance
 		tr
 			td Compiled to
 			td Machine Code
-			td Byte Code
+			td Byte Code (JVM)
 		tr
 			td Garbage Collection
-				div.note http://stackoverflow.com/questions/147130/why-doesnt-c-have-a-garbage-collector
 			td.yellow NO
 			td.green YES
 		tr
 			td Runtime Checks
 			td.red NO
 			td.green YES
-
+	div.note Gargabe Collection http://stackoverflow.com/questions/147130/why-doesnt-c-have-a-garbage-collector
 .slide
 	h2 C++ vs. Java - Hello World
 
@@ -621,3 +624,80 @@
 		}
 		// Output: 4 + 5 = 9
 	
+.slide
+	h2 Functions
+	
+	div Why do we need functions?
+	ul
+		li Cleanup code
+		li Make code reusable
+		li Hide complexity
+	
+	div Possible problems when
+	ul
+		li modify arguments
+		li return multiple values
+		
+.slide
+	h2 Functions
+	
+	div Function to encapsulate reading multiple values
+	pre.prettyprint.
+		#include <iostream>
+		using namespace std;
+
+		void readCallByValue(int price, int amount){
+			cout << "Enter a price: "; cin >> price;
+			cout << "Enter the amount: "; cin >> amount;
+		}
+
+		void readCallByReference(int& price, int& amount){
+			cout << "Enter a price: "; cin >> price;
+			cout << "Enter the amount: "; cin >> amount;
+		}
+
+		int main(){
+			int price = 0;
+			int amount = 0;
+			readCallByValue(price, amount); // price and amount is 0
+			readCallByReference(price, amount);
+		}
+	
+.slide
+	h2 Functions
+	
+	div Call by Value
+	ul
+		li The values of the variables are copied
+		li Changes are made to the copies
+	pre.prettyprint void readCallByValue(int price, int amount){ ... }
+	div Call by Reference (ampersand sign 
+		code &
+		&nbsp;)
+	ul
+		li The references to the variables are passed
+		li Changes are made to the variables
+	pre.prettyprint void readCallByReference(int& price, int& amount){ ... }
+	
+
+.slide
+	h2 Functions
+	
+	ul
+		li Functions can have the same name
+		li Compiler differentiates based on the number and type of arguments
+	
+	pre.prettyprint.
+		int add(int a, int b){ ... }
+		int add(float a, float b){ ... }
+	
+	ul
+		li Default value of arguments
+	pre.prettyprint.
+		int sum(int a, int b = 0){ return a+b; }
+		
+		int main(){
+			sum(10);	// 10
+			sum(10,2);	// 12
+		}
+

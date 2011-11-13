@@ -2461,3 +2461,88 @@ body {
 .sp-audience {
   background: #888;
 }
+/* Print style */
+@media print {
+  * {
+    background: transparent !important;
+    text-shadow: none !important;
+    filter: none !important;
+    -ms-filter: none !important;
+    -webkit-box-reflect: none !important;
+    -moz-box-reflect: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    font-size: 20px !important;
+  }
+  * :before, * :after {
+    display: none !important;
+  }
+  a, a:visited {
+    text-decoration: underline;
+  }
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+    content: "";
+  }
+  pre, blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr, img {
+    page-break-inside: avoid;
+  }
+  @page  {
+    margin: 0.5cm;
+  }
+  p, h2, h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  .deck-container h2, h3 {
+    page-break-after: avoid;
+  }
+  .slide {
+    position: static !important;
+    visibility: visible !important;
+    display: block !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+    -ms-transform: none !important;
+    transform: none !important;
+  }
+  .deck-container h1 {
+    font-size: 35px !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+    -ms-transform: none !important;
+    transform: none !important;
+    padding: 0 !important;
+    position: static !important;
+  }
+  /*.deck-container > .slide {
+      page-break-after: always;
+    }*/
+  .deck-container .note {
+    display: block !important;
+  }
+  .deck-container {
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  script {
+    display: none;
+  }
+}

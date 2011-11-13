@@ -1,0 +1,302 @@
+
+.slide
+	h1 Objects and Classes in C++
+
+.slide
+	h2 Classes
+	
+	p What are classes?
+	Classes
+	ul
+		li group data and functionality
+		li formal description of objects
+		li corresponds to the real world
+
+	p Why do we need classes?
+	Classes
+	ul
+		li hide complexity
+		li makes reusable code
+		li helps to understand code better
+		li imitate the real world
+
+.slide
+	h2 Classes in C++
+	
+	div Classes are basis of object oriented programming
+	pre.prettyprint.
+		class Car{
+		private:
+			int horsepower;
+			int weight;
+			string brand;
+		public:
+			void setHorsepower(int horsepower);
+			void setWeight(int weight);
+			void setBrand(string brand);
+			static int numberOfCars; // static
+		};
+			
+	div Objects are instances of classes
+	pre.prettyprint.
+		Car bmw;
+		bmw.horsepower = 100;
+		bmw.weight = 2000;
+		bmw.brand = "bmw";
+		string description = bmw.description();
+
+.slide
+	h2 Classes in C++
+	
+	p Definition and implementation of classes is often split into separate files.
+	
+	ul
+		li Definition of class 
+			code Car
+			&nbsp;in header file
+			code Car.h
+		li Implementation in file 
+			code Car.cpp
+			, has to include the header file with 
+			code #include "Car.h"
+.slide
+	h2 Header
+	pre.prettyprint.
+		#ifndef _RECTANGLE_H
+		#define _RECTANGLE_H
+		
+		class Rectangle{
+		private:
+			int _x, _y;
+		protected:
+			int _width, _height;
+		public:
+			void setCoordinates(int x, int y);
+			void setSize(int width, int height);
+			string computeArea();
+		};
+		
+		#endif
+	
+	div Include guards to prevent compiler errors
+	ul
+		li Compilation fails if a class is defined multiple times (including a header file twice)
+		li Use 
+			code #ifndef
+			&nbsp;and 
+			code #define
+			&nbsp; to prevent this
+			
+.slide
+	h2 Header
+	pre.prettyprint.
+		#ifndef _RECTANGLE_H
+		#define _RECTANGLE_H
+		
+		class Rectangle{
+		private:
+			int _x, _y;
+		protected:
+			int _width, _height;
+		public:
+			void setCoordinates(int x, int y);
+			void setSize(int width, int height);
+			string computeArea();
+		};
+		
+		#endif
+		
+	div Access specifier
+	ul
+		li private: from within the class and friends
+		li protected: from within the class, friend and derived class
+		li public: from everywhere
+
+.slide
+	h2 Implementation
+	
+	ul
+		li Use scope operator 
+			code ::
+			&nbsp;to define members of the class from outside of the class defintion
+		li Use default value for method arguments (called default arguments)
+		
+	pre.prettyprint.
+		void Rectangle::setCoordinates(int x = 0, int y = 0){
+			_x = x;
+			_y = y;
+		}
+		
+		void Rectangle::setSize(int width = 0, int height = 0){
+			_width = width;
+			_height = height;
+		}
+		
+		string Rectangle::computeArea(){
+			return _width*_height;
+		}
+	
+	
+.slide
+	h2 Objects in C++
+	
+	pre.prettyprint.
+		#include <iostream>
+		#include "Rectangle.h"
+		using namespace std;
+		
+		int main(){
+			Rectangle rectangle;
+			rectangle.setSize(5,10);
+			cout << rectangle.computeArea();
+			
+			rectangle.setSize(); // correct, using default arguments (0,0)
+			rectangle.setSize(5); // correct, using arguments (5,0)
+			
+			return 0;
+		}
+		
+.slide
+	h2 Constructor
+	
+	div The constructor 
+	ul
+		li is a special method declared in a class
+		li has the same name as the class
+		li has no return type
+		li is called when a new object is created
+	
+	div There can be multiple constructor
+	table
+		tr
+			td
+				pre.prettyprint.
+					class Rectangle{
+					private:
+						...
+					protected:
+						...
+					public:
+						Rectangle();
+						Rectangle(x,y);
+					};
+			td
+				pre.prettyprint.
+					Rectangle::Rectangle(){
+						_x = 0;
+						_y = 0;
+					}
+					
+					Rectangle::Rectangle(x,y){
+						_x = x;
+						_y = y;
+					}
+
+.slide
+	h2 Constructor
+	
+	pre.prettyprint.
+		#include "Rectangle.h"
+		...
+		Rectangle rectangle; // Calls Rectangle();
+		Rectangle rectangle(); // Compiler error
+		Rectangle rectangle(5,5); // Calls Rectangle(int x, int y);
+		
+		
+	p Only the explicitly (user defined) defined constructors can be called.
+	
+	div If class has no constructor, the compiler implicitly generates a
+	ul
+		li default constructor (constructor with no arguments)
+		li copy constructor
+		li copy assignment operator (covered later in operator overloading)
+		
+.slide 
+	h2 Copy Constructor
+	
+	ul
+		li Is a special kind of constructor
+		li Used to make a copy of an object
+	
+	p.alert-message.info It's up to the programmer how to implement it!
+
+	table
+		tr
+			td
+				pre.prettyprint.
+					class Rectangle{
+					private:
+						...
+					virtual:
+						...
+					public:
+						Rectangle(const Rectangle &rect){
+							_x = rect._x; // private member
+							_y = rect._y;
+							...
+						}
+					};
+			td
+				pre.prettyprint.
+					// x, y, width, height
+					Rectangle rect1(0,0,10,40);
+					
+					// Examples of copy constructor
+					Rectangle rect2(rect1);
+					Rectangle rect3 = rect1;
+					foo(rect1); // Argument
+					return rect1; // Return value
+					
+	div.note Note that object assignment operation only calls the copy constructor, if the object is not created yet. Otherwise the copy assignment operator is used.
+	
+	
+.slide	
+	h2 Constructor - Implicit conversion
+	
+	div Constructors 
+	ul
+		li may be called in unexpected situations
+		li are implicitly called to perform type conversions
+	
+	pre.prettyprint.
+		class Rectangle{
+		public:
+			// Constructor
+			Rectangle(int x = 0, int y = 0, int width = 0, int height = 0);
+	
+			// Returns intersection
+			Rectangle intersection(Rectangle rect);
+		};
+	pre.prettyprint.
+		Rectangle rect; 	// calls Rectangle(0,0,0,0)
+		Rectangle rect = 1; 	// calls Rectangle(1,0,0,0)
+		rect.intersection(5); 	// calls Rectangle(5,0,0,0)
+
+.slide
+	h2 Destructor
+	
+	div The destructor 
+	ul
+		li is a special method declared in a class
+		li has the same name as the class but preceded with a tilde sign (~)
+		li has no return type and no arguments
+		li is called when an object is destroyed
+
+	div There can only be one destructor per class
+
+	pre.prettyprint.
+		class Rectangle{
+		private:
+			...
+		protected:
+			...
+		public:
+			Rectangle();
+			~Rectangle();
+		};
+		
+.slide
+	h2 Destructor
+	
+	p If a class has no destructor, an implicit destructor is generated (calls the destructors of all non-static data members)
+	p In the destructor, the class has to cleanup allocated memory (important on dynamically created memory)
