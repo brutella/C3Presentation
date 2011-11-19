@@ -37,8 +37,17 @@ int* p1 = &a;
 </pre><p><code>p1</code>&nbsp; now points to the address of 
 <code>a</code>&nbsp; again
 </p></div><div class="slide"><h2>Pointer and Array</h2><p>Identifier of an array is equivalent to the address of its first element</p><pre class="prettyprint">int array[5];
-int* p = NULL;
+int* p = array;
 
+*p = 1; // == array[0]
+p[0] = 1; // == array[0]
+p++; // increase pointer address by 4 bytes
+*p = 2; // == array[1]
 
+</pre><p>The precedence of the operators depend on the position and brackets</p><pre class="prettyprint">*p++ = 3; // first dereference and assign value, then increase pointer
+*++p = 4 // first increase pointer value, then dereference
+int a  = *++p; // first increase pointer value, then dereference
+int b  = *p++; // first dereference than increase pointer value
+int c = *(p++); // first increase pointer value, then dereference
 </pre></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

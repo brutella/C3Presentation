@@ -149,6 +149,18 @@
 	
 	pre.prettyprint.
 		int array[5];
-		int* p = NULL;
+		int* p = array;
 		
-		
+		*p = 1; // == array[0]
+		p[0] = 1; // == array[0]
+		p++; // increase pointer address by 4 bytes
+		*p = 2; // == array[1]
+
+	p The precedence of the operators depend on the position and brackets
+	pre.prettyprint.
+		*p++ = 3; // first dereference and assign value, then increase pointer
+		*++p = 4 // first increase pointer value, then dereference
+		int a  = *++p; // first increase pointer value, then dereference
+		int b  = *p++; // first dereference than increase pointer value
+		int c = *(p++); // first increase pointer value, then dereference
+	
