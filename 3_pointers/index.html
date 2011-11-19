@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><title>Classes and Objects</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Pointers</h1></div><div class="slide"><h2>Overview</h2><ul><li>Pointers</li><li>Memory Addresses</li><li>Pointer Arithmetic</li><li>Dynamic Memory Allocation <div>new, delete</div></li><li><code>this</code>&nbsp; Pointer
+</li><li>Destructor	</li></ul></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
+
+</pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
+int* a = &age;
+</pre><ul><li>Reference the memory location of a variable with reference operator <code>&</code></li><li>Pointer variable precedes with an asterisk <code>*</code></li></ul><div class="span10"><div>Pointer <code>a</code></div><ul><li>is the memory address where the value of the variable age is stored</li><li>has a different value than the variable age (since it references the memory location) - in this case 8</li></ul></div><div class="span6"><img src="pointer_a.png"/></div></div><div class="slide"><h2>What is a pointer? - Examples</h2><pre class="prettyprint">int age = 18;
+int* a = &age; // Get the reference
+int foo = *a;  // Dereference (foo == age)
+
+</pre><p>Dereference the pointer to get the value in memory, where the pointer points to</p><p>The size of a pointer depends on the operating system - get the size of a variable in bytes with <code>sizeof()</code></p><pre class="prettyprint">cout &lt;&lt; sizeof(age) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output: 4 bytes
+cout &lt;&lt; sizeof(a) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output on 64-bit machine: 8 bytes
+
+</pre></div><div class="slide"><h2>Pointer declaration</h2><ul><li>A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to</li></ul><p>Pointer declaration: <code>type * variable_name;</code></p><pre class="prettyprint">int* p1 = NULL;
+char* p2 = NULL;
+float* p3 = NULL;
+double* p4 = NULL;
+
+</pre><div class="note">These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).</div><ul><li>The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.</li><li>Always declare a pointer always with an initial value (NULL), otherwise it points to an arbitrary address.</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int age = 30;
+int height = 180;
+int* p1, * p2 = NULL; // Initializing
+
+p1 = age;  // Compiler error, variables have different size
+p1 = &age; // &quot;p1&quot; points to the address of &quot;age&quot;
+p2 = p1; // Correct (both have the same size), p2 points to the address of p1
+*p2 = height; // Dereference &quot;p2&quot; and assign the value of &quot;height&quot;
+
+</pre><p>Keep in mind that</p><ul><li>by dereferencing the pointer you have direct access to the values</li><li>declaring a pointer looks very similar to dereferencing a pointer, but they are not the same</li><li>you should always declare a pointer with an initial value (NULL, null, nil)</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int a = 30;
+int* p1 = &a;
+
+</pre><p><code>p1</code>&nbsp; points to the address of 
+<code>a</code>&nbsp;
+</p><pre class="prettyprint">p1++; // Increases the pointer by one unit (in this case 4 byte)
+
+</pre><p><code>p1</code>&nbsp; points to the last address + 4 bytes
+</p><pre class="prettyprint">p1--; // Decreases the pointer by one unit
+
+</pre><p><code>p1</code>&nbsp; now points to the address of 
+<code>a</code>&nbsp; again
+</p></div><div class="slide"><h2>Pointer and Array</h2><p>Identifier of an array is equivalent to the address of its first element</p><pre class="prettyprint">int array[5];
+int* p = NULL;
+
+
+</pre></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

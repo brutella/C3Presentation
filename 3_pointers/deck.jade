@@ -1,0 +1,154 @@
+.slide
+	h1 Pointers
+
+.slide
+	h2 Overview
+	
+	ul
+		li Pointers
+		li Memory Addresses
+		li Pointer Arithmetic
+		li Dynamic Memory Allocation 
+			div new, delete
+		li 
+			code this
+			&nbsp; Pointer
+		li Destructor	
+
+.slide
+	h2 What is a pointer?
+	
+	p  A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)
+	
+	pre.prettyprint.
+		int age = 27;
+	
+	div.span9
+		div Variable 
+			code age
+		ul
+			li contains 4 bytes (32 bits)
+			li and forms the value 27
+	div.span5
+		img(src="variable.png")
+	
+	div.note The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.
+
+
+.slide
+	h2 What is a pointer?
+	
+	pre.prettyprint.
+		int age = 27;
+		int* a = &age;
+	ul
+		li Reference the memory location of a variable with reference operator 
+			code \&
+		li Pointer variable precedes with an asterisk 
+			code *
+	
+	div.span10
+		div Pointer 
+			code a
+		ul
+			li is the memory address where the value of the variable age is stored
+			li has a different value than the variable age (since it references the memory location) - in this case 8
+	div.span6
+		img(src="pointer_a.png")
+
+.slide
+	h2 What is a pointer? - Examples
+	
+	pre.prettyprint.
+		int age = 18;
+		int* a = &age; // Get the reference
+		int foo = *a;  // Dereference (foo == age)
+		
+	p Dereference the pointer to get the value in memory, where the pointer points to
+	
+	p The size of a pointer depends on the operating system - get the size of a variable in bytes with 
+		code sizeof()
+	
+	pre.prettyprint.
+		cout << sizeof(age) << " bytes" << endl;  // Output: 4 bytes
+		cout << sizeof(a) << " bytes" << endl;  // Output on 64-bit machine: 8 bytes
+
+.slide
+	h2 Pointer declaration
+	
+	ul
+		li A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to
+		
+	p Pointer declaration: 
+		code type * variable_name;
+		
+	pre.prettyprint.
+		int* p1 = NULL;
+		char* p2 = NULL;
+		float* p3 = NULL;
+		double* p4 = NULL;
+	
+	div.note These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).
+	
+	ul
+		li The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.
+		li Always declare a pointer always with an initial value (NULL), otherwise it points to an arbitrary address.
+	
+.slide
+	h2 Pointer Examples
+	
+	pre.prettyprint.
+		int age = 30;
+		int height = 180;
+		int* p1, * p2 = NULL; // Initializing
+		
+		p1 = age;  // Compiler error, variables have different size
+		p1 = &age; // "p1" points to the address of "age"
+		p2 = p1; // Correct (both have the same size), p2 points to the address of p1
+		*p2 = height; // Dereference "p2" and assign the value of "height"
+		
+	p Keep in mind that
+	ul
+		li by dereferencing the pointer you have direct access to the values
+		li declaring a pointer looks very similar to dereferencing a pointer, but they are not the same
+		li you should always declare a pointer with an initial value (NULL, null, nil)
+
+.slide
+	h2 Pointer Examples
+	
+	pre.prettyprint.
+		int a = 30;
+		int* p1 = &a;
+
+	p 
+		code p1
+		&nbsp; points to the address of 
+		code a
+		&nbsp;
+	
+	pre.prettyprint.
+		p1++; // Increases the pointer by one unit (in this case 4 byte)
+	
+	p 
+		code p1
+		&nbsp; points to the last address + 4 bytes
+		
+	pre.prettyprint.
+		p1--; // Decreases the pointer by one unit
+	
+	p 
+		code p1
+		&nbsp; now points to the address of 
+		code a
+		&nbsp; again
+	
+.slide
+	h2 Pointer and Array
+	
+	p Identifier of an array is equivalent to the address of its first element
+	
+	pre.prettyprint.
+		int array[5];
+		int* p = NULL;
+		
+		
