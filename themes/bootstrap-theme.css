@@ -2446,6 +2446,9 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 .deck-container.deck-menu .deck-current, .no-touch .deck-container.deck-menu .slide:hover {
   background: #ddf;
 }
+.center {
+  text-align: center;
+}
 /* deckmirror!themes/default.css */
 body {
   background: black;
@@ -2537,7 +2540,7 @@ body {
     display: block !important;
   }
   .deck-container {
-    width: auto !important;
+    width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     display: block !important;

@@ -1,5 +1,5 @@
 .slide
-	h1 Pointers
+	h1 Pointers in C++
 
 .slide
 	h2 Overview
@@ -8,12 +8,12 @@
 		li Pointers
 		li Memory Addresses
 		li Pointer Arithmetic
-		li Dynamic Memory Allocation 
+		li Memory Management
 			div new, delete
+			div Destructor
 		li 
 			code this
 			&nbsp; Pointer
-		li Destructor	
 
 .slide
 	h2 What is a pointer?
@@ -68,7 +68,7 @@
 	
 	p The size of a pointer depends on the operating system - get the size of a variable in bytes with 
 		code sizeof()
-	
+			
 	pre.prettyprint.
 		cout << sizeof(age) << " bytes" << endl;  // Output: 4 bytes
 		cout << sizeof(a) << " bytes" << endl;  // Output on 64-bit machine: 8 bytes
@@ -92,7 +92,7 @@
 	
 	ul
 		li The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.
-		li Always declare a pointer always with an initial value (NULL), otherwise it points to an arbitrary address.
+		li Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.
 	
 .slide
 	h2 Pointer Examples
@@ -111,7 +111,8 @@
 	ul
 		li by dereferencing the pointer you have direct access to the values
 		li declaring a pointer looks very similar to dereferencing a pointer, but they are not the same
-		li you should always declare a pointer with an initial value (NULL, null, nil)
+		li you should always declare a pointer with an initial value 
+			code 0, NULL, null, nil
 
 .slide
 	h2 Pointer Examples
@@ -155,12 +156,357 @@
 		p[0] = 1; // == array[0]
 		p++; // increase pointer address by 4 bytes
 		*p = 2; // == array[1]
+		*(p + 3) = 5 // == array[4]
 
+.slide
+	h2 Pointer Arithmetic
+	
 	p The precedence of the operators depend on the position and brackets
 	pre.prettyprint.
+		int array[5];
+		int* p = array;
 		*p++ = 3; // first dereference and assign value, then increase pointer
 		*++p = 4 // first increase pointer value, then dereference
 		int a  = *++p; // first increase pointer value, then dereference
 		int b  = *p++; // first dereference than increase pointer value
 		int c = *(p++); // first increase pointer value, then dereference
+		
+.slide
+	h2 Pointer Arithmetic
 	
+	p Behaviour of a pointer operation depends on the size of a pointer's data type
+
+	pre.prettyprint.
+		short* sp = (short*)array; // short has 2 bytes
+		*sp = 10; // 0000 0000 0000 1010
+		
+		// Increase by 2 bytes
+		*(sp+1) = 20; // 0000 0000 0001 0100
+	
+	p Use a 
+		code short
+		&nbsp;pointer (2 byte) to access the memory, which then forms an integer of value 1.310.730
+	
+	table
+		tr
+			th.center byte 4
+			th.center byte 3
+			th.center byte 2
+			th.center byte 1
+		tr
+			td.center 0000 0000
+			td.center 0001 0100
+			td.center 0000 0000
+			td.center 0000 1010
+		
+.slide
+	h2 Pointer to Pointer
+	
+	p Add an asterisk (*) for each level of reference in the declaration
+	
+	pre.prettyprint.
+		char c = 'a';
+		char* pC = &c;
+		char** ppC = &pC;
+	
+	ul
+		li
+			code pC
+			&nbsp;is a pointer 
+		li 
+			code ppC
+			&nbsp;is a pointer to a pointer
+	
+	img(src="pointer_to_pointer.png")
+
+.slide
+	h2 The 
+		code void
+		&nbsp; Pointer
+	
+	ul
+		li 
+			code void
+			&nbsp;pointers are a special type of pointers, in C++ they represent the absence of type 
+		li They have an undetermined length and undetermined dereference properties
+		li Therefore they have to be cast to a concrete pointer type 
+
+	pre.prettyprint.
+		int a = 100;
+		void* pA = &p;
+		
+		*pA = 101; // Compiler error: 'void*' is not a pointer-to-object type
+		*(int*)pA = 101; // Cast before dereference
+	
+	div.note The void pointer allows to point to any data type, from an integer value or a float to a string of characters. But in exchange they have a great limitation: the data pointed by them cannot be directly dereferenced (which is logical, since we have no type to dereference to), and for that reason we will always have to cast the address in the void pointer to some other pointer type that points to a concrete data type before dereferencing it.
+
+.slide
+	h2 Dynamic Memory
+	
+	ul
+		li Until now we have only had as much memory available as we declared for our variables
+		
+		li Memory consumption is known at compile time
+		li What if we need a variable amount of memory (determined during runtime)?
+			div E.g. array with a user defined size
+	
+	p.alert-message.success Answer: Dynamic Memory
+		
+	p Allocate dynamic memory on the heap with the keyword 
+		code new
+		&nbsp;and multiple elements with 
+		code new[]
+		
+.slide
+	h2 Dynamic Memory
+	
+	p Memory allocation on the heap:
+	p 
+		code type * variable_name = new type;
+	
+	p 
+		code type * variable_name = new type [ size ]; 
+	
+	pre.prettyprint.
+		int* pInt = new int;
+		int *pIntArray = new int[10];
+		
+		Rectangle* pRectangle = new Rectangle;
+		Rectangle* pRectangles = new Rectangle[10];
+		
+	div Access object members
+	pre.prettyprint.
+		pRectangle->getWidth(); // Use of arrow operator
+		(*pRectangle).getWidth(); // Dot notation
+	
+	
+.slide
+	h2 A program's memory
+
+	p First an overview about the 4 different areas of a program's memory
+	ol
+		li Code area
+			div where the compiled program sits in memory.
+		li Globals area
+			div where global variables are stored.
+		li Heap
+			div where dynamically allocated variables are allocated from.
+		li Stack
+			div where parameters and local variables are allocated from.
+	
+	p The memory is allocated based on how a variable is declared.
+
+
+.slide
+	h2 Memory Management - The stack
+	
+	p Stack is the place in memory where parameters and local variables are allocated, the stack is often referred as execution stack, control stack, run-time stack, or machine stack
+	
+	div.span9
+		p In general, a stack is a container which holds items (like an array). You put items into the container (push) or take them down from it (pop). 
+		p Compared to an array, the stack only let's you access the last item put into/onto it. A stack is a last-in, first-out (LIFO) structure.
+	div.span6
+		img(src="stack.jpg")
+
+.slide
+	h2 Memory Memory - The stack
+	
+	p The memory on the stack is automatically cleaned up when the code block has returned.
+	
+	div Example
+	pre.prettyprint.
+		int increment(int a){
+			int b = ++a;
+			
+			return b;
+		} // after returning the value, the stack is cleaned up 
+	
+	p.alert-message.success You don't have to worry about memory allocation which is always nice!
+	
+.slide
+	h2 Memory Management - The heap
+	
+	p The heap is a large pool of the memory, which is used for (dynamically allocated) objects created with the keyword 
+		code new
+	
+	pre.prettyprint.
+		int* pB = new int; // Memory is on the heap
+		int a = 10; // Memory of "a" is allocated on the stack
+		int pA = &a; // Memory of "pB" is allocated on the stack
+	
+	p Dynamically allocated memory "survive" code blocks, but not the variables
+	p.alert-message.error Dynamically allocated memory has to be freed by the programmer (no garbage collector)
+	
+.slide
+	h2 Memory Management - The heap
+	
+	p Programmer has to decide when to free memory when it is no longer needed
+	ul
+		li Memory becomes available for other allocation requests
+		li Memory can be freed with the 
+			code delete
+			&nbsp;or
+			code delete[]
+			&nbsp;operator
+			
+	pre.prettyprint.
+		int* pB = new int;
+		...
+		delete pB;
+
+.slide
+	h2 Memory Management - Leaks
+	
+	p Memory leaks occur when there is memory allocated, to which you don't have access to.
+	
+	p.alert-message.info Good memory management is important!
+	
+	h3 When do you clean up memory?
+	
+	ul
+		li When the variable is no longer needed
+		li As long as you have access to it
+
+	p.alert-message.info The destructor is a good place to free memory!
+	
+
+.slide
+	h2 Memory Management - Leaks
+	
+	div Example of a memory leak
+	pre.prettyprint.
+		void print(int value){
+			int* b = new int;
+			cout << value;
+		}
+		
+		print(10);
+	
+	p Variable 
+		code b
+		&nbsp;is deleted after the return of the function, but the memory is still allocated, you don't have access to the variable outside of the function
+
+.slide
+	h2 Memory Management - Leaks
+	
+	div How to do it better
+	pre.prettyprint.
+		void print(int value){
+			int* b = new int;
+			cout << value;
+			delete b;
+		}
+		
+		print(10);
+	
+	p Delete the memory as long as you have access to!
+	
+.slide
+	h2 Memory Management - Leaks
+	
+	div Another example
+	pre.prettyprint.
+		int* newIntegerWithValue(int value){
+			int* b = new int;
+			*b = value;
+			
+			return b;
+		}
+		
+		int* integer = newIntegerWithValue(10);
+		...
+		delete integer;
+	
+	p After returning the function, you still have access to the dynamically allocated memory
+	
+	p.alert-message.info Use the stack when your variable will not be used after the current function returns. Use the heap when the data in the variable is needed beyond the lifetime of the current code block.
+	
+.slide
+	h2 Back to dynamic memory
+	
+	pre.prettyprint.
+		class Rectangle{
+		int _x, _y, _width, _height;
+		char* _pixels;
+		
+		public:
+			Rectangle(int x = 0, int y = 0, int width = 0, int height = 0){
+				_x = x;
+				_y = x;
+				_width = width;
+				_height = height;
+				
+				// Dynamic memory allocation
+				_pixels = new char[_width*_height];
+			}
+		
+			~Rectangle(){
+				delete[] _pixels;
+			}
+		};
+	
+	p Free dynamically allocated memory for the variable 
+		code _pixels
+		&nbsp;in the destructor.
+		
+.slide
+	h2 Memory Management - Destructor
+
+	pre.prettyprint.
+		{
+			Rectangle rect(10, 10, 400, 300);
+		} // Automatically cleans up stack memory and calls destructor
+		
+		Rectangle* pRect = new Rectangle(10, 10, 400, 300);
+		delete pRect; // Cleans up heap memory and calls desctructor
+
+	p Destructor is automatically called
+	ul
+		li on local variable when declaration scope is left
+		li on dynamically allocated objects when delete is called
+		li on statically allocated objects when program is terminated
+		li on every array element, if an array is destroyed
+		
+.slide
+	h2 The 
+		code this
+		&nbsp;Pointer
+	
+	p In a non-static context, 
+		code this
+		&nbsp;is a pointer to the 'current' object
+		
+	pre.prettyprint.
+		class Rectangle{
+		...	
+		public:
+			int getArea(){
+				return this->_width * this->height;
+			}
+			void printArea(){
+				cout << "area: " << this->getArea() << endl;
+			}
+		};
+	
+	p.alert-message.info The this pointer is not available in static member functions!
+	
+.slide
+	h2 Objects vs. Pointers to Objects
+	
+	p Object values may become unhandy
+	ul
+		li It is costly to copy full objects
+		li Objects should be mainly passed to functions by reference
+			ul
+				li Use of reference parameters in method declarations is recommended
+				li Otherwise the copy constructor is invoked on each function call with an object as argument to create a temporary copy of the object
+				
+
+.slide
+	h2 Objects vs. Pointers to Objects
+	
+	p Object pointers are frequently preferred
+	ul
+		li It is cheap to copy pointers to objects
+		li Objects referenced by pointers should be created on the heap by new
+		li Such objects must be explicitly destroyed by delete, otherwise 'memory leaks' will arise in the program. Destructors of objects must explicitly free the space of all objects referenced by pointers

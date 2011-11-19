@@ -13,16 +13,17 @@ int main(){
 	*p++ = 4;
 	*p = 5;
 	
-	p = &array[3];
-	int array3 = *p++;
-	p = &array[3];
-	int array4 = *++p;
+	for(int i = 0; i<5; i++){
+		cout << "array[" << i << "] = " << array[i] << endl;
+	}
+	
+	short* sp = (short*)array;
+	*sp = 10;
+	*(sp+1) = 20; // 0001 0100 0000 0000 0000 0000 0000 1010 = 1310730
 	
 	for(int i = 0; i<5; i++){
 		cout << "array[" << i << "] = " << array[i] << endl;
 	}
 	
-	cout << "array[3] = " << array3 << endl;
-	cout << "array[4] = " << array4 << endl;
 	return 0;
 }
