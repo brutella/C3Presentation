@@ -46,7 +46,7 @@ class Derived: private Base { ... };
 class Derived: Base { ... };
 
 </pre><p>Restricts access to <code>Base</code>&nbsp;for the children of 
-<code>Derived</code></p><ul><li>public: all access specifiers in Base preserve their meaning</li><li>protected: public members of Base become protected</li><li>private: all members of Base become private (default)</li></ul><p>Typically, simply public inheritance is applied</p></div><div class="slide"><h2>Inheritance Access Specifiers - Example</h2><pre class="prettyprint">class Book : Article {};
+<code>Derived</code></p><ul><li>public: all access specifiers in Base preserve their meaning</li><li>protected: public members of Base become protected (visible for subclasses)</li><li>private: all members of Base become private (default)</li></ul><p>Typically, simply public inheritance is applied</p></div><div class="slide"><h2>Inheritance Access Specifiers - Example</h2><pre class="prettyprint">class Book : Article {};
 
 book.getAuthor(); // Compiler error
 
@@ -73,9 +73,54 @@ public:
 </pre><ul><li><code>Derived</code>&nbsp;inherits from 
 <code>Base1</code>&nbsp;and 
 <code>Base2</code><ul><li>Object contains separate "subobjects" for each base class</li></ul></li><li>Hierarchy is a graph (not a tree)<ul><li>Name conflicts possible</li></ul></li></ul></div><div class="slide"><h2>Multiple Inheritance</h2><p>Name clashes have to be resolved by qualification</p><img src="multiple_inheritance.png"/><div>Resolve ambiguity in <code>C</code>&nbsp;with scope operator
-<code>(A::x, B::x)</code></div></div><div class="slide"><h2>Share base class object</h2><div class="span9"><pre class="prettyprint"></pre></div><div class="span7"><img src="multiple_inheritance_shared_base_class.png"/></div><ul><li><code>BookCD</code>&nbsp;contains two separate subobjects of 
-<code>Article</code></li><li>Specifier <code>virtual</code>&nbsp;lets corresponding subobjects be shared
-</li></ul></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
+<code>(A::x, B::x)</code></div></div><div class="slide"><h2>Share base class object - Diamond Problem</h2><div class="span9"><pre class="prettyprint">class Book: public Article {}
+class Cd: public Article {}
+class BookCD: public Book, public Cd {}
+
+BookCD bookCD;
+bookCD.getPrice(); // Ambiguous
+bookCD.Book::getPrice();
+bookCD.Cd::getPrice();
+
+</pre></div><div class="span7"><img src="multiple_inheritance_shared_base_class.png"/></div><p>Class <code>BookCD</code>&nbsp;contains two separate subobjects of 
+<code>Article</code></p><p>Method <code>getPrice();</code>&nbsp;is available in both super classes
+<div class="note">This situation is sometimes referred to as diamond inheritance because the inheritance diagram is in the shape of a diamond. Virtual inheritance can help to solve this problem.</div></p></div><div class="slide"><h2>Share base class object - Virtual Access Specifier</h2><div class="span9"><pre class="prettyprint">class Book: public virtual Article {}
+class Cd: public virtual Article {}
+class BookCD: public Book, public Cd {}
+
+BookCD bookCD;
+bookCD.getPrice(); // Unambiguous
+
+</pre></div><div class="span7"><img src="multiple_inheritance_shared_base_class.png"/></div><p>Specifier <code>virtual</code>&nbsp;lets corresponding subobjects be merged to one
+</p></div><div class="slide"><h2>Polymorphism</h2><ul><li>Objects of the subclass type can be used instead of objects of the baseclass type</li><li>Subclass is compatible with the base class</li><li>Code that works with objects of a certain class also works with objects of subclasses (e.g. collection classes)</li><li>In C++ solved with pointers</li></ul><pre class="prettyprint">void printArticle(Article* a) {
+ cout &lt;&lt; a-&gt;getTitle();
+}
+
+Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
+Book* pBook = new Book(&quot;200&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
+printArticle(pArticle);
+printArticle(pBook);
+
+</pre></div><div class="slide"><h2>Polymorphism</h2><img src="inheritance_polymorphism.png"/><pre class="prettyprint">Article* pArticle; // Static type &quot;Article&quot;
+Book* pBook; // Static type &quot;Book&quot;, dynamic type &quot;Article&quot;
+
+</pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span10"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
+Book* pBook = new Book(&quot;200&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
+
+pArticle-&gt;setTitle(&quot;Basic Article&quot;); // ok
+pBook-&gt;setPublisher(&quot;Addison-Wesley&quot;); // ok
+
+</pre></div><div class="span6"><img src="polymorphism_1.png"/></div><div class="span10"><pre class="prettyprint">pArticle = pBook;
+pArticle-&gt;setPublisher(&quot;dpunkt&quot;); // compiler error
+pArticle-&gt;setPrice(29.90); // ok
+
+</pre></div><div class="span6"><img src="polymorphism_2.png"/></div></div><div class="slide"><h2>Dynamic Casts</h2><p>A pointer variable of a subclass type can always be assigned to a pointer variable of the baseclass</p><div class="alert-message error">Inverse assignment is not possible - Cast is needed</div><pre class="prettyprint">Article* pArticle;
+Book* pBook = new Book(&quot;123&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
+pArticle = pBook; // ok
+pBook = pArticle; // error
+pBook = dynamic_cast&lt;Book*&gt;(pArticle); // ok
+
+</pre></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
 
 </pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
 int* a = &age;

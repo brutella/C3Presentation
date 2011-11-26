@@ -155,7 +155,7 @@
 	
 	ul
 		li public: all access specifiers in Base preserve their meaning
-		li protected: public members of Base become protected
+		li protected: public members of Base become protected (visible for subclasses)
 		li private: all members of Base become private (default)
 	
 	p Typically, simply public inheritance is applied
@@ -237,22 +237,138 @@
 		code (A::x, B::x)
 
 .slide
-	h2 Share base class object
+	h2 Share base class object - Diamond Problem
 	
 	div.span9
 		pre.prettyprint.
+			class Book: public Article {}
+			class Cd: public Article {}
+			class BookCD: public Book, public Cd {}
+			
+			BookCD bookCD;
+			bookCD.getPrice(); // Ambiguous
+			bookCD.Book::getPrice();
+			bookCD.Cd::getPrice();
+			
 	div.span7
 		img(src="multiple_inheritance_shared_base_class.png")
 	
-	ul
-		li 
-			code BookCD
-			&nbsp;contains two separate subobjects of 
-			code Article
-		li Specifier 
-			code virtual
-			&nbsp;lets corresponding subobjects be shared
+	p Class 
+		code BookCD
+		&nbsp;contains two separate subobjects of 
+		code Article
+	p Method 
+		code getPrice();
+		&nbsp;is available in both super classes
+	
+		div.note This situation is sometimes referred to as diamond inheritance because the inheritance diagram is in the shape of a diamond. Virtual inheritance can help to solve this problem.
+	
+		
+.slide
 
+	h2 Share base class object - Virtual Access Specifier
+	
+	div.span9 
+		pre.prettyprint.
+			class Book: public virtual Article {}
+			class Cd: public virtual Article {}
+			class BookCD: public Book, public Cd {}
+			
+			BookCD bookCD;
+			bookCD.getPrice(); // Unambiguous
+	
+	div.span7
+		img(src="multiple_inheritance_shared_base_class.png")
+		
+	p Specifier 
+		code virtual
+		&nbsp;lets corresponding subobjects be merged to one
+
+.slide
+	h2 Polymorphism
+	
+	ul
+		li Objects of the subclass type can be used instead of objects of the baseclass type
+		li Subclass is compatible with the base class
+		li Code that works with objects of a certain class also works with objects of subclasses (e.g. collection classes)
+		li In C++ solved with pointers
+
+	pre.prettyprint.
+		void printArticle(Article* a) {
+			cout << a->getTitle();
+		}
+		
+		Article* pArticle = new Article("100", "Article1", 9.90);
+		Book* pBook = new Book("200", "C++", 24.90, "Stroustrup", "", "1-23");
+		printArticle(pArticle);
+		printArticle(pBook);
+
+.slide
+	h2 Polymorphism
+	
+	img(src="inheritance_polymorphism.png")
+	
+	pre.prettyprint.
+		Article* pArticle; // Static type "Article"
+		Book* pBook; // Static type "Book", dynamic type "Article"
+
+.slide
+	h2 Static vs. Dynamic Types
+	
+	div Static Type
+	
+	ul
+		li The type appearing in the declaration
+		li Is known at compile time
+		li Determines which members can be accessed
+
+	div Dynamic type
+	
+	ul
+		li The type of the object stored at runtime (can change)
+		li May be (directly or indirectly) derived from the static type
+		li Determines which virtual member functions are called (see later)
+	
+	p A polymorph variable may refer to objects of the static type or of any subclass
+	
+.slide
+	h2 Static vs. Dynamic Types
+	
+	div.span10
+		pre.prettyprint.
+			Article* pArticle = new Article("100", "Article1", 9.90);
+			Book* pBook = new Book("200", "C++", 24.90, "Stroustrup", "", "1-23");
+		
+			pArticle->setTitle("Basic Article"); // ok
+			pBook->setPublisher("Addison-Wesley"); // ok
+	
+	div.span6
+		img(src="polymorphism_1.png")
+	
+	
+	div.span10
+		pre.prettyprint.
+			pArticle = pBook;
+			pArticle->setPublisher("dpunkt"); // compiler error
+			pArticle->setPrice(29.90); // ok
+	
+	div.span6
+		img(src="polymorphism_2.png")
+
+
+.slide
+	h2 Dynamic Casts
+	
+	p A pointer variable of a subclass type can always be assigned to a pointer variable of the baseclass
+	div.alert-message.error Inverse assignment is not possible - Cast is needed
+	
+	pre.prettyprint.
+		Article* pArticle;
+		Book* pBook = new Book("123", "C++", 24.90, "Stroustrup", "", "1-23");
+		pArticle = pBook; // ok
+		pBook = pArticle; // error
+		pBook = dynamic_cast<Book*>(pArticle); // ok
+	
 .slide
 	h2 What is a pointer?
 	
