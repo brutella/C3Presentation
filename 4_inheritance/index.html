@@ -1,0 +1,249 @@
+<!DOCTYPE html><html><head><title>Classes and Objects</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Inheritance and Polymorphism in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Inheritance<ul><li>Base class and sub class</li><li>Access specifiers</li><li>Constructors</li><li>Multiple Inheritance</li></ul></li><li>Polymorphism<ul><li>Static vs. Dynamic Type</li><li>Generic Methods and Types</li><li>Virtual Methods</li></ul></li><li>Abstract Classes</li><li>Interfaces</li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Inherit to create hierarchy of classes<ul><li>Bases class provides basic/shared functionality</li><li>Subclass extends base class for specific functionality</li></ul></li><li>Subclass inherits<ul><li>Member variables</li><li>Implemented methods and interfaces expect constructor and destructor</li></ul></li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Subclass may<ul><li>use existing members and methods</li><li>add new members and methods</li><li>override members and methods</li></ul></li><li>Inheritance is transitive (a derived class inherits from all its ancestor classes)<div>If <code>C</code>&nbsp;is derived from 
+<code>B</code>&nbsp;, and 
+<code>B</code>&nbsp;is derived from 
+<code>A</code>&nbsp;, then 
+&nbsp;C
+&nbsp;inherits the members declared in 
+<code>B</code>&nbsp;and 
+<code>A</code></div></li><li>Subclass can not remove inherited members</li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Subclass extends the base class</li><li>Subclass is a "specialization" of the base class</li><li>Subclasses are compatible with the base class</li></ul><div>Example</div><img src="inheritance.png"/></div><div class="slide"><h2>Base Class</h2><p>Common functionality should be in a base class!</p><div>Example articles</div><ul><li>Price</li><li>Number</li><li>Title/Name</li></ul><pre class="prettyprint">class Article {
+private:
+ string m_number;
+ string m_title;
+ double m_price;
+public:
+ Article() { ... }
+ string getNumber() const { return m_number; }
+ string getTitle() const { return m_title; }
+ double getPrice() const { return m_price; }
+};
+
+</pre></div><div class="slide"><h2>Derived Class</h2><p>Adds special functionality for specific use cases</p><div>Example book</div><ul><li>Author</li><li>Publisher</li><li>ISBN Number</li></ul><pre class="prettyprint">class Book: public Article {  // Book is derived from Article
+private:
+ string m_author;
+ string m_publisher;
+ double m_isbn;
+public:
+ Book() { ... }
+ string getAuthor() const { return m_author; }
+ string getPublisher() const { return m_publisher; }
+ string getIsbn() const { return m_isbn; }
+};
+
+</pre></div><div class="slide"><h2>Derived Class</h2><p>Class <code>Book</code>&nbsp;inherits all features of 
+<code>Article</code></p><pre class="prettyprint">Book book;
+book.getAuthor();
+book.getPublisher();
+book.getIsbn();
+
+// Method from super class
+book.getNumber();
+book.getTitle();
+book.getPrice();
+
+</pre></div><div class="slide"><h2>Inheritance Access Specifiers</h2><p>Base class may be provided with an access specifier</p><pre class="prettyprint">class Derived: public Base { ... };
+class Derived: protected Base { ... };
+class Derived: private Base { ... };
+class Derived: Base { ... };
+
+</pre><p>Restricts access to <code>Base</code>&nbsp;for the children of 
+<code>Derived</code></p><ul><li>public: all access specifiers in Base preserve their meaning</li><li>protected: public members of Base become protected</li><li>private: all members of Base become private (default)</li></ul><p>Typically, simply public inheritance is applied</p></div><div class="slide"><h2>Inheritance Access Specifiers - Example</h2><pre class="prettyprint">class Book : Article {};
+
+book.getAuthor(); // Compiler error
+
+</pre><pre class="prettyprint">class Book : protected Article {};
+
+book.getAuthor(); // Compiler error
+
+</pre><pre class="prettyprint">class Book : private Article {};
+
+book.getAuthor(); // Compiler error
+
+
+</pre></div><div class="slide"><h2>Constructors</h2><ul><li>The constructors of a base class are not inherited<ul><li>Derived class is responsible for initializing data members of base class</li></ul></li><li>A derived class must define its own constructor<ul><li>May call (in its initalization list) a constructor of the base class</li><li>Otherwise, the default constructor of base class is called first</li></ul></li></ul></div><div class="slide"><h2>Constructors - Example</h2><pre class="prettyprint">class Book: public Article {
+public:
+ Book(string number, string title, double price, string author, string publisher, string isbn) 
+  : Article(number, title, price), m_author(author), m_publisher(publisher), m_isbn(isbn) {}
+
+};
+
+</pre></div><div class="slide"><h2>Multiple Inheritance</h2><p>In C++ a class may have multiple parents</p><pre class="prettyprint">class Derived : public Base1, public Base2{
+ ...
+};
+
+</pre><ul><li><code>Derived</code>&nbsp;inherits from 
+<code>Base1</code>&nbsp;and 
+<code>Base2</code><ul><li>Object contains separate "subobjects" for each base class</li></ul></li><li>Hierarchy is a graph (not a tree)<ul><li>Name conflicts possible</li></ul></li></ul></div><div class="slide"><h2>Multiple Inheritance</h2><p>Name clashes have to be resolved by qualification</p><img src="multiple_inheritance.png"/><div>Resolve ambiguity in <code>C</code>&nbsp;with scope operator
+<code>(A::x, B::x)</code></div></div><div class="slide"><h2>Share base class object</h2><div class="span9"><pre class="prettyprint"></pre></div><div class="span7"><img src="multiple_inheritance_shared_base_class.png"/></div><ul><li><code>BookCD</code>&nbsp;contains two separate subobjects of 
+<code>Article</code></li><li>Specifier <code>virtual</code>&nbsp;lets corresponding subobjects be shared
+</li></ul></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
+
+</pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
+int* a = &age;
+</pre><ul><li>Reference the memory location of a variable with reference operator <code>&</code></li><li>Pointer variable precedes with an asterisk <code>*</code></li></ul><div class="span10"><div>Pointer <code>a</code></div><ul><li>is the memory address where the value of the variable age is stored</li><li>has a different value than the variable age (since it references the memory location) - in this case 8</li></ul></div><div class="span6"><img src="pointer_a.png"/></div></div><div class="slide"><h2>What is a pointer? - Examples</h2><pre class="prettyprint">int age = 18;
+int* a = &age; // Get the reference
+int foo = *a;  // Dereference (foo == age)
+
+</pre><p>Dereference the pointer to get the value in memory, where the pointer points to</p><p>The size of a pointer depends on the operating system - get the size of a variable in bytes with <code>sizeof()</code></p><pre class="prettyprint">cout &lt;&lt; sizeof(age) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output: 4 bytes
+cout &lt;&lt; sizeof(a) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output on 64-bit machine: 8 bytes
+
+</pre></div><div class="slide"><h2>Pointer declaration</h2><ul><li>A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to</li></ul><p>Pointer declaration: <code>type * variable_name;</code></p><pre class="prettyprint">int* p1 = NULL;
+char* p2 = NULL;
+float* p3 = NULL;
+double* p4 = NULL;
+
+</pre><div class="note">These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).</div><ul><li>The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.</li><li>Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int age = 30;
+int height = 180;
+int* p1, * p2 = NULL; // Initializing
+
+p1 = age;  // Compiler error, variables have different size
+p1 = &age; // &quot;p1&quot; points to the address of &quot;age&quot;
+p2 = p1; // Correct (both have the same size), p2 points to the address of p1
+*p2 = height; // Dereference &quot;p2&quot; and assign the value of &quot;height&quot;
+
+</pre><p>Keep in mind that</p><ul><li>by dereferencing the pointer you have direct access to the values</li><li>declaring a pointer looks very similar to dereferencing a pointer, but they are not the same</li><li>you should always declare a pointer with an initial value <code>0, NULL, null, nil</code></li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int a = 30;
+int* p1 = &a;
+
+</pre><p><code>p1</code>&nbsp; points to the address of 
+<code>a</code>&nbsp;
+</p><pre class="prettyprint">p1++; // Increases the pointer by one unit (in this case 4 byte)
+
+</pre><p><code>p1</code>&nbsp; points to the last address + 4 bytes
+</p><pre class="prettyprint">p1--; // Decreases the pointer by one unit
+
+</pre><p><code>p1</code>&nbsp; now points to the address of 
+<code>a</code>&nbsp; again
+</p></div><div class="slide"><h2>Pointer and Array</h2><p>Identifier of an array is equivalent to the address of its first element</p><pre class="prettyprint">int array[5];
+int* p = array;
+
+*p = 1; // == array[0]
+p[0] = 1; // == array[0]
+p++; // increase pointer address by 4 bytes
+*p = 2; // == array[1]
+*(p + 3) = 5 // == array[4]
+
+</pre></div><div class="slide"><h2>Pointer Arithmetic</h2><p>The precedence of the operators depend on the position and brackets</p><pre class="prettyprint">int array[5];
+int* p = array;
+*p++ = 3; // first dereference and assign value, then increase pointer
+*++p = 4 // first increase pointer value, then dereference
+int a  = *++p; // first increase pointer value, then dereference
+int b  = *p++; // first dereference than increase pointer value
+int c = *(p++); // first increase pointer value, then dereference
+
+</pre></div><div class="slide"><h2>Pointer Arithmetic</h2><p>Behaviour of a pointer operation depends on the size of a pointer's data type</p><pre class="prettyprint">short* sp = (short*)array; // short has 2 bytes
+*sp = 10; // 0000 0000 0000 1010
+
+// Increase by 2 bytes
+*(sp+1) = 20; // 0000 0000 0001 0100
+
+</pre><p>Use a <code>short</code>&nbsp;pointer (2 byte) to access the memory, which then forms an integer of value 1.310.730
+</p><table><tr><th class="center">byte 4</th><th class="center">byte 3</th><th class="center">byte 2</th><th class="center">byte 1</th></tr><tr><td class="center">0000 0000</td><td class="center">0001 0100</td><td class="center">0000 0000</td><td class="center">0000 1010</td></tr></table></div><div class="slide"><h2>Pointer to Pointer</h2><p>Add an asterisk (*) for each level of reference in the declaration</p><pre class="prettyprint">char c = 'a';
+char* pC = &c;
+char** ppC = &pC;
+
+</pre><ul><li><code>pC</code>&nbsp;is a pointer 
+</li><li><code>ppC</code>&nbsp;is a pointer to a pointer
+</li></ul><img src="pointer_to_pointer.png"/></div><div class="slide"><h2>The <code>void</code>&nbsp; Pointer
+</h2><ul><li><code>void</code>&nbsp;pointers are a special type of pointers, in C++ they represent the absence of type 
+</li><li>They have an undetermined length and undetermined dereference properties</li><li>Therefore they have to be cast to a concrete pointer type </li></ul><pre class="prettyprint">int a = 100;
+void* pA = &p;
+
+*pA = 101; // Compiler error: 'void*' is not a pointer-to-object type
+*(int*)pA = 101; // Cast before dereference
+
+</pre><div class="note">The void pointer allows to point to any data type, from an integer value or a float to a string of characters. But in exchange they have a great limitation: the data pointed by them cannot be directly dereferenced (which is logical, since we have no type to dereference to), and for that reason we will always have to cast the address in the void pointer to some other pointer type that points to a concrete data type before dereferencing it.</div></div><div class="slide"><h2>Dynamic Memory</h2><ul><li>Until now we have only had as much memory available as we declared for our variables</li><li>Memory consumption is known at compile time</li><li>What if we need a variable amount of memory (determined during runtime)?<div>E.g. array with a user defined size</div></li></ul><p class="alert-message success">Answer: Dynamic Memory</p><p>Allocate dynamic memory on the heap with the keyword <code>new</code>&nbsp;and multiple elements with 
+<code>new[]</code></p></div><div class="slide"><h2>Dynamic Memory</h2><p>Memory allocation on the heap:</p><p><code>type * variable_name = new type;</code></p><p><code>type * variable_name = new type [ size ]; </code></p><pre class="prettyprint">int* pInt = new int;
+int *pIntArray = new int[10];
+
+Rectangle* pRectangle = new Rectangle;
+Rectangle* pRectangles = new Rectangle[10];
+
+</pre><div>Access object members</div><pre class="prettyprint">pRectangle-&gt;getWidth(); // Use of arrow operator
+(*pRectangle).getWidth(); // Dot notation
+
+
+</pre></div><div class="slide"><h2>A program's memory</h2><p>First an overview about the 4 different areas of a program's memory</p><ol><li>Code area<div>where the compiled program sits in memory.</div></li><li>Globals area<div>where global variables are stored.</div></li><li>Heap<div>where dynamically allocated variables are allocated from.</div></li><li>Stack<div>where parameters and local variables are allocated from.</div></li></ol><p>The memory is allocated based on how a variable is declared.</p></div><div class="slide"><h2>Memory Management - The stack</h2><p>Stack is the place in memory where parameters and local variables are allocated, the stack is often referred as execution stack, control stack, run-time stack, or machine stack</p><div class="span9"><p>In general, a stack is a container which holds items (like an array). You put items into the container (push) or take them down from it (pop). </p><p>Compared to an array, the stack only let's you access the last item put into/onto it. A stack is a last-in, first-out (LIFO) structure.</p></div><div class="span6"><img src="stack.jpg"/></div></div><div class="slide"><h2>Memory Memory - The stack</h2><p>The memory on the stack is automatically cleaned up when the code block has returned.</p><div>Example</div><pre class="prettyprint">int increment(int a){
+ int b = ++a;
+
+ return b;
+} // after returning the value, the stack is cleaned up 
+
+</pre><p class="alert-message success">You don't have to worry about memory allocation which is always nice!</p></div><div class="slide"><h2>Memory Management - The heap</h2><p>The heap is a large pool of the memory, which is used for (dynamically allocated) objects created with the keyword <code>new</code></p><pre class="prettyprint">int* pB = new int; // Memory is on the heap
+int a = 10; // Memory of &quot;a&quot; is allocated on the stack
+int pA = &a; // Memory of &quot;pB&quot; is allocated on the stack
+
+</pre><p>Dynamically allocated memory "survive" code blocks, but not the variables</p><p class="alert-message error">Dynamically allocated memory has to be freed by the programmer (no garbage collector)</p></div><div class="slide"><h2>Memory Management - The heap</h2><p>Programmer has to decide when to free memory when it is no longer needed</p><ul><li>Memory becomes available for other allocation requests</li><li>Memory can be freed with the <code>delete</code>&nbsp;or
+<code>delete[]</code>&nbsp;operator
+</li></ul><pre class="prettyprint">int* pB = new int;
+...
+delete pB;
+
+</pre></div><div class="slide"><h2>Memory Management - Leaks</h2><p>Memory leaks occur when there is memory allocated, to which you don't have access to.</p><p class="alert-message info">Good memory management is important!</p><h3>When do you clean up memory?</h3><ul><li>When the variable is no longer needed</li><li>As long as you have access to it</li></ul><p class="alert-message info">The destructor is a good place to free memory!</p></div><div class="slide"><h2>Memory Management - Leaks</h2><div>Example of a memory leak</div><pre class="prettyprint">void print(int value){
+ int* b = new int;
+ cout &lt;&lt; value;
+}
+
+print(10);
+
+</pre><p>Variable <code>b</code>&nbsp;is deleted after the return of the function, but the memory is still allocated, you don't have access to the variable outside of the function
+</p></div><div class="slide"><h2>Memory Management - Leaks</h2><div>How to do it better</div><pre class="prettyprint">void print(int value){
+ int* b = new int;
+ cout &lt;&lt; value;
+ delete b;
+}
+
+print(10);
+
+</pre><p>Delete the memory as long as you have access to!</p></div><div class="slide"><h2>Memory Management - Leaks</h2><div>Another example</div><pre class="prettyprint">int* newIntegerWithValue(int value){
+ int* b = new int;
+ *b = value;
+
+ return b;
+}
+
+int* integer = newIntegerWithValue(10);
+...
+delete integer;
+
+</pre><p>After returning the function, you still have access to the dynamically allocated memory</p><p class="alert-message info">Use the stack when your variable will not be used after the current function returns. Use the heap when the data in the variable is needed beyond the lifetime of the current code block.</p></div><div class="slide"><h2>Back to dynamic memory</h2><pre class="prettyprint">class Rectangle{
+int _x, _y, _width, _height;
+char* _pixels;
+
+public:
+ Rectangle(int x = 0, int y = 0, int width = 0, int height = 0){
+  _x = x;
+  _y = x;
+  _width = width;
+  _height = height;
+
+  // Dynamic memory allocation
+  _pixels = new char[_width*_height];
+ }
+
+ ~Rectangle(){
+  delete[] _pixels;
+ }
+};
+
+</pre><p>Free dynamically allocated memory for the variable <code>_pixels</code>&nbsp;in the destructor.
+</p></div><div class="slide"><h2>Memory Management - Destructor</h2><pre class="prettyprint">{
+ Rectangle rect(10, 10, 400, 300);
+} // Automatically cleans up stack memory and calls destructor
+
+Rectangle* pRect = new Rectangle(10, 10, 400, 300);
+delete pRect; // Cleans up heap memory and calls desctructor
+
+</pre><p>Destructor is automatically called</p><ul><li>on local variable when declaration scope is left</li><li>on dynamically allocated objects when delete is called</li><li>on statically allocated objects when program is terminated</li><li>on every array element, if an array is destroyed</li></ul></div><div class="slide"><h2>The <code>this</code>&nbsp;Pointer
+</h2><p>In a non-static context, <code>this</code>&nbsp;is a pointer to the 'current' object
+</p><pre class="prettyprint">class Rectangle{
+...	
+public:
+ int getArea(){
+  return this-&gt;_width * this-&gt;height;
+ }
+ void printArea(){
+  cout &lt;&lt; &quot;area: &quot; &lt;&lt; this-&gt;getArea() &lt;&lt; endl;
+ }
+};
+
+</pre><p class="alert-message info">The this pointer is not available in static member functions!</p></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object values may become unhandy</p><ul><li>It is costly to copy full objects</li><li>Objects should be mainly passed to functions by reference<ul><li>Use of reference parameters in method declarations is recommended</li><li>Otherwise the copy constructor is invoked on each function call with an object as argument to create a temporary copy of the object</li></ul></li></ul></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object pointers are frequently preferred</p><ul><li>It is cheap to copy pointers to objects</li><li>Objects referenced by pointers should be created on the heap by new</li><li>Such objects must be explicitly destroyed by delete, otherwise 'memory leaks' will arise in the program. Destructors of objects must explicitly free the space of all objects referenced by pointers</li></ul></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>
