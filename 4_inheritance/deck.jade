@@ -329,7 +329,7 @@
 		li May be (directly or indirectly) derived from the static type
 		li Determines which virtual member functions are called (see later)
 	
-	p A polymorph variable may refer to objects of the static type or of any subclass
+	p A polymorph variable (class needs a virtual function) may refer to objects of the static type or of any subclass
 	
 .slide
 	h2 Static vs. Dynamic Types
@@ -368,7 +368,187 @@
 		pArticle = pBook; // ok
 		pBook = pArticle; // error
 		pBook = dynamic_cast<Book*>(pArticle); // ok
+
+	div dynamic_cast: Checks whether pointer points to an object of class 
+		code Book
+		&nbsp;(or subclass), If yes, it returns a pointer of type 
+		code Book*
+		&nbsp;to the object; if not, a 
+		code NULL
+		&nbsp;pointer is returned
+
+.slide
+	h2 Generic Methods
 	
+	p Generic methods can operate on arguments of multiple dynamic types
+
+	pre.prettyprint.
+		void printInfo(Article* a) {
+			cout << "Article " << a->getTitle();
+			cout << " (" << a->getNumber() << "); ";
+			cout << a->getPrice() << " Euro" << endl;
+		}
+		
+		Book* pBook = new Book(...);
+		Cd* pCd = new Cd(...);
+		printInfo(pBook);
+		printInfo(pCd);
+
+.slide
+	h2 Generic Types
+	
+	p Generic containers can contain elements of multiple dynamic types
+	
+	pre.prettyprint.
+		class ShoppingCart {
+			...
+			void add(Article* a);
+			Article* getArticle(int index);
+		};
+		
+		ShoppingCart cart(...);
+		Book* pBook = new Book(...);
+		C* pCd = new Cd(...);
+		cart.add(pBook);
+		cart.add(pCd);
+		Article* article = cart.getArticle(0); // may be book or Cd
+
+.slide
+	h2 Override methods
+	
+	div Inherited methods can be overridden
+	ul
+		li Same interface (same method signature)
+		li 2 forms of override
+			ul
+				li Static override: Static Binding
+				li Dynamic override: Dynamic Binding
+	
+	div Inherited methods can be overloaded
+	ul
+		li Different interface
+		
+
+.slide
+	h2 Static Override
+	
+	pre.prettyprint.
+		class Article{
+		public:
+			void printInfo(){
+				cout << "Article: " << m_title;
+			}
+		};
+		
+		class Book: public Article{
+		public:
+			void printInfo(){
+				cout << "Book: " << m_title << "|" << m_author;
+			}
+		};
+	
+	pre.prettyprint.
+		void main(){
+			Book* pBook = new Book("123", "C++", 24.90, "Stroutrup", "", "1-23");
+			Article* pArticle = pBook;
+			pArticle->printInfo(); // what is printed out?
+		}
+
+.slide
+	h2 Virtual Methods
+	
+	ul
+		li In C++, methods are statically linked per default
+		li Keyword virtual is necessary for dynamically linked methods
+		li Only non-static methods can be virtual
+		li When a virtual function is called on an object, the function of the object's dynamic type is executed
+		li Buzzword: Dynamic Binding
+		li Dynamic Binding works only with polymorph variables (class needs min. one virtual method)
+		li Base function may be still called
+			div
+				code object->Base::func(...)
+		li In Java all methods are virtual and dynamically linked
+
+
+.slide
+	h2 Virtual Methods
+	
+	pre.prettyprint.
+		class Article{
+		public:
+			virtual void printInfo(){
+				cout << "Article: " << m_title;
+			}
+		};
+		
+		class Book: public Article{
+		public:
+			void printInfo(){
+				cout << "Book: " << m_title << "|" << m_author;
+			}
+		};
+	
+	pre.prettyprint.
+		void main(){
+			Book* pBook = new Book("123", "C++", 24.90, "Stroutrup", "", "1-23");
+			Article* pArticle = pBook;
+			pArticle->printInfo(); // what is printed out?
+		}
+
+.slide
+	h2 Generic Types/Methods
+
+
+	pre.prettyprint.
+		class ShoppingCart {
+		private:
+			int _number;
+			Article* _articles[10];
+		public:
+			void add(Article* a){...}
+			void printArticles(){
+				for(int i = 0; i<_number;i++){
+					_articles[i]->printInfo();
+				}
+			}
+		};
+		
+		ShoppingCart cart(...);
+		Book* pBook = new Book(...); cart.add(pBook); 
+		C* pCd = new Cd(...); cart.add(pCd);
+		cart.printArticles();
+		
+	div.alert-message.success Core of object-oriented programming: generic types/methods call the methods associated to the dynamic types of their elements/arguments.
+
+.slide
+	h2 Virtual Destructor
+	
+	div By default the destructor of a class is not virtual
+	ul
+		li If an object is deleted, the destructor of its static type is called
+		li In most situations, this is not what is wanted/expected
+	
+	div A destructor can be declard as virtual in the base class
+	ul
+		li Then the destructor of the dynamic type is called
+		li The destructors of derived classes automatically get virtual
+
+.slide
+	h2 Virtual Destructor
+	
+		
+	pre.prettyprint.
+		class Base { 
+			virtual ~Base() { ... }
+		};
+		
+		Base* object = new Derived();
+		delete object; // Derived::~Derived() is called
+
+	div.alert-message.info A class with virtual functions should also have a virtual destructor
+
+
+
 .slide
 	h2 What is a pointer?
 	

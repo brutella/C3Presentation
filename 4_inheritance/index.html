@@ -104,7 +104,7 @@ printArticle(pBook);
 </pre></div><div class="slide"><h2>Polymorphism</h2><img src="inheritance_polymorphism.png"/><pre class="prettyprint">Article* pArticle; // Static type &quot;Article&quot;
 Book* pBook; // Static type &quot;Book&quot;, dynamic type &quot;Article&quot;
 
-</pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span10"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
+</pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable (class needs a virtual function) may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span10"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
 Book* pBook = new Book(&quot;200&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
 
 pArticle-&gt;setTitle(&quot;Basic Article&quot;); // ok
@@ -120,7 +120,99 @@ pArticle = pBook; // ok
 pBook = pArticle; // error
 pBook = dynamic_cast&lt;Book*&gt;(pArticle); // ok
 
-</pre></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
+</pre><div>dynamic_cast: Checks whether pointer points to an object of class <code>Book</code>&nbsp;(or subclass), If yes, it returns a pointer of type 
+<code>Book*</code>&nbsp;to the object; if not, a 
+<code>NULL</code>&nbsp;pointer is returned
+</div></div><div class="slide"><h2>Generic Methods</h2><p>Generic methods can operate on arguments of multiple dynamic types</p><pre class="prettyprint">void printInfo(Article* a) {
+ cout &lt;&lt; &quot;Article &quot; &lt;&lt; a-&gt;getTitle();
+ cout &lt;&lt; &quot; (&quot; &lt;&lt; a-&gt;getNumber() &lt;&lt; &quot;); &quot;;
+ cout &lt;&lt; a-&gt;getPrice() &lt;&lt; &quot; Euro&quot; &lt;&lt; endl;
+}
+
+Book* pBook = new Book(...);
+Cd* pCd = new Cd(...);
+printInfo(pBook);
+printInfo(pCd);
+
+</pre></div><div class="slide"><h2>Generic Types</h2><p>Generic containers can contain elements of multiple dynamic types</p><pre class="prettyprint">class ShoppingCart {
+ ...
+ void add(Article* a);
+ Article* getArticle(int index);
+};
+
+ShoppingCart cart(...);
+Book* pBook = new Book(...);
+C* pCd = new Cd(...);
+cart.add(pBook);
+cart.add(pCd);
+Article* article = cart.getArticle(0); // may be book or Cd
+
+</pre></div><div class="slide"><h2>Override methods</h2><div>Inherited methods can be overridden</div><ul><li>Same interface (same method signature)</li><li>2 forms of override<ul><li>Static override: Static Binding</li><li>Dynamic override: Dynamic Binding</li></ul></li></ul><div>Inherited methods can be overloaded</div><ul><li>Different interface</li></ul></div><div class="slide"><h2>Static Override</h2><pre class="prettyprint">class Article{
+public:
+ void printInfo(){
+  cout &lt;&lt; &quot;Article: &quot; &lt;&lt; m_title;
+ }
+};
+
+class Book: public Article{
+public:
+ void printInfo(){
+  cout &lt;&lt; &quot;Book: &quot; &lt;&lt; m_title &lt;&lt; &quot;|&quot; &lt;&lt; m_author;
+ }
+};
+
+</pre><pre class="prettyprint">void main(){
+ Book* pBook = new Book(&quot;123&quot;, &quot;C++&quot;, 24.90, &quot;Stroutrup&quot;, &quot;&quot;, &quot;1-23&quot;);
+ Article* pArticle = pBook;
+ pArticle-&gt;printInfo(); // what is printed out?
+}
+
+</pre></div><div class="slide"><h2>Virtual Methods</h2><ul><li>In C++, methods are statically linked per default</li><li>Keyword virtual is necessary for dynamically linked methods</li><li>Only non-static methods can be virtual</li><li>When a virtual function is called on an object, the function of the object's dynamic type is executed</li><li>Buzzword: Dynamic Binding</li><li>Dynamic Binding works only with polymorph variables (class needs min. one virtual method)</li><li>Base function may be still called<div><code>object->Base::func(...)</code></div></li><li>In Java all methods are virtual and dynamically linked</li></ul></div><div class="slide"><h2>Virtual Methods</h2><pre class="prettyprint">class Article{
+public:
+ virtual void printInfo(){
+  cout &lt;&lt; &quot;Article: &quot; &lt;&lt; m_title;
+ }
+};
+
+class Book: public Article{
+public:
+ void printInfo(){
+  cout &lt;&lt; &quot;Book: &quot; &lt;&lt; m_title &lt;&lt; &quot;|&quot; &lt;&lt; m_author;
+ }
+};
+
+</pre><pre class="prettyprint">void main(){
+ Book* pBook = new Book(&quot;123&quot;, &quot;C++&quot;, 24.90, &quot;Stroutrup&quot;, &quot;&quot;, &quot;1-23&quot;);
+ Article* pArticle = pBook;
+ pArticle-&gt;printInfo(); // what is printed out?
+}
+
+</pre></div><div class="slide"><h2>Generic Types/Methods</h2><pre class="prettyprint">class ShoppingCart {
+private:
+ int _number;
+ Article* _articles[10];
+public:
+ void add(Article* a){...}
+ void printArticles(){
+  for(int i = 0; i&lt;_number;i++){
+   _articles[i]-&gt;printInfo();
+  }
+ }
+};
+
+ShoppingCart cart(...);
+Book* pBook = new Book(...); cart.add(pBook); 
+C* pCd = new Cd(...); cart.add(pCd);
+cart.printArticles();
+
+</pre><div class="alert-message success">Core of object-oriented programming: generic types/methods call the methods associated to the dynamic types of their elements/arguments.</div></div><div class="slide"><h2>Virtual Destructor</h2><div>By default the destructor of a class is not virtual</div><ul><li>If an object is deleted, the destructor of its static type is called</li><li>In most situations, this is not what is wanted/expected</li></ul><div>A destructor can be declard as virtual in the base class</div><ul><li>Then the destructor of the dynamic type is called</li><li>The destructors of derived classes automatically get virtual</li></ul></div><div class="slide"><h2>Virtual Destructor</h2><pre class="prettyprint">class Base { 
+ virtual ~Base() { ... }
+};
+
+Base* object = new Derived();
+delete object; // Derived::~Derived() is called
+
+</pre><div class="alert-message info">A class with virtual functions should also have a virtual destructor</div></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
 
 </pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
 int* a = &age;
