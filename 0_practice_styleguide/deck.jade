@@ -1,0 +1,78 @@
+.slide
+	h1 Coding Style Guidelines
+
+.slide
+	h2 Coding Style Guidelines - Naming
+	
+	div Use meaningful names
+	ul
+		li Types (e.g. classes): mixed case starting with upper case
+			div 
+				code class Line, class SavingsAccount
+		li Variables: mixed case starting with lower case
+			div
+				code Line line; int numberOfLines;
+		li Member variables: start with the prefix "_" or "m_", it's up to you but stick to it
+			div 
+				code int _balance; double m_totalAmount;
+		li Methods or functions: verbs and written in mixed case starting with lower case
+			div
+				code getName(), computeTotalWidth()
+				
+.slide
+	h2 Coding Style Guidelines - Naming
+	
+	ul
+		li Named constants (including enumeration values): uppercase using underscore to separate words
+			div 
+				code MAX_ITERATIONS, COLOR_RED, PI
+	
+	div Code formatting
+	ul
+		li Use blocks (marked by "{", "}") also for a single statement
+			pre.prettyprint.
+				if(x == 0){
+					cout << x;
+				}
+		li Block layout: Opening bracket on the same line
+			pre.prettyprint.
+				while(x < 10){
+					cout << x;
+					x++;
+				}
+	
+.slide
+	h2 Coding Style Guidelines - Naming
+	
+	p Classes and methods have to be commented according to the JavaDoc conventions
+	
+	pre.prettyprint.
+		/**
+		* A class representing a rectangle.
+		* @author Matthias Hochgatterer
+		*/
+		class Rectangle{
+		public:
+			/**
+			* Gets the origin x position of the rectangle.
+			* @return the origin x position
+			*/
+			int getX();
+			
+			/**
+			* Sets the size of the rectangle
+			* @param width new width of the rectangle
+			* @param height new height of the rectangle
+			*/
+			void setSize(int width, int height);
+		};
+
+.slide
+	h2 Coding Style Guidelines
+	
+	p Source code comments
+	ul
+		li In general, the use of comments should be minimized by making the code self-documenting by appropriate name choices and an explicit logical structure
+		li Add inline comments for your thoughts or complex algorithm
+		li Use comments to simplify understanding of the code
+
