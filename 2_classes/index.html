@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Classes and Objects</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Objects and Classes in C++</h1></div><div class="slide"><h2>Classes</h2><p>What are classes?</p><Classes></Classes><ul><li>group data and functionality</li><li>formal description of objects</li><li>corresponds to the real world</li></ul><p>Why do we need classes?</p><Classes></Classes><ul><li>hide complexity</li><li>makes reusable code</li><li>helps to understand code better</li><li>imitate the real world</li></ul></div><div class="slide"><h2>Classes in C++</h2><div>Classes are basis of object oriented programming</div><pre class="prettyprint">class Car{
+<!DOCTYPE html><html><head><title>Classes and Objects</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Objects and Classes in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Classes</li><li>File Organization</li><li>Class Members</li><ul><li>Non-static Member Functions</li><li>Static Class Members</li></ul><li>Constructors</li><ul><li>Default Constructor</li><li>Copy Constructor</li></ul><li>Copy Assignment Operator</li><li>Destructor</li></ul></div><div class="slide"><h2>Classes</h2><p>What are classes?</p><Classes></Classes><ul><li>group data and functionality</li><li>formal description of objects</li><li>corresponds to the real world</li></ul><p>Why do we need classes?</p><Classes></Classes><ul><li>hide complexity</li><li>makes reusable code</li><li>helps to understand code better</li><li>imitate the real world</li></ul></div><div class="slide"><h2>Classes in C++</h2><div>Classes are basis of object oriented programming</div><pre class="prettyprint">class Car{
 private:
  int horsepower;
  int weight;
@@ -11,14 +11,14 @@ public:
 };
 
 </pre><div>Objects are instances of classes</div><pre class="prettyprint">Car bmw;
-bmw.horsepower = 100;
-bmw.weight = 2000;
-bmw.brand = &quot;bmw&quot;;
+bmw.horsepower = 100; // Error: is private
+bmw.setHorsepower(100);
 string description = bmw.description();
 
 </pre></div><div class="slide"><h2>Classes in C++</h2><p>Definition and implementation of classes is often split into separate files.</p><ul><li>Definition of class <code>Car</code>&nbsp;in header file
 <code>Car.h</code></li><li>Implementation in file <code>Car.cpp</code>, has to include the header file with 
-<code>#include "Car.h"</code></li><li>Must be included by every other file that wants to access members <code>#include "Car.h"</code></li><li>If the class declaration changes, all files that include Class.h must be recompiled</li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
+<code>#include "Car.h"</code></li><li>Must be included by every other file that wants to access members <code>#include "Car.h"</code></li><li>If the class declaration changes, all files that include <code>Car.h</code>&nbsp;must be recompiled
+</li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
 #define _RECTANGLE_H
 
 class Rectangle{
@@ -52,7 +52,7 @@ public:
 
 #endif
 
-</pre><div>Access specifier</div><ul><li>private: from within the class and friends</li><li>protected: from within the class, friend and derived class</li><li>public: from everywhere</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Implementation file (e.g. Rectangle.cpp) contains the corresponding member definitions<ul><li>Must include Class.h</li><li>If some member definition changes, only this file must be recompiled (and the program must be relinked)</li></ul></li><li>Any change to a member function that is defined in a class declaration may cause a lot of recompilations</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Use scope operator <code>::</code>&nbsp;to define members of the class from outside of the class defintion
+</pre><div>Access specifier</div><ul><li>private: from within the class and friends</li><li>protected: from within the class, friend and derived class</li><li>public: from everywhere</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Implementation file (e.g. Rectangle.cpp) contains the corresponding member definitions<ul><li>Must include <code>Rectangle.h</code></li></ul></li><li>Any change to a member function that is defined in a class declaration may cause a lot of recompilations</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Use scope operator <code>::</code>&nbsp;to define members of the class from outside of the class defintion
 </li><li>Use default value for method arguments (called default arguments)</li></ul><pre class="prettyprint">void Rectangle::setCoordinates(int x = 0, int y = 0){
  _x = x;
  _y = y;
@@ -145,8 +145,7 @@ public:
  // executed after data members have been initialized
  ...
 }
-
-</pre></div><div class="slide"><h2>Copy Constructor</h2><ul><li>An object duplicate is created with the copy constructor of the class</li><li>The copy constructor of a class can be called with a reference to an object of this class as argument<ul><li>Is called in variable initializations (!= assignment)</li><li>Is called when passing objects as function arguments</li><li>Is called when returning objects as function results</li></ul></li><li>If a class has no copy constructor, an implicit copy constructor is automatically generated<ul><li>Calls the copy constructors of all non-static data members</li></ul></li></ul></div><div class="slide"><h2>Copy Constructor</h2><ul><li>Is a special kind of constructor</li><li>Used to make a copy of an object</li></ul><p class="alert-message info">It's up to the programmer how to implement it!</p><table><tr><td><pre class="prettyprint">class Rectangle{
+</pre><p>Base initializers are only allowed in constructors</p></div><div class="slide"><h2>Copy Constructor</h2><ul><li>An object duplicate is created with the copy constructor of the class</li><li>The copy constructor of a class can be called with a reference to an object of this class as argument<ul><li>Is called in variable initializations (!= assignment)</li><li>Is called when passing objects as function arguments</li><li>Is called when returning objects as function results</li></ul></li><li>If a class has no copy constructor, an implicit copy constructor is automatically generated<ul><li>Calls the copy constructors of all non-static data members</li></ul></li></ul></div><div class="slide"><h2>Copy Constructor</h2><ul><li>Is a special kind of constructor</li><li>Used to make a copy of an object</li></ul><p class="alert-message info">It's up to the programmer how to implement it!</p><table><tr><td><pre class="prettyprint">class Rectangle{
 private:
  ...
 virtual:
@@ -215,21 +214,26 @@ public:
  ~Rectangle();
 };
 
-</pre></div><div class="slide"><h2>Destructor</h2><p>If a class has no destructor, an implicit destructor is generated (calls the destructors of all non-static data members)</p><p>In the destructor, the class has to cleanup allocated memory (important on dynamically created memory)</p></div><div class="slide"><h2>Practice</h2><p>Enhance your Rectangle class by constructors and some methods. Name the methods exactly as stated below.</p><pre class="prettyprint">// Default constructor
-Rectangle();
-// Use default arguments (e.g. int x = 0)
-Rectangle(int x, int y, int width, int height);
-// Copy constructor
-Rectangle(const Rectangle&amp; rect);
+</pre></div><div class="slide"><h2>Destructor</h2><div>Object destruction can be controlled by the programmer</div><ul><li>Destructor of a class can be called without arguments</li><li>Is called on local variable when declaration scope is left</li><li>Is called on dynamically allocated objects when <code>delete</code>&nbsp;is called
+</li><li>Is called on statically allocated objects when program is terminated</li><li>Is called on every array element, if an array is destroyed</li></ul><div>If a class has no destructor, an implicit destructor is generated<ul><li>Calls the destructors of all non-static data members</li></ul></div></div><div class="slide"><h2>Summary - Non-Static Member Functions</h2><div>A non-static member function is "bound to" a particular object</div><ul><li>Every object of a class has an instance of this function attached</li></ul><div>The function operates "within" the object to which it is bound</div><ul><li>It can access all non-static data members of the object without object qualification</li><li>A member function declared as <code>const</code>&nbsp;does not change the object
+</li></ul><ul><li>Constructors/destructors/copy assignment operators are special cases of non-static member functions</li></ul></div><div class="slide"><h2>Summary - Static Members</h2><div>Static member variables (class variables)</div><ul><li>Exist only once per class (the same for all objects)</li><li>Kind of global variables</li></ul><p>Static member functions (class methods)</p><ul><li>Kind of global functions</li><li>Can only refer to static data</li></ul></div><div class="slide"><h2>Summary - Examples</h2><pre class="prettyprint">class Rectangle{
+private:
+ int _x, _y;
+protected:
+ int _width, _height;
+public:
+ void setCoordinates(int x, int y); 
+ void setSize(int width, int height);
+ int computeArea();
 
-// Member function
-// Returns a rectangle which represents the intersection of both
-Rectangle intersection(const Rectangle&amp; rect);
+ void print() const;
+ static int defaultColor;
+ static Rectangle add(Rectangle r1, Rectangle r2);
+};
 
-// Static/class function
-// Returns a rectangle which represents the intersection of both
-static Rectangle intersection(const Rectangle&amp; rect1, const Rectangle&amp; rect2);
-// Returns true, if both rectangle intersect
-static boolean intersect(const Rectangle&amp; rect1, const Rectangle&amp; rect2);
+</pre><pre class="prettyprint">Rectangle rect1; Rectangle rect2;
+rect1._x = 10; // Error: member variable is private
+Rectangle::defaultColor = 255;
+Rectangle unionRect = Rectangle::add(rect1, rect2);
 </pre></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

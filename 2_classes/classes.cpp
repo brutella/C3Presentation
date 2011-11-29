@@ -21,6 +21,14 @@ public:
 	string description(){
 		return brand + " " + constructionYear;
 	}
+	
+	void setBrand(string _newbrand) : brand(_newbrand){
+		
+	}
+	
+	string& getBrand(){
+		return brand;
+	}
 };
 
 int main(){
@@ -36,4 +44,10 @@ int main(){
 	//audi.weight = 100; // error
 	audi.setWeight(100); // error
 	cout << audi.weight << endl;
+	{
+		string brand = "audi";
+		audi.setBrand(brand);
+	}
+	
+	cout <<  audi.getBrand();
 }

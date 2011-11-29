@@ -3,6 +3,22 @@
 	h1 Objects and Classes in C++
 
 .slide
+	h2 Overview
+	
+	ul
+		li Classes
+		li File Organization
+		li Class Members
+		ul
+			li Non-static Member Functions
+			li Static Class Members
+		li Constructors
+		ul
+			li Default Constructor
+			li Copy Constructor
+		li Copy Assignment Operator
+		li Destructor
+.slide
 	h2 Classes
 	
 	p What are classes?
@@ -40,9 +56,8 @@
 	div Objects are instances of classes
 	pre.prettyprint.
 		Car bmw;
-		bmw.horsepower = 100;
-		bmw.weight = 2000;
-		bmw.brand = "bmw";
+		bmw.horsepower = 100; // Error: is private
+		bmw.setHorsepower(100);
 		string description = bmw.description();
 
 .slide
@@ -61,7 +76,9 @@
 			code #include "Car.h"
 		li Must be included by every other file that wants to access members 
 			code #include "Car.h"
-		li If the class declaration changes, all files that include Class.h must be recompiled
+		li If the class declaration changes, all files that include 
+			code Car.h
+			&nbsp;must be recompiled
 
 .slide
 	h2 Header
@@ -122,8 +139,8 @@
 	ul
 		li Implementation file (e.g. Rectangle.cpp) contains the corresponding member definitions
 			ul
-				li Must include Class.h
-				li If some member definition changes, only this file must be recompiled (and the program must be relinked)
+				li Must include 
+					code Rectangle.h
 		li Any change to a member function that is defined in a class declaration may cause a lot of recompilations
 .slide
 	h2 Implementation
@@ -283,7 +300,7 @@
 			// executed after data members have been initialized
 			...
 		}
-
+	p Base initializers are only allowed in constructors
 .slide
 	h2 Copy Constructor
 	
@@ -442,5 +459,68 @@
 .slide
 	h2 Destructor
 	
+	div Object destruction can be controlled by the programmer
+	ul
+		li Destructor of a class can be called without arguments
+		li Is called on local variable when declaration scope is left
+		li Is called on dynamically allocated objects when 
+			code delete
+			&nbsp;is called
+		li Is called on statically allocated objects when program is terminated
+		li Is called on every array element, if an array is destroyed
+	div If a class has no destructor, an implicit destructor is generated
+		ul
+			li Calls the destructors of all non-static data members
+
+.slide
+	h2 Summary - Non-Static Member Functions
+	
+	div A non-static member function is "bound to" a particular object
+	ul
+		li Every object of a class has an instance of this function attached
+	div The function operates "within" the object to which it is bound
+	ul
+		li It can access all non-static data members of the object without object qualification
+		li A member function declared as 
+			code const
+			&nbsp;does not change the object
+	ul
+		li Constructors/destructors/copy assignment operators are special cases of non-static member functions
+
+.slide
+	h2 Summary - Static Members
+	
+	div Static member variables (class variables)
+	ul
+		li Exist only once per class (the same for all objects)
+		li Kind of global variables
+	
+	p Static member functions (class methods)
+	ul
+		li Kind of global functions
+		li Can only refer to static data
+
+.slide
+	h2 Summary - Examples
+	
 	pre.prettyprint.
-		
+		class Rectangle{
+		private:
+			int _x, _y;
+		protected:
+			int _width, _height;
+		public:
+			void setCoordinates(int x, int y); 
+			void setSize(int width, int height);
+			int computeArea();
+
+			void print() const;
+			static int defaultColor;
+			static Rectangle add(Rectangle r1, Rectangle r2);
+		};
+	
+	pre.prettyprint.
+		Rectangle rect1; Rectangle rect2;
+		rect1._x = 10; // Error: member variable is private
+		Rectangle::defaultColor = 255;
+		Rectangle unionRect = Rectangle::add(rect1, rect2);
