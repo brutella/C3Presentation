@@ -473,6 +473,43 @@
 			li Calls the destructors of all non-static data members
 
 .slide
+	h2 Summary - Classes
+	
+	pre.prettyprint.
+		#ifndef _RECTANGLE_H
+		#define _RECTANGLE_H // Guard to prevent compiler error
+		
+		class Rectangle{
+		friend class Circle; // friend
+		
+		private: // private access specifier
+			int _x, _y;
+		
+		protected: // protected access specifier
+			int _width, _height;
+		
+		public: // public access specifier
+			Rectangle();
+			Rectangle(const Rectangle& rect);
+			Rectangle& operator=(const Rectangle& rect); // copy assignment operator
+			~Rectangle();
+			
+			void print() const; // const method
+			
+			static int defaultColor; // static/class variable
+			static Rectangle add(Rectangle r1, Rectangle r2); // static/class function
+		};
+		#endif 
+
+.slide
+	h2 Summary - Classes
+	
+	pre.prettyprint.
+		Rectangle rect1;
+		Rectangle rect2(rect1);
+		rect2 = rect1;
+		
+.slide
 	h2 Summary - Non-Static Member Functions
 	
 	div A non-static member function is "bound to" a particular object
@@ -501,7 +538,7 @@
 		li Can only refer to static data
 
 .slide
-	h2 Summary - Examples
+	h2 Summary - Members Example
 	
 	pre.prettyprint.
 		class Rectangle{

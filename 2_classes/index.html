@@ -215,8 +215,37 @@ public:
 };
 
 </pre></div><div class="slide"><h2>Destructor</h2><div>Object destruction can be controlled by the programmer</div><ul><li>Destructor of a class can be called without arguments</li><li>Is called on local variable when declaration scope is left</li><li>Is called on dynamically allocated objects when <code>delete</code>&nbsp;is called
-</li><li>Is called on statically allocated objects when program is terminated</li><li>Is called on every array element, if an array is destroyed</li></ul><div>If a class has no destructor, an implicit destructor is generated<ul><li>Calls the destructors of all non-static data members</li></ul></div></div><div class="slide"><h2>Summary - Non-Static Member Functions</h2><div>A non-static member function is "bound to" a particular object</div><ul><li>Every object of a class has an instance of this function attached</li></ul><div>The function operates "within" the object to which it is bound</div><ul><li>It can access all non-static data members of the object without object qualification</li><li>A member function declared as <code>const</code>&nbsp;does not change the object
-</li></ul><ul><li>Constructors/destructors/copy assignment operators are special cases of non-static member functions</li></ul></div><div class="slide"><h2>Summary - Static Members</h2><div>Static member variables (class variables)</div><ul><li>Exist only once per class (the same for all objects)</li><li>Kind of global variables</li></ul><p>Static member functions (class methods)</p><ul><li>Kind of global functions</li><li>Can only refer to static data</li></ul></div><div class="slide"><h2>Summary - Examples</h2><pre class="prettyprint">class Rectangle{
+</li><li>Is called on statically allocated objects when program is terminated</li><li>Is called on every array element, if an array is destroyed</li></ul><div>If a class has no destructor, an implicit destructor is generated<ul><li>Calls the destructors of all non-static data members</li></ul></div></div><div class="slide"><h2>Summary - Classes</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
+#define _RECTANGLE_H // Guard to prevent compiler error
+
+class Rectangle{
+friend class Circle; // friend
+
+private: // private access specifier
+ int _x, _y;
+
+protected: // protected access specifier
+ int _width, _height;
+
+public: // public access specifier
+ Rectangle();
+ Rectangle(const Rectangle&amp; rect);
+ Rectangle&amp; operator=(const Rectangle&amp; rect); // copy assignment operator
+ ~Rectangle();
+
+ void print() const; // const method
+
+ static int defaultColor; // static/class variable
+ static Rectangle add(Rectangle r1, Rectangle r2); // static/class function
+};
+#endif 
+
+</pre></div><div class="slide"><h2>Summary - Classes</h2><pre class="prettyprint">Rectangle rect1;
+Rectangle rect2(rect1);
+rect2 = rect1;
+
+</pre></div><div class="slide"><h2>Summary - Non-Static Member Functions</h2><div>A non-static member function is "bound to" a particular object</div><ul><li>Every object of a class has an instance of this function attached</li></ul><div>The function operates "within" the object to which it is bound</div><ul><li>It can access all non-static data members of the object without object qualification</li><li>A member function declared as <code>const</code>&nbsp;does not change the object
+</li></ul><ul><li>Constructors/destructors/copy assignment operators are special cases of non-static member functions</li></ul></div><div class="slide"><h2>Summary - Static Members</h2><div>Static member variables (class variables)</div><ul><li>Exist only once per class (the same for all objects)</li><li>Kind of global variables</li></ul><p>Static member functions (class methods)</p><ul><li>Kind of global functions</li><li>Can only refer to static data</li></ul></div><div class="slide"><h2>Summary - Members Example</h2><pre class="prettyprint">class Rectangle{
 private:
  int _x, _y;
 protected:
