@@ -59,6 +59,10 @@
 			code Car.cpp
 			, has to include the header file with 
 			code #include "Car.h"
+		li Must be included by every other file that wants to access members 
+			code #include "Car.h"
+		li If the class declaration changes, all files that include Class.h must be recompiled
+
 .slide
 	h2 Header
 	pre.prettyprint.
@@ -116,6 +120,15 @@
 	h2 Implementation
 	
 	ul
+		li Implementation file (e.g. Rectangle.cpp) contains the corresponding member definitions
+			ul
+				li Must include Class.h
+				li If some member definition changes, only this file must be recompiled (and the program must be relinked)
+		li Any change to a member function that is defined in a class declaration may cause a lot of recompilations
+.slide
+	h2 Implementation
+	
+	ul
 		li Use scope operator 
 			code ::
 			&nbsp;to define members of the class from outside of the class defintion
@@ -155,25 +168,6 @@
 			return 0;
 		}
 
-.slide
-	h2 Practice
-	
-	p Let's try to make a class which represents a rectangle. Split up the code in separate files (header, implementation). Create objects and play around with them. Name the class and methods exactly as stated below.
-	
-	ul
-		li Class name:
-			br 
-			code Rectangle
-		li Private member variables:
-			br 
-			code int _x, _y, _width, _height
-		li Two public member function: 
-			br 
-			code string toString();
-			&nbsp; eg. "x: 10, y: 10, width: 50, height: 25"
-			br
-			code void set(int x, int y, int width, int height);
-	
 .slide
 	h2 Members (Variables, Functions)
 	
@@ -271,7 +265,39 @@
 		li default constructor (constructor with no arguments)
 		li copy constructor
 		li copy assignment operator (covered later in operator overloading)
-		
+
+.slide
+	h2 Initialization List
+	
+	pre.prettyprint.
+		class Rectangle{
+			int _x;
+			int _y;
+		public:
+			Rectangle();
+			Rectangle(x,y);
+		};
+	
+	pre.prettyprint.
+		Rectangle::Rectangle(x,y) : _x(x), _y(y){
+			// executed after data members have been initialized
+			...
+		}
+
+.slide
+	h2 Copy Constructor
+	
+	ul
+		li An object duplicate is created with the copy constructor of the class
+		li The copy constructor of a class can be called with a reference to an object of this class as argument
+			ul
+				li Is called in variable initializations (!= assignment)
+				li Is called when passing objects as function arguments
+				li Is called when returning objects as function results
+		li If a class has no copy constructor, an implicit copy constructor is automatically generated
+			ul
+				li Calls the copy constructors of all non-static data members
+
 .slide 
 	h2 Copy Constructor
 	
@@ -311,7 +337,6 @@
 	div.note In this example the copy constructor is implemented directly in the header file. Functions need not to be implemented in the .cpp file, but may increase the readability/maintainability of your project.
 		
 	div.note Note that object assignment operation only calls the copy constructor, if the object is not created yet. Otherwise the copy assignment operator is used.
-	
 	
 .slide	
 	h2 Constructor - Implicit conversion
@@ -357,6 +382,40 @@
 		rect.intersection(5); 	// Compiler error
 		rect.intersection(static_cast<Rectangle>5); 	// calls Rectangle(5,0,0,0)
 
+
+.slide
+	h2 Copy Assignment Operator
+	
+	ul
+		li Object assignment is performed with the copy assignment operator
+		ul
+			li Object assignment can be controlled by the programmer
+		li The copy assignment operator of a class can be called with a reference to an object of this class argument
+		ul
+			li Is called in object assigments (not in object initializations!)
+		li If a class has no copy assignment operator, an implicit copy assignment operator is automatically generated
+		ul
+			li Calls the copy assignment operators of all non-static data members
+
+
+.slide
+	h2 Copy Assignment Operator
+	
+	pre.prettyprint.
+		class Rectangle{
+		public:
+			Rectangle& operator=(const Rectangle& rect){
+				_x = rect._x;
+				_y = rect._y;
+				return *this;
+			}
+		};
+	
+	pre.prettyprint.
+		Rectangle rect1(0,0);
+		Rectangle rect2(rect1); // Copy constructor
+		rect2 = rect1; // Copy assignment operator
+
 .slide
 	h2 Destructor
 	
@@ -383,28 +442,5 @@
 .slide
 	h2 Destructor
 	
-	p If a class has no destructor, an implicit destructor is generated (calls the destructors of all non-static data members)
-	p In the destructor, the class has to cleanup allocated memory (important on dynamically created memory)
-	
-.slide
-	h2 Practice
-	
-	p Enhance your Rectangle class by constructors and some methods. Name the methods exactly as stated below.
-	
 	pre.prettyprint.
-		// Default constructor
-		Rectangle();
-		// Use default arguments (e.g. int x = 0)
-		Rectangle(int x, int y, int width, int height);
-		// Copy constructor
-		Rectangle(const Rectangle& rect);
 		
-		// Member function
-		// Returns a rectangle which represents the intersection of both
-		Rectangle intersection(const Rectangle& rect);
-		
-		// Static/class function
-		// Returns a rectangle which represents the intersection of both
-		static Rectangle intersection(const Rectangle& rect1, const Rectangle& rect2);
-		// Returns true, if both rectangle intersect
-		static boolean intersect(const Rectangle& rect1, const Rectangle& rect2);

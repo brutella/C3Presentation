@@ -18,7 +18,7 @@ string description = bmw.description();
 
 </pre></div><div class="slide"><h2>Classes in C++</h2><p>Definition and implementation of classes is often split into separate files.</p><ul><li>Definition of class <code>Car</code>&nbsp;in header file
 <code>Car.h</code></li><li>Implementation in file <code>Car.cpp</code>, has to include the header file with 
-<code>#include "Car.h"</code></li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
+<code>#include "Car.h"</code></li><li>Must be included by every other file that wants to access members <code>#include "Car.h"</code></li><li>If the class declaration changes, all files that include Class.h must be recompiled</li></ul></div><div class="slide"><h2>Header</h2><pre class="prettyprint">#ifndef _RECTANGLE_H
 #define _RECTANGLE_H
 
 class Rectangle{
@@ -52,7 +52,7 @@ public:
 
 #endif
 
-</pre><div>Access specifier</div><ul><li>private: from within the class and friends</li><li>protected: from within the class, friend and derived class</li><li>public: from everywhere</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Use scope operator <code>::</code>&nbsp;to define members of the class from outside of the class defintion
+</pre><div>Access specifier</div><ul><li>private: from within the class and friends</li><li>protected: from within the class, friend and derived class</li><li>public: from everywhere</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Implementation file (e.g. Rectangle.cpp) contains the corresponding member definitions<ul><li>Must include Class.h</li><li>If some member definition changes, only this file must be recompiled (and the program must be relinked)</li></ul></li><li>Any change to a member function that is defined in a class declaration may cause a lot of recompilations</li></ul></div><div class="slide"><h2>Implementation</h2><ul><li>Use scope operator <code>::</code>&nbsp;to define members of the class from outside of the class defintion
 </li><li>Use default value for method arguments (called default arguments)</li></ul><pre class="prettyprint">void Rectangle::setCoordinates(int x = 0, int y = 0){
  _x = x;
  _y = y;
@@ -82,8 +82,7 @@ int main(){
  return 0;
 }
 
-</pre></div><div class="slide"><h2>Practice</h2><p>Let's try to make a class which represents a rectangle. Split up the code in separate files (header, implementation). Create objects and play around with them. Name the class and methods exactly as stated below.</p><ul><li>Class name:<br/><code>Rectangle</code></li><li>Private member variables:<br/><code>int _x, _y, _width, _height</code></li><li>Two public member function: <br/><code>string toString();</code>&nbsp; eg. "x: 10, y: 10, width: 50, height: 25"
-<br/><code>void set(int x, int y, int width, int height);</code></li></ul></div><div class="slide"><h2>Members (Variables, Functions)</h2><pre class="prettyprint">class Rectangle{
+</pre></div><div class="slide"><h2>Members (Variables, Functions)</h2><pre class="prettyprint">class Rectangle{
 private:
  int _x, _y; // Member variables
 
@@ -134,7 +133,20 @@ Rectangle rectangle(); // Compiler error
 Rectangle rectangle(5,5); // Calls Rectangle(int x, int y);
 
 
-</pre><p>Only the explicitly (user defined) defined constructors can be called.</p><div>If class has no constructor, the compiler implicitly generates a</div><ul><li>default constructor (constructor with no arguments)</li><li>copy constructor</li><li>copy assignment operator (covered later in operator overloading)</li></ul></div><div class="slide"><h2>Copy Constructor</h2><ul><li>Is a special kind of constructor</li><li>Used to make a copy of an object</li></ul><p class="alert-message info">It's up to the programmer how to implement it!</p><table><tr><td><pre class="prettyprint">class Rectangle{
+</pre><p>Only the explicitly (user defined) defined constructors can be called.</p><div>If class has no constructor, the compiler implicitly generates a</div><ul><li>default constructor (constructor with no arguments)</li><li>copy constructor</li><li>copy assignment operator (covered later in operator overloading)</li></ul></div><div class="slide"><h2>Initialization List</h2><pre class="prettyprint">class Rectangle{
+ int _x;
+ int _y;
+public:
+ Rectangle();
+ Rectangle(x,y);
+};
+
+</pre><pre class="prettyprint">Rectangle::Rectangle(x,y) : _x(x), _y(y){
+ // executed after data members have been initialized
+ ...
+}
+
+</pre></div><div class="slide"><h2>Copy Constructor</h2><ul><li>An object duplicate is created with the copy constructor of the class</li><li>The copy constructor of a class can be called with a reference to an object of this class as argument<ul><li>Is called in variable initializations (!= assignment)</li><li>Is called when passing objects as function arguments</li><li>Is called when returning objects as function results</li></ul></li><li>If a class has no copy constructor, an implicit copy constructor is automatically generated<ul><li>Calls the copy constructors of all non-static data members</li></ul></li></ul></div><div class="slide"><h2>Copy Constructor</h2><ul><li>Is a special kind of constructor</li><li>Used to make a copy of an object</li></ul><p class="alert-message info">It's up to the programmer how to implement it!</p><table><tr><td><pre class="prettyprint">class Rectangle{
 private:
  ...
 virtual:
@@ -178,6 +190,20 @@ Rectangle rect = 1; 	// Compiler error
 Rectangle rect(1); 	// calls Rectangle(1,0,0,0)
 rect.intersection(5); 	// Compiler error
 rect.intersection(static_cast&lt;Rectangle&gt;5); 	// calls Rectangle(5,0,0,0)
+
+
+</pre></div><div class="slide"><h2>Copy Assignment Operator</h2><ul><li>Object assignment is performed with the copy assignment operator</li><ul><li>Object assignment can be controlled by the programmer</li></ul><li>The copy assignment operator of a class can be called with a reference to an object of this class argument</li><ul><li>Is called in object assigments (not in object initializations!)</li></ul><li>If a class has no copy assignment operator, an implicit copy assignment operator is automatically generated</li><ul><li>Calls the copy assignment operators of all non-static data members</li></ul></ul></div><div class="slide"><h2>Copy Assignment Operator</h2><pre class="prettyprint">class Rectangle{
+public:
+ Rectangle&amp; operator=(const Rectangle&amp; rect){
+  _x = rect._x;
+  _y = rect._y;
+  return *this;
+ }
+};
+
+</pre><pre class="prettyprint">Rectangle rect1(0,0);
+Rectangle rect2(rect1); // Copy constructor
+rect2 = rect1; // Copy assignment operator
 
 </pre></div><div class="slide"><h2>Destructor</h2><div>The destructor </div><ul><li>is a special method declared in a class</li><li>has the same name as the class but preceded with a tilde sign (~)</li><li>has no return type and no arguments</li><li>is called when an object is destroyed</li></ul><div>There can only be one destructor per class</div><pre class="prettyprint">class Rectangle{
 private:
