@@ -13,6 +13,15 @@ int main(){
 	*p++ = 4;
 	*p = 5;
 	
+	p = array;
+	*(p++) = 100;
+	int p1 = *p++;
+	int p2 = *p++;
+	int p3 = *p;
+	cout << "p1 " << p1 << endl;
+	cout << "p2 " << p2 << endl;
+	cout << "p3 " << p3 << endl;
+	
 	for(int i = 0; i<5; i++){
 		cout << "array[" << i << "] = " << array[i] << endl;
 	}

@@ -8,6 +8,7 @@
 		li Pointers
 		li Memory Addresses
 		li Pointer Arithmetic
+		li Pointer and Arrays
 		li Memory Management
 			div new, delete
 			div Destructor
@@ -34,6 +35,26 @@
 	
 	div.note The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.
 
+.slide
+	h2 Pointer declaration
+	
+	ul
+		li A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to
+		
+	p Pointer declaration: 
+		code type * variable_name;
+		
+	pre.prettyprint.
+		int* p1 = NULL;
+		char* p2 = NULL;
+		float* p3 = NULL;
+		double* p4 = NULL;
+	
+	div.note These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).
+	
+	ul
+		li The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.
+		li Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.
 
 .slide
 	h2 What is a pointer?
@@ -62,9 +83,6 @@
 	pre.prettyprint.
 		int age = 18;
 		int* a = &age; // Get the reference
-		int foo = *a;  // Dereference (foo == age)
-		
-	p Dereference the pointer to get the value in memory, where the pointer points to
 	
 	p The size of a pointer depends on the operating system - get the size of a variable in bytes with 
 		code sizeof()
@@ -74,25 +92,29 @@
 		cout << sizeof(a) << " bytes" << endl;  // Output on 64-bit machine: 8 bytes
 
 .slide
-	h2 Pointer declaration
+	h2 Dereference Operator 
+		code *
 	
+	table
+		tr
+			td
+				pre.prettyprint.
+					int age = 18;
+					int* a = &age;
+			td
+				img(src="pointer_a_example.png")
+		tr
+			td
+				pre.prettyprint.
+					int foo = *a;
+			td
+				img(src="pointer_foo_a_example.png")
+
+	p Dereference the pointer to get the value in memory, where the pointer points to
 	ul
-		li A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to
-		
-	p Pointer declaration: 
-		code type * variable_name;
-		
-	pre.prettyprint.
-		int* p1 = NULL;
-		char* p2 = NULL;
-		float* p3 = NULL;
-		double* p4 = NULL;
-	
-	div.note These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).
-	
-	ul
-		li The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.
-		li Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.
+		li Precede the pointer's identifier with an asterisk 
+			code *
+		li Operand has to be a pointer variable
 	
 .slide
 	h2 Pointer Examples
@@ -113,6 +135,31 @@
 		li declaring a pointer looks very similar to dereferencing a pointer, but they are not the same
 		li you should always declare a pointer with an initial value 
 			code 0, NULL, null, nil
+
+.slide
+	h2 Pointer Examples
+	
+	pre.prettyprint.
+		int firstvalue = 5, secondvalue = 15;
+		int* p1, *p2;
+		p1 = &firstvalue; // p1 = address of firstvalue
+		p2 = &secondvalue; // p2 = address of secondvalue
+		*p1 = 10; // value pointed by p1 = 10
+		*p2 = *p1; // value pointed by p2 = value pointed by p1
+		p1 = p2; // p1 = p2 (value of pointer is copied)
+		*p1 = 20; // value pointed by p1 = 20 
+		
+		cout << "firstvalue is " << firstvalue << endl;
+		cout << "secondvalue is " << secondvalue << endl;
+
+.slide
+	h2 Pointer Arithmetic
+	
+	p Addition and subtraction operations are allowed on pointers
+	ul
+		li If a pointer is incremented by one it points to the following element of its type in memory
+		li The size in bytes of the pointer type is added to the pointer
+		li Behavior of a pointer operation depends on the size of a pointer's data type
 
 .slide
 	h2 Pointer Examples
@@ -151,13 +198,15 @@
 	pre.prettyprint.
 		int array[5];
 		int* p = array;
+		int* p = &array[0]
 		
 		*p = 1; // == array[0]
-		p[0] = 1; // == array[0]
 		p++; // increase pointer address by 4 bytes
 		*p = 2; // == array[1]
 		*(p + 3) = 5 // == array[4]
-
+	div.alert-message.error Array is a constant pointer!
+	pre.prettyprint.
+		array = p;
 .slide
 	h2 Pointer Arithmetic
 	
@@ -166,10 +215,10 @@
 		int array[5];
 		int* p = array;
 		*p++ = 3; // first dereference and assign value, then increase pointer
-		*++p = 4 // first increase pointer value, then dereference
-		int a  = *++p; // first increase pointer value, then dereference
-		int b  = *p++; // first dereference than increase pointer value
-		int c = *(p++); // first increase pointer value, then dereference
+		*(p+1) = 3; // add 4 bytes to pointer, dereference, assign value
+		*++p = 4 // increase pointer value, dereference and assign
+		int a  = *++p; // increase pointer value, dereference and assign
+		int b  = *p++; // dereference, assign, increase pointer value
 		
 .slide
 	h2 Pointer Arithmetic
@@ -208,7 +257,10 @@
 		char c = 'a';
 		char* pC = &c;
 		char** ppC = &pC;
-	
+		
+		// Dereferencing
+		*ppC; // reference to pC
+		**ppC; // reference to c
 	ul
 		li
 			code pC
@@ -273,12 +325,40 @@
 		
 		Rectangle* pRectangle = new Rectangle;
 		Rectangle* pRectangles = new Rectangle[10];
+
+.slide
+	h2 Accessing Dynamic Memory
+	
+	pre.prettyprint.
+		int* pInt= new int;
+		char* pChar = new char;
+		Rectangle* pRectangle = new Rectangle(10, 10);
+		
+		*pInt = 27;
+		*pChar = 'z';
 		
 	div Access object members
 	pre.prettyprint.
 		pRectangle->getWidth(); // Use of arrow operator
 		(*pRectangle).getWidth(); // Dot notation
+
+.slide
+	h2 Accessing Dynamic Memory
 	
+	p Index operator can be used on arrays
+	pre.prettyprint.
+		int* pInt= new int[100];
+		Rectangle* pRect = new Rectangle[10];
+		
+		pInt[10] = 103;
+		pRect[0] = Rectangle(10, 10); // constructor call
+		pRect[2] = Rectangle(100, 100);
+		
+		Rectangle rect = pRect[0];
+		int x = rect.getX();
+		pRect = pRect + 2;
+		rect = *pRect;
+		x = rect.getX();
 	
 .slide
 	h2 A program's memory
@@ -348,11 +428,14 @@
 			&nbsp;or
 			code delete[]
 			&nbsp;operator
-			
+		li Argument is a pointer to a memory block previously allocated with 
+			code new
 	pre.prettyprint.
 		int* pB = new int;
+		int* pArray = new int[10];
 		...
 		delete pB;
+		delete[] pArray;
 
 .slide
 	h2 Memory Management - Leaks
@@ -476,19 +559,39 @@
 		code this
 		&nbsp;is a pointer to the 'current' object
 		
+	p Any plain (unqualified) reference to a non-static member is implicitly extended to a qualified reference by adding 
+		code this
+	ul
+		li var -> this->var
+		li func(...) -> this->func(...)
+		
+	p.alert-message.info The this pointer is not available in static member functions!
+
+.slide
+	h2 The 
+		code this
+		&nbsp;Pointer
+	
 	pre.prettyprint.
 		class Rectangle{
-		...	
+		int _x, _y, _width, _height;
+		
 		public:
-			int getArea(){
-				return this->_width * this->height;
-			}
-			void printArea(){
-				cout << "area: " << this->getArea() << endl;
-			}
+			Rectangle(int x = 0, int y = 0, int width = 0, int height = 0);
+			void setWidth(int width);
 		};
-	
-	p.alert-message.info The this pointer is not available in static member functions!
+		
+		// Implementation
+		Rectangle::Rectangle(int x = 0, int y = 0, int width = 0, int height = 0){
+			this->_x = x;
+			this->_y = x;
+			this->_width = width;
+			this->_height = height;
+		}
+		
+		void Rectangle::setWidth(int width){
+			this->_width = width;
+		}
 	
 .slide
 	h2 Objects vs. Pointers to Objects
@@ -510,3 +613,123 @@
 		li It is cheap to copy pointers to objects
 		li Objects referenced by pointers should be created on the heap by new
 		li Such objects must be explicitly destroyed by delete, otherwise 'memory leaks' will arise in the program. Destructors of objects must explicitly free the space of all objects referenced by pointers
+
+
+.slide
+	h2 Namespaces
+	
+	p Namespaces allow to group entities like classes, objects and functions under a name. 
+
+	pre.prettyprint.
+		namespace first{
+			int a, b;
+		}
+	
+	p  variables 
+		code a
+		&nbsp;and 
+		code b
+		&nbsp;are declared within a namespace 
+		code first
+	p  access these variables from outside the namespace we have to use the scope operator 
+		code ::
+	
+	pre.prettyprint.
+		first::a;
+		first::b;
+
+.slide
+	h2 Namespaces
+	
+	p namespaces are useful in the cases that global object or function uses the same identifier as another one, which otherwise causes redefinition errors
+	
+	pre.prettyprint.
+		namespace first{
+			int var = 5;
+		}
+
+		namespace second{
+			double var = 3.1416;
+		}
+
+		int main () {
+			cout << first::var << endl;
+			cout << second::var << endl;
+			return 0;
+		}
+
+.slide
+	h2 Namespaces - Using
+	
+	p keyword 
+		code using
+		&nbsp;is used to introduce a name from a namespace
+		
+	pre.prettyprint.
+		namespace first{
+			int x = 5;
+			int y = 5;
+		}
+
+		namespace second{
+			double x = 3.1416;
+			double y = 3.1416;
+		}
+
+		int main () {
+			using first::x;
+			using second::y;
+			
+			cout << x << endl; // first::x
+			cout << y << endl; // second::y;
+			return 0;
+		}
+
+.slide
+	h2 Namespaces - Using namespace
+	
+	p use 
+		code using namespace
+		&nbsp;to introduce an entire namespace
+	
+	pre.prettyprint.
+		namespace first{
+			int x = 5;
+			int y = 5;
+		}
+
+		namespace second{
+			double x = 3.1416;
+			double y = 3.1416;
+		}
+
+		int main () {
+			using namespace first;
+			
+			cout << x << endl; // first::x
+			cout << y << endl; // first::y;
+			return 0;
+		}
+
+.slide
+	h2 Classes in Namespaces
+	
+	p Group classes with namespaces
+	pre.prettyprint.
+		namespace Graphics{
+			class Rectangle{...};
+		}
+		Graphics::Rectangle* rectangle new Graphics::Rectangle();
+		
+	p Declare namespace in different files
+	pre.prettyprint.
+		// Rectangle.h
+		namespace Graphics{
+			class Rectangle{...};
+		}
+		// Circle.h
+		namespace Graphics{
+			class Circle{...};
+		}
+		
+	

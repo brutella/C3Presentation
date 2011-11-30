@@ -19,6 +19,14 @@ class BookCD : public Book, public CD{
 
 };
 
+struct GraphicsObject{
+
+};
+
+struct Rectangle : GraphicsObject{
+
+};
+
 int main(){
 	
 	BookCD bookCD;

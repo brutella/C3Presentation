@@ -102,7 +102,7 @@ public:
 
 </pre></div><div class="slide"><h2>Members (Variables, Functions)</h2><ul><li>Non-Static members<div>- are bound to objects</div><div>- exists for every object</div><div>- member function declared <code>const</code>&nbsp;can't change object
 </div></li><li>Static members (called class variables/functions)<div>- exist only once per class</div><div>- kind of global variables/functions</div></li><pre class="prettyprint">int Rectangle::defaultColor = 255;
-static void Rectangle::print() const{
+void Rectangle::print() const{
  ...
 }
 
@@ -264,5 +264,7 @@ public:
 rect1._x = 10; // Error: member variable is private
 Rectangle::defaultColor = 255;
 Rectangle unionRect = Rectangle::add(rect1, rect2);
-</pre></div>
+
+</pre></div><div class="slide"><h2>Bjarne Stroustrup: How C++ Combats Global Warming</h2><iframe width="800" height="600" src="http://www.youtube.com/embed/FBWeO2HYEc0" frameborder="0" allowfullscreen></iframe>
+</div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

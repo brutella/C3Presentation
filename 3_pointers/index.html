@@ -1,21 +1,23 @@
-<!DOCTYPE html><html><head><title>Pointers</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Pointers in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Pointers</li><li>Memory Addresses</li><li>Pointer Arithmetic</li><li>Memory Management<div>new, delete</div><div>Destructor</div></li><li><code>this</code>&nbsp; Pointer
+<!DOCTYPE html><html><head><title>Pointers</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Pointers in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Pointers</li><li>Memory Addresses</li><li>Pointer Arithmetic</li><li>Pointer and Arrays</li><li>Memory Management<div>new, delete</div><div>Destructor</div></li><li><code>this</code>&nbsp; Pointer
 </li></ul></div><div class="slide"><h2>What is a pointer?</h2><p>A pointer references a location in memory, and obtaining the value at the location a pointer refers to is known as dereferencing the pointer. (Wikipedia)</p><pre class="prettyprint">int age = 27;
 
-</pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
-int* a = &age;
-</pre><ul><li>Reference the memory location of a variable with reference operator <code>&</code></li><li>Pointer variable precedes with an asterisk <code>*</code></li></ul><div class="span10"><div>Pointer <code>a</code></div><ul><li>is the memory address where the value of the variable age is stored</li><li>has a different value than the variable age (since it references the memory location) - in this case 8</li></ul></div><div class="span6"><img src="pointer_a.png"/></div></div><div class="slide"><h2>What is a pointer? - Examples</h2><pre class="prettyprint">int age = 18;
-int* a = &age; // Get the reference
-int foo = *a;  // Dereference (foo == age)
-
-</pre><p>Dereference the pointer to get the value in memory, where the pointer points to</p><p>The size of a pointer depends on the operating system - get the size of a variable in bytes with <code>sizeof()</code></p><pre class="prettyprint">cout &lt;&lt; sizeof(age) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output: 4 bytes
-cout &lt;&lt; sizeof(a) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output on 64-bit machine: 8 bytes
-
-</pre></div><div class="slide"><h2>Pointer declaration</h2><ul><li>A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to</li></ul><p>Pointer declaration: <code>type * variable_name;</code></p><pre class="prettyprint">int* p1 = NULL;
+</pre><div class="span9"><div>Variable <code>age</code></div><ul><li>contains 4 bytes (32 bits)</li><li>and forms the value 27</li></ul></div><div class="span5"><img src="variable.png"/></div><div class="note">The decision where the value of a variable is located in the memory is a task automatically performed by the operating system during runtime.</div></div><div class="slide"><h2>Pointer declaration</h2><ul><li>A pointer can directly access the value of the memory it's pointing to. Therefore it has to be specified the data type it's pointing to</li></ul><p>Pointer declaration: <code>type * variable_name;</code></p><pre class="prettyprint">int* p1 = NULL;
 char* p2 = NULL;
 float* p3 = NULL;
 double* p4 = NULL;
 
-</pre><div class="note">These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).</div><ul><li>The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.</li><li>Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int age = 30;
+</pre><div class="note">These are three declarations of pointers, which point to a different data type. But all of them need the same amount of space in memory (as mentioned before - the size in memory of a pointer depends on the platform where the code is going to run).</div><ul><li>The asterisk (*) means that the variable is a pointer, don't confuse it with the dereference operator.</li><li>Always declare a pointer with an initial value (NULL), otherwise it points to an arbitrary address.</li></ul></div><div class="slide"><h2>What is a pointer?</h2><pre class="prettyprint">int age = 27;
+int* a = &age;
+</pre><ul><li>Reference the memory location of a variable with reference operator <code>&</code></li><li>Pointer variable precedes with an asterisk <code>*</code></li></ul><div class="span10"><div>Pointer <code>a</code></div><ul><li>is the memory address where the value of the variable age is stored</li><li>has a different value than the variable age (since it references the memory location) - in this case 8</li></ul></div><div class="span6"><img src="pointer_a.png"/></div></div><div class="slide"><h2>What is a pointer? - Examples</h2><pre class="prettyprint">int age = 18;
+int* a = &age; // Get the reference
+
+</pre><p>The size of a pointer depends on the operating system - get the size of a variable in bytes with <code>sizeof()</code></p><pre class="prettyprint">cout &lt;&lt; sizeof(age) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output: 4 bytes
+cout &lt;&lt; sizeof(a) &lt;&lt; &quot; bytes&quot; &lt;&lt; endl;  // Output on 64-bit machine: 8 bytes
+
+</pre></div><div class="slide"><h2>Dereference Operator <code>*</code></h2><table><tr><td><pre class="prettyprint">int age = 18;
+int* a = &age;
+</pre></td><td><img src="pointer_a_example.png"/></td></tr><tr><td><pre class="prettyprint">int foo = *a;
+</pre></td><td><img src="pointer_foo_a_example.png"/></td></tr></table><p>Dereference the pointer to get the value in memory, where the pointer points to</p><ul><li>Precede the pointer's identifier with an asterisk <code>*</code></li><li>Operand has to be a pointer variable</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int age = 30;
 int height = 180;
 int* p1, * p2 = NULL; // Initializing
 
@@ -24,7 +26,19 @@ p1 = &age; // &quot;p1&quot; points to the address of &quot;age&quot;
 p2 = p1; // Correct (both have the same size), p2 points to the address of p1
 *p2 = height; // Dereference &quot;p2&quot; and assign the value of &quot;height&quot;
 
-</pre><p>Keep in mind that</p><ul><li>by dereferencing the pointer you have direct access to the values</li><li>declaring a pointer looks very similar to dereferencing a pointer, but they are not the same</li><li>you should always declare a pointer with an initial value <code>0, NULL, null, nil</code></li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int a = 30;
+</pre><p>Keep in mind that</p><ul><li>by dereferencing the pointer you have direct access to the values</li><li>declaring a pointer looks very similar to dereferencing a pointer, but they are not the same</li><li>you should always declare a pointer with an initial value <code>0, NULL, null, nil</code></li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int firstvalue = 5, secondvalue = 15;
+int* p1, *p2;
+p1 = &firstvalue; // p1 = address of firstvalue
+p2 = &secondvalue; // p2 = address of secondvalue
+*p1 = 10; // value pointed by p1 = 10
+*p2 = *p1; // value pointed by p2 = value pointed by p1
+p1 = p2; // p1 = p2 (value of pointer is copied)
+*p1 = 20; // value pointed by p1 = 20 
+
+cout &lt;&lt; &quot;firstvalue is &quot; &lt;&lt; firstvalue &lt;&lt; endl;
+cout &lt;&lt; &quot;secondvalue is &quot; &lt;&lt; secondvalue &lt;&lt; endl;
+
+</pre></div><div class="slide"><h2>Pointer Arithmetic</h2><p>Addition and subtraction operations are allowed on pointers</p><ul><li>If a pointer is incremented by one it points to the following element of its type in memory</li><li>The size in bytes of the pointer type is added to the pointer</li><li>Behavior of a pointer operation depends on the size of a pointer's data type</li></ul></div><div class="slide"><h2>Pointer Examples</h2><pre class="prettyprint">int a = 30;
 int* p1 = &a;
 
 </pre><p><code>p1</code>&nbsp; points to the address of 
@@ -38,20 +52,20 @@ int* p1 = &a;
 <code>a</code>&nbsp; again
 </p></div><div class="slide"><h2>Pointer and Array</h2><p>Identifier of an array is equivalent to the address of its first element</p><pre class="prettyprint">int array[5];
 int* p = array;
+int* p = &amp;array[0]
 
 *p = 1; // == array[0]
-p[0] = 1; // == array[0]
 p++; // increase pointer address by 4 bytes
 *p = 2; // == array[1]
 *(p + 3) = 5 // == array[4]
-
+</pre><div class="alert-message error">Array is a constant pointer!</div><pre class="prettyprint">array = p;
 </pre></div><div class="slide"><h2>Pointer Arithmetic</h2><p>The precedence of the operators depend on the position and brackets</p><pre class="prettyprint">int array[5];
 int* p = array;
 *p++ = 3; // first dereference and assign value, then increase pointer
-*++p = 4 // first increase pointer value, then dereference
-int a  = *++p; // first increase pointer value, then dereference
-int b  = *p++; // first dereference than increase pointer value
-int c = *(p++); // first increase pointer value, then dereference
+*(p+1) = 3; // add 4 bytes to pointer, dereference, assign value
+*++p = 4 // increase pointer value, dereference and assign
+int a  = *++p; // increase pointer value, dereference and assign
+int b  = *p++; // dereference, assign, increase pointer value
 
 </pre></div><div class="slide"><h2>Pointer Arithmetic</h2><p>Behaviour of a pointer operation depends on the size of a pointer's data type</p><pre class="prettyprint">short* sp = (short*)array; // short has 2 bytes
 *sp = 10; // 0000 0000 0000 1010
@@ -64,6 +78,9 @@ int c = *(p++); // first increase pointer value, then dereference
 char* pC = &c;
 char** ppC = &pC;
 
+// Dereferencing
+*ppC; // reference to pC
+**ppC; // reference to c
 </pre><ul><li><code>pC</code>&nbsp;is a pointer 
 </li><li><code>ppC</code>&nbsp;is a pointer to a pointer
 </li></ul><img src="pointer_to_pointer.png"/></div><div class="slide"><h2>The <code>void</code>&nbsp; Pointer
@@ -81,9 +98,28 @@ int *pIntArray = new int[10];
 Rectangle* pRectangle = new Rectangle;
 Rectangle* pRectangles = new Rectangle[10];
 
+</pre></div><div class="slide"><h2>Accessing Dynamic Memory</h2><pre class="prettyprint">int* pInt= new int;
+char* pChar = new char;
+Rectangle* pRectangle = new Rectangle(10, 10);
+
+*pInt = 27;
+*pChar = 'z';
+
 </pre><div>Access object members</div><pre class="prettyprint">pRectangle-&gt;getWidth(); // Use of arrow operator
 (*pRectangle).getWidth(); // Dot notation
 
+</pre></div><div class="slide"><h2>Accessing Dynamic Memory</h2><p>Index operator can be used on arrays</p><pre class="prettyprint">int* pInt= new int[100];
+Rectangle* pRect = new Rectangle[10];
+
+pInt[10] = 103;
+pRect[0] = Rectangle(10, 10); // constructor call
+pRect[2] = Rectangle(100, 100);
+
+Rectangle rect = pRect[0];
+int x = rect.getX();
+pRect = pRect + 2;
+rect = *pRect;
+x = rect.getX();
 
 </pre></div><div class="slide"><h2>A program's memory</h2><p>First an overview about the 4 different areas of a program's memory</p><ol><li>Code area<div>where the compiled program sits in memory.</div></li><li>Globals area<div>where global variables are stored.</div></li><li>Heap<div>where dynamically allocated variables are allocated from.</div></li><li>Stack<div>where parameters and local variables are allocated from.</div></li></ol><p>The memory is allocated based on how a variable is declared.</p></div><div class="slide"><h2>Memory Management - The stack</h2><p>Stack is the place in memory where parameters and local variables are allocated, the stack is often referred as execution stack, control stack, run-time stack, or machine stack</p><div class="span9"><p>In general, a stack is a container which holds items (like an array). You put items into the container (push) or take them down from it (pop). </p><p>Compared to an array, the stack only let's you access the last item put into/onto it. A stack is a last-in, first-out (LIFO) structure.</p></div><div class="span6"><img src="stack.jpg"/></div></div><div class="slide"><h2>Memory Memory - The stack</h2><p>The memory on the stack is automatically cleaned up when the code block has returned.</p><div>Example</div><pre class="prettyprint">int increment(int a){
  int b = ++a;
@@ -97,9 +133,11 @@ int pA = &a; // Memory of &quot;pB&quot; is allocated on the stack
 
 </pre><p>Dynamically allocated memory "survive" code blocks, but not the variables</p><p class="alert-message error">Dynamically allocated memory has to be freed by the programmer (no garbage collector)</p></div><div class="slide"><h2>Memory Management - The heap</h2><p>Programmer has to decide when to free memory when it is no longer needed</p><ul><li>Memory becomes available for other allocation requests</li><li>Memory can be freed with the <code>delete</code>&nbsp;or
 <code>delete[]</code>&nbsp;operator
-</li></ul><pre class="prettyprint">int* pB = new int;
+</li><li>Argument is a pointer to a memory block previously allocated with <code>new</code></li></ul><pre class="prettyprint">int* pB = new int;
+int* pArray = new int[10];
 ...
 delete pB;
+delete[] pArray;
 
 </pre></div><div class="slide"><h2>Memory Management - Leaks</h2><p>Memory leaks occur when there is memory allocated, to which you don't have access to.</p><p class="alert-message info">Good memory management is important!</p><h3>When do you clean up memory?</h3><ul><li>When the variable is no longer needed</li><li>As long as you have access to it</li></ul><p class="alert-message info">The destructor is a good place to free memory!</p></div><div class="slide"><h2>Memory Management - Leaks</h2><div>Example of a memory leak</div><pre class="prettyprint">void print(int value){
  int* b = new int;
@@ -158,16 +196,102 @@ delete pRect; // Cleans up heap memory and calls desctructor
 
 </pre><p>Destructor is automatically called</p><ul><li>on local variable when declaration scope is left</li><li>on dynamically allocated objects when delete is called</li><li>on statically allocated objects when program is terminated</li><li>on every array element, if an array is destroyed</li></ul></div><div class="slide"><h2>The <code>this</code>&nbsp;Pointer
 </h2><p>In a non-static context, <code>this</code>&nbsp;is a pointer to the 'current' object
-</p><pre class="prettyprint">class Rectangle{
-...	
+</p><p>Any plain (unqualified) reference to a non-static member is implicitly extended to a qualified reference by adding <code>this</code></p><ul><li>var -> this->var</li><li>func(...) -> this->func(...)</li></ul><p class="alert-message info">The this pointer is not available in static member functions!</p></div><div class="slide"><h2>The <code>this</code>&nbsp;Pointer
+</h2><pre class="prettyprint">class Rectangle{
+int _x, _y, _width, _height;
+
 public:
- int getArea(){
-  return this-&gt;_width * this-&gt;height;
- }
- void printArea(){
-  cout &lt;&lt; &quot;area: &quot; &lt;&lt; this-&gt;getArea() &lt;&lt; endl;
- }
+ Rectangle(int x = 0, int y = 0, int width = 0, int height = 0);
+ void setWidth(int width);
 };
 
-</pre><p class="alert-message info">The this pointer is not available in static member functions!</p></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object values may become unhandy</p><ul><li>It is costly to copy full objects</li><li>Objects should be mainly passed to functions by reference<ul><li>Use of reference parameters in method declarations is recommended</li><li>Otherwise the copy constructor is invoked on each function call with an object as argument to create a temporary copy of the object</li></ul></li></ul></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object pointers are frequently preferred</p><ul><li>It is cheap to copy pointers to objects</li><li>Objects referenced by pointers should be created on the heap by new</li><li>Such objects must be explicitly destroyed by delete, otherwise 'memory leaks' will arise in the program. Destructors of objects must explicitly free the space of all objects referenced by pointers</li></ul></div>
+// Implementation
+Rectangle::Rectangle(int x = 0, int y = 0, int width = 0, int height = 0){
+ this-&gt;_x = x;
+ this-&gt;_y = x;
+ this-&gt;_width = width;
+ this-&gt;_height = height;
+}
+
+void Rectangle::setWidth(int width){
+ this-&gt;_width = width;
+}
+
+</pre></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object values may become unhandy</p><ul><li>It is costly to copy full objects</li><li>Objects should be mainly passed to functions by reference<ul><li>Use of reference parameters in method declarations is recommended</li><li>Otherwise the copy constructor is invoked on each function call with an object as argument to create a temporary copy of the object</li></ul></li></ul></div><div class="slide"><h2>Objects vs. Pointers to Objects</h2><p>Object pointers are frequently preferred</p><ul><li>It is cheap to copy pointers to objects</li><li>Objects referenced by pointers should be created on the heap by new</li><li>Such objects must be explicitly destroyed by delete, otherwise 'memory leaks' will arise in the program. Destructors of objects must explicitly free the space of all objects referenced by pointers</li></ul></div><div class="slide"><h2>Namespaces</h2><p>Namespaces allow to group entities like classes, objects and functions under a name. </p><pre class="prettyprint">namespace first{
+ int a, b;
+}
+
+</pre><p>variables <code>a</code>&nbsp;and 
+<code>b</code>&nbsp;are declared within a namespace 
+<code>first</code></p><p>access these variables from outside the namespace we have to use the scope operator <code>::</code></p><pre class="prettyprint">first::a;
+first::b;
+
+</pre></div><div class="slide"><h2>Namespaces</h2><p>namespaces are useful in the cases that global object or function uses the same identifier as another one, which otherwise causes redefinition errors</p><pre class="prettyprint">namespace first{
+ int var = 5;
+}
+
+namespace second{
+ double var = 3.1416;
+}
+
+int main () {
+ cout &lt;&lt; first::var &lt;&lt; endl;
+ cout &lt;&lt; second::var &lt;&lt; endl;
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Namespaces - Using</h2><p>keyword <code>using</code>&nbsp;is used to introduce a name from a namespace
+</p><pre class="prettyprint">namespace first{
+ int x = 5;
+ int y = 5;
+}
+
+namespace second{
+ double x = 3.1416;
+ double y = 3.1416;
+}
+
+int main () {
+ using first::x;
+ using second::y;
+
+ cout &lt;&lt; x &lt;&lt; endl; // first::x
+ cout &lt;&lt; y &lt;&lt; endl; // second::y;
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Namespaces - Using namespace</h2><p>use <code>using namespace</code>&nbsp;to introduce an entire namespace
+</p><pre class="prettyprint">namespace first{
+ int x = 5;
+ int y = 5;
+}
+
+namespace second{
+ double x = 3.1416;
+ double y = 3.1416;
+}
+
+int main () {
+ using namespace first;
+
+ cout &lt;&lt; x &lt;&lt; endl; // first::x
+ cout &lt;&lt; y &lt;&lt; endl; // first::y;
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Classes in Namespaces</h2><p>Group classes with namespaces</p><pre class="prettyprint">namespace Graphics{
+ class Rectangle{...};
+}
+Graphics::Rectangle* rectangle new Graphics::Rectangle();
+
+</pre><p>Declare namespace in different files</p><pre class="prettyprint">// Rectangle.h
+namespace Graphics{
+ class Rectangle{...};
+}
+// Circle.h
+namespace Graphics{
+ class Circle{...};
+}
+
+</pre></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

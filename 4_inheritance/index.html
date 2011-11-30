@@ -267,5 +267,18 @@ public:
   }
  }
 };
-</pre></div>
+
+</pre></div><div class="slide"><h2>Structs vs Classes</h2><p>Structs are very similar to classes</p><div>Main difference is the visibility of the members and inheritance</div><ul><li>Members of structs are public as default</li><li>Members of classes are private as default</li></ul><ul><li>Inheritance between structs is public as default</li><li>Inheritance between classes is private as default</li></ul></div><div class="slide"><h2>Structs vs Classes</h2><pre class="prettyprint">struct Rectangle : GraphicsObject{
+ // Members are public
+ int _x;
+ int _y;
+};
+
+class Rectangle : GraphicsObject{
+ // Members are private
+ int _x;
+ int _y;
+};
+
+</pre></div><div class="slide"><h2></h2></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

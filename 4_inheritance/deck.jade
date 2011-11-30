@@ -647,3 +647,36 @@
 				}
 			}
 		};
+
+.slide
+	h2 Structs vs Classes
+	
+	p Structs are very similar to classes
+	
+	div Main difference is the visibility of the members and inheritance
+	ul
+		li Members of structs are public as default
+		li Members of classes are private as default
+	
+	ul
+		li Inheritance between structs is public as default
+		li Inheritance between classes is private as default
+
+.slide
+	h2 Structs vs Classes
+	
+	pre.prettyprint.
+		struct Rectangle : GraphicsObject{
+			// Members are public
+			int _x;
+			int _y;
+		};
+		
+		class Rectangle : GraphicsObject{
+			// Members are private
+			int _x;
+			int _y;
+		};
+
+.slide
+	h2 

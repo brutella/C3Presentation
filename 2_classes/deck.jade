@@ -223,7 +223,7 @@
 		
 		pre.prettyprint.
 			int Rectangle::defaultColor = 255;
-			static void Rectangle::print() const{
+			void Rectangle::print() const{
 				...
 			}
 			
@@ -561,3 +561,8 @@
 		rect1._x = 10; // Error: member variable is private
 		Rectangle::defaultColor = 255;
 		Rectangle unionRect = Rectangle::add(rect1, rect2);
+
+.slide
+	h2 Bjarne Stroustrup: How C++ Combats Global Warming
+	
+	<iframe width="800" height="600" src="http://www.youtube.com/embed/FBWeO2HYEc0" frameborder="0" allowfullscreen></iframe>
