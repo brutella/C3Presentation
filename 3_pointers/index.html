@@ -129,7 +129,7 @@ x = rect.getX();
 
 </pre><p class="alert-message success">You don't have to worry about memory allocation which is always nice!</p></div><div class="slide"><h2>Memory Management - The heap</h2><p>The heap is a large pool of the memory, which is used for (dynamically allocated) objects created with the keyword <code>new</code></p><pre class="prettyprint">int* pB = new int; // Memory is on the heap
 int a = 10; // Memory of &quot;a&quot; is allocated on the stack
-int pA = &a; // Memory of &quot;pB&quot; is allocated on the stack
+int* pA = &a; // Memory of &quot;pA&quot; is allocated on the stack
 
 </pre><p>Dynamically allocated memory "survive" code blocks, but not the variables</p><p class="alert-message error">Dynamically allocated memory has to be freed by the programmer (no garbage collector)</p></div><div class="slide"><h2>Memory Management - The heap</h2><p>Programmer has to decide when to free memory when it is no longer needed</p><ul><li>Memory becomes available for other allocation requests</li><li>Memory can be freed with the <code>delete</code>&nbsp;or
 <code>delete[]</code>&nbsp;operator

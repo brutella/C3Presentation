@@ -412,7 +412,7 @@
 	pre.prettyprint.
 		int* pB = new int; // Memory is on the heap
 		int a = 10; // Memory of "a" is allocated on the stack
-		int pA = &a; // Memory of "pB" is allocated on the stack
+		int* pA = &a; // Memory of "pA" is allocated on the stack
 	
 	p Dynamically allocated memory "survive" code blocks, but not the variables
 	p.alert-message.error Dynamically allocated memory has to be freed by the programmer (no garbage collector)

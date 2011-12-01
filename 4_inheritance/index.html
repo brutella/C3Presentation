@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Inheritance</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Inheritance and Polymorphism in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Inheritance<ul><li>Base class and sub class</li><li>Access specifiers</li><li>Constructors</li><li>Multiple Inheritance</li></ul></li><li>Polymorphism<ul><li>Static vs. Dynamic Type</li><li>Generic Methods and Types</li><li>Virtual Methods</li></ul></li><li>Abstract Classes</li><li>Interfaces</li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Inherit to create hierarchy of classes<ul><li>Bases class provides basic/shared functionality</li><li>Subclass extends base class for specific functionality</li></ul></li><li>Subclass inherits<ul><li>Member variables</li><li>Implemented methods and interfaces expect constructor and destructor</li></ul></li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Subclass may<ul><li>use existing members and methods</li><li>add new members and methods</li><li>override members and methods</li></ul></li><li>Inheritance is transitive (a derived class inherits from all its ancestor classes)<div>If <code>C</code>&nbsp;is derived from 
+<!DOCTYPE html><html><head><title>Inheritance</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Inheritance and Polymorphism in C++</h1></div><div class="slide"><h2>Overview</h2><ul><li>Inheritance</li><ul><li>Base class and sub class</li><li>Access specifiers</li><li>Constructors</li><li>Multiple Inheritance</li></ul><li>Polymorphism</li><ul><li>Static vs. Dynamic Type</li><li>Generic Methods and Types</li><li>Virtual Methods</li></ul><li>Abstract Classes/Interfaces</li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Inherit to create hierarchy of classes<ul><li>Bases class provides basic/shared functionality</li><li>Subclass extends base class for specific functionality</li></ul></li><li>Subclass inherits<ul><li>Member variables</li><li>Implemented methods and interfaces</li></ul></li></ul></div><div class="slide"><h2>Inheritance</h2><ul><li>Subclass may<ul><li>use existing members and methods</li><li>add new members and methods</li><li>override members and methods</li></ul></li><li>Inheritance is transitive (a derived class inherits from all its ancestor classes)<div>If <code>C</code>&nbsp;is derived from 
 <code>B</code>&nbsp;, and 
 <code>B</code>&nbsp;is derived from 
 <code>A</code>&nbsp;, then 
@@ -45,8 +45,11 @@ class Derived: protected Base { ... };
 class Derived: private Base { ... };
 class Derived: Base { ... };
 
-</pre><p>Restricts access to <code>Base</code>&nbsp;for the children of 
-<code>Derived</code></p><ul><li>public: all access specifiers in Base preserve their meaning</li><li>protected: public members of Base become protected (visible for subclasses)</li><li>private: all members of Base become private (default)</li></ul><p>Typically, simply public inheritance is applied</p></div><div class="slide"><h2>Inheritance Access Specifiers - Example</h2><pre class="prettyprint">class Book : Article {};
+</pre><div>Restricts access to <code>Base</code>&nbsp;for the children of 
+<code>Derived</code></div><ul><li>public: all access specifiers in <code>Base</code>&nbsp;preserve meaning
+</li><li>protected: public members of <code>Base</code>&nbsp;become protected (visible for subclasses)
+</li><li>private: all members of <code>Base</code>&nbsp;become private (default)
+</li></ul><div class="alert-message error">Typically, simply public inheritance is applied</div></div><div class="slide"><h2>Inheritance Access Specifiers - Example</h2><pre class="prettyprint">class Book : Article {};
 
 book.getAuthor(); // Compiler error
 
@@ -102,7 +105,9 @@ printArticle(pArticle);
 printArticle(pBook);
 
 </pre></div><div class="slide"><h2>Polymorphism</h2><img src="inheritance_polymorphism.png"/><pre class="prettyprint">Article* pArticle; // Static type &quot;Article&quot;
-Book* pBook; // Static type &quot;Book&quot;, dynamic type &quot;Article&quot;
+Book* pBook; // Static type &quot;Book&quot;
+
+Article* pArticle = new Book(); // Static type &quot;Article&quot;, dynamic type &quot;Book&quot;
 
 </pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable (class needs a virtual function) may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span10"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
 Book* pBook = new Book(&quot;200&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
@@ -228,12 +233,12 @@ GraphicObject* pGraphicObject = new GraphicObject(); // Compiler error
 GraphicObject* pGraphicObject = new Rectangle();
 pGraphicObject-&gt;draw();
 
-</pre></div><div class="slide"><h2>Interfaces</h2><div>An interface </div><ul><li>is an abstract class with only pure virtual functions</li><li>defines an abstract data type<ul><li>Defines only the signature (operations) of a data type</li></ul></li></ul><div>A concrete class</div><ul><li>Represents an implementation of the interface (data type)</li><li>Defines the concrete representation and the concrete realization of the operations on the type</li></ul><div class="alert-message info">Interfaces make your software more flexible and modular!</div></div><div class="slide"><h2>Interfaces</h2><pre class="prettyprint">public interface Serializable{
+</pre></div><div class="slide"><h2>Interfaces</h2><div>An interface </div><ul><li>is an abstract class with only pure virtual functions</li><li>defines an abstract data type<ul><li>Defines only the signature (operations) of a data type</li></ul></li></ul><div>A concrete class</div><ul><li>Represents an implementation of the interface (data type)</li><li>Defines the concrete representation and the concrete realization of the operations on the type</li></ul><div class="alert-message info">Interfaces make your software more flexible and modular!</div></div><div class="slide"><h2>Interfaces</h2><p>Java</p><pre class="prettyprint">public interface Serializable{
  void writeObject(ObjectOutputStream out);
  void readObject(ObjectInputStream in);
 }
 
-class Serializable{
+</pre><p>C++</p><pre class="prettyprint">class Serializable{
  virtual void writeObject(ObjectOutputStream &amp;out) = 0;
  virtual void readObject(ObjectInputStream &amp;in) = 0;
 };
@@ -258,12 +263,12 @@ class Triangle : public Serializable {
 
 </pre></div><div class="slide"><h2>Interfaces</h2><pre class="prettyprint">class SaveToFileOperation{
 private:
- vector&lt;Serializable&gt; _serializeAbleObjects;
+ vector&lt;Serializable*&gt; _serializeAbleObjects;
 public:
  void save(string filename){
   ObjectOutputStream out; // get output stream
   for(int i = 0; i &lt; _serializeAbleObjects.size(); i++){
-   _serializeAbleObjects.at(i).writeObject(out);
+   _serializeAbleObjects.at(i)-&gt;writeObject(out);
   }
  }
 };
@@ -280,5 +285,5 @@ class Rectangle : GraphicsObject{
  int _y;
 };
 
-</pre></div><div class="slide"><h2></h2></div>
+</pre></div><div class="slide"><h2>Constructor Call Order</h2><p>Constructors are called from the top to bottom</p><img src="constructor_order.png"/></div><div class="slide"><h2>Destructor Call Order</h2><p>Destructor are called from the bottom to top</p><img src="destructor_order.png"/></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

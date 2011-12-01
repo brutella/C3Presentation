@@ -2,6 +2,8 @@
 using namespace std;
 
 class Car{
+private:
+	int blub;
 public:
 	int horsepower;
 	int weight;
@@ -22,12 +24,16 @@ public:
 		return brand + " " + constructionYear;
 	}
 	
-	void setBrand(string _newbrand) : brand(_newbrand){
+	void setBrand(string _newbrand){
 		
 	}
 	
 	string& getBrand(){
 		return brand;
+	}
+	
+	void foo(Car car){
+		car.blub;
 	}
 };
 

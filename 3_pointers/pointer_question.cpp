@@ -13,4 +13,6 @@ int main(){
 	
 	cout << "firstvalue is " << firstvalue << endl;
 	cout << "secondvalue is " << secondvalue << endl;
+	
+	::system("pause");
 }

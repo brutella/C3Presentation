@@ -6,18 +6,17 @@
 	
 	ul
 		li Inheritance
-			ul
-				li Base class and sub class
-				li Access specifiers
-				li Constructors
-				li Multiple Inheritance
+		ul
+			li Base class and sub class
+			li Access specifiers
+			li Constructors
+			li Multiple Inheritance
 		li Polymorphism
-			ul
-				li Static vs. Dynamic Type
-				li Generic Methods and Types
-				li Virtual Methods
-		li Abstract Classes
-		li Interfaces
+		ul
+			li Static vs. Dynamic Type
+			li Generic Methods and Types
+			li Virtual Methods
+		li Abstract Classes/Interfaces
 
 .slide
 
@@ -31,7 +30,7 @@
 		li Subclass inherits
 			ul
 				li Member variables
-				li Implemented methods and interfaces expect constructor and destructor
+				li Implemented methods and interfaces
 
 .slide
 	h2 Inheritance
@@ -148,17 +147,23 @@
 		class Derived: private Base { ... };
 		class Derived: Base { ... };
 	
-	p Restricts access to 
+	div Restricts access to 
 		code Base
 		&nbsp;for the children of 
 		code Derived
 	
 	ul
-		li public: all access specifiers in Base preserve their meaning
-		li protected: public members of Base become protected (visible for subclasses)
-		li private: all members of Base become private (default)
+		li public: all access specifiers in 
+			code Base
+			&nbsp;preserve meaning
+		li protected: public members of 
+			code Base
+			&nbsp;become protected (visible for subclasses)
+		li private: all members of 
+			code Base
+			&nbsp;become private (default)
 	
-	p Typically, simply public inheritance is applied
+	div.alert-message.error Typically, simply public inheritance is applied
 
 .slide
 	h2 Inheritance Access Specifiers - Example
@@ -310,7 +315,9 @@
 	
 	pre.prettyprint.
 		Article* pArticle; // Static type "Article"
-		Book* pBook; // Static type "Book", dynamic type "Article"
+		Book* pBook; // Static type "Book"
+		
+		Article* pArticle = new Book(); // Static type "Article", dynamic type "Book"
 
 .slide
 	h2 Static vs. Dynamic Types
@@ -598,12 +605,15 @@
 .slide
 	h2 Interfaces
 	
+	p Java
 	pre.prettyprint.
 		public interface Serializable{
 			void writeObject(ObjectOutputStream out);
 			void readObject(ObjectInputStream in);
 		}
 	
+	p C++
+	pre.prettyprint.
 		class Serializable{
 			virtual void writeObject(ObjectOutputStream &out) = 0;
 			virtual void readObject(ObjectInputStream &in) = 0;
@@ -613,6 +623,7 @@
 	h2 Interface implementation
 	
 	div Example
+	
 	pre.prettyprint.
 		class Rectangle : public Serializable {
 			virtual void writeObject(ObjectOutputStream &out) {
@@ -638,12 +649,12 @@
 	pre.prettyprint.
 		class SaveToFileOperation{
 		private:
-			vector<Serializable> _serializeAbleObjects;
+			vector<Serializable*> _serializeAbleObjects;
 		public:
 			void save(string filename){
 				ObjectOutputStream out; // get output stream
 				for(int i = 0; i < _serializeAbleObjects.size(); i++){
-					_serializeAbleObjects.at(i).writeObject(out);
+					_serializeAbleObjects.at(i)->writeObject(out);
 				}
 			}
 		};
@@ -679,4 +690,17 @@
 		};
 
 .slide
-	h2 
+	h2 Constructor Call Order
+	
+	p Constructors are called from the top to bottom
+	
+	img(src="constructor_order.png")
+	
+
+.slide
+	h2 Destructor Call Order
+	
+	p Destructor are called from the bottom to top
+
+	img(src="destructor_order.png")
+
