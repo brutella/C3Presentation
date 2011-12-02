@@ -1,2 +1,160 @@
-<!DOCTYPE html><html><head><title>Inheritance</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Exceptions and Templates</h1></div><div class="slide"><h2>Overview</h2><ul><li></li></ul></div>
+<!DOCTYPE html><html><head><title>Inheritance</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Exceptions and Templates</h1></div><div class="slide"><h2>Overview</h2><ul><li>Exceptions</li><ul><li>Syntax</li><li>Exceptions in a function/method</li><li>Base Class exception</li><li>User Defined Exception Classes</li></ul><li>File Access</li><ul><li>Write Data</li><li>Read Data</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Errors may occur within a program at any time in any situation</li><li>Handling an error within a function/method is often not appropriate</li><li>Caller of a function/method may handle the error</li><li>Exceptions automate error propagation</li><ul><li>As long as an error is not handled it is propagated to the previous caller on the stack</li><li>Unhandled errors abort the program</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><div>Typical Exceptions</div><ul><li>Division by 0</li><li>Array over/underflow</li><li>File I/O errors</li><li>Network connection errors</li><li>NULL pointer exceptions</li></ul><div>New languages have built-in exception handling</div><ul><li>Java, C#</li><li>C++ has no built-in exception handling but supports exceptions (since 1990)</li></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Exceptions may have any data type</li><li>Exceptions are not checked by the compiler</li></ul><pre class="prettyprint">try{
+ // Encapsulate critical code that may cause an exception in a try block, 
+}catch(type name){
+ // Catch an exception of a given type.
+}
+
+</pre><p>You can throw an exception manually</p><pre class="prettyprint">throw exceptionObject;
+
+</pre></div><div class="slide"><h2>Exceptions Example</h2><pre class="prettyprint">int divide (int a, int b){
+ if (b == 0) {
+  throw 0;
+ }
+ return a/b;
+}
+
+int main (){
+ try {
+  cout &lt;&lt; divide(10, 0);
+ } catch (int exception) {
+  cout &lt;&lt; &quot;Division by Zero.&quot;;
+ } catch (...) { // all other exceptions
+  cout &lt;&lt; &quot;An error occurred.&quot;;
+ }
+}
+
+</pre></div><div class="slide"><h2>Exceptions</h2><ul><li>Functions can be restricted</li><li>Defines what types of exceptions are thrown</li><li>Keyword: <code>throw</code></li><li>Different to checked exceptions in Java</li></ul><pre class="prettyprint">int divide (int a, int b) throw (int){
+ if (b == 0) {
+  throw 0; // only throwing int allowed
+ }
+ return a/b;
+}
+
+int divide (int a, int b) throw (type){} // throws an exception of type
+int divide (int a, int b) throw (){} // doesn't throw any exception
+
+
+</pre></div><div class="slide"><h2>Base class <code>exception</code></h2><p>C++ standard library provides a base class <code>exceptions</code></p><ul><li>defined in the <code>exception</code>&nbsp;header file
+</li><li>under the namespace <code>std</code></li></ul><div>It has a</div><ul><li>default and copy constructors, operators and destructors,</li><li>virtual member function <code>what()</code>&nbsp;which can be overridden (returns a null-terminated character sequence)
+</li></ul></div><div class="slide"><h2>Base class <code>exception</code></h2><pre class="prettyprint">class exception {
+public:
+ exception() throw();
+ exception(const exception&amp;) throw();
+ exception&amp; operator=(const exception&amp;) throw();
+ virtual ~exception() throw();
+ virtual const char* what() const throw();
+private:
+ ...
+};
+
+</pre></div><div class="slide"><h2>Class hierarchy</h2><div>They are defined in the <code>stdexcept</code>&nbsp;library
+</div><pre class="prettyprint">#include &lt;stdexcept&gt;
+using namespace std;
+</pre><img src="exceptions.png"/></div><div class="slide"><h2>Exceptions Example</h2><div>Check if memory can be allocated</div><ul><li>Exception of type <code>bad_alloc</code>&nbsp;is thrown
+</li></ul><pre class="prettyprint">try{
+ int* array = new int[100];
+}catch(bad_alloc&amp;){
+ cout &lt;&lt; &quot;Error allocating memory&quot; &lt;&lt; endl;
+}
+
+</pre></div><div class="slide"><h2>User Defined Exception Class</h2><pre class="prettyprint">class MyException : public exception{
+ int _errorCode;
+public:
+ MyException() : exception(){
+  _errorCode = 0;
+ }
+
+ MyException(int errorCode) : exception(){
+  _errorCode = errorCode;
+ }
+
+ const char* what() throw(){
+  stringstream sstream;
+  sstream &lt;&lt; &quot;exception: &quot; &lt;&lt; m_errorCode;
+  string message = sstream.str();
+
+  return message.c_str();
+ }
+}
+
+</pre></div><div class="slide"><h2>Exceptions</h2><ul><li>Exceptions need not to be catched</li><li>Exceptions can be explicitly forwarded to the caller</li><li>Exception objects may contain data (see previous slide)</li><li>Exceptions may be organized in class hierarchies</li><li>Missing compared to Java</li><ul><li>finally block</li><li>Checked exceptions (throws statement)</li><li>Built-in exceptions (e.g. for arrays or pointers)</li></ul></ul></div><div class="slide"><h2>Exceptions Example - <code>SaveArray</code></h2><pre class="prettyprint">class SaveArray{
+ int _maxSize;
+ int* _array;
+public:
+ SaveArray(int size);
+ int&amp; operator[](int index);
+};
+
+class RangeException : public exception {
+ int _index;
+public:
+ RangeException(int index);
+ const char* what() throw();
+};
+
+class SizeException : public exception {
+ int _size;
+public:
+ SizeException(int size);
+ const char* what() throw();
+};
+
+</pre></div><div class="slide"><h2>Exceptions Example - <code>SaveArray</code></h2><pre class="prettyprint">RangeException::RangeException(int index) throw(){
+ _index = index;
+}
+
+const char* RangeException::what() const throw(){
+ stringstream sstream;
+ sstream &lt;&lt; &quot;range exception for index &quot; &lt;&lt; _index;
+ string message = sstream.str();
+
+ return message.c_str();
+}
+
+SizeException::SizeException(int size) throw(){
+ _size = size;
+}
+
+const char* SizeException::what() const throw(){
+ stringstream sstream;
+ sstream &lt;&lt; &quot;size exception for size &quot; &lt;&lt; _size;
+ string message = sstream.str();
+
+ return message.c_str();
+}
+
+</pre></div><div class="slide"><h2>Exceptions Example - <code>SaveArray</code></h2><p>Implementation of <code>SaveArray</code></p><pre class="prettyprint">SaveArray::SaveArray(int size){
+ if(size &lt; 0){
+  throw SizeException(size);
+ }
+}
+
+int&amp; SaveArray::operator[](int index){
+ if(index &lt; 0 || index &gt;= _maxSize){
+  throw RangeException(index);
+ }
+ return _array[index];
+}
+
+</pre></div><div class="slide"><h2>Exceptions Example - <code>SaveArray</code></h2><div>Exception when accessing array element</div><pre class="prettyprint">try{
+ SaveArray array(10);
+ array[11] = 0;
+}catch(RangeException&amp; e){
+ cout &lt;&lt; e.what() &lt;&lt; endl; // range exception for index 11
+}
+
+</pre><div>Exception when creating array</div><pre class="prettyprint">try{
+ SaveArray array(-1);
+}catch(SizeException&amp; e){
+ throw e; // Explicitly forward to caller
+}
+
+</pre></div><div class="slide"><h2>File Access</h2><div>Classes to perform output and input to/from files</div><ul><li><code>ofstream</code>&nbsp;: stream class to write to files
+</li><li><code>ifstream</code>&nbsp;: stream class to read from files
+</li><li><code>fstream</code>&nbsp;: stream class to both read and write from/to files
+</li></ul><div>Classes are derived from <code>istream</code>&nbsp;and 
+<code>ostream</code></div><ul><li>Use insertion operator <code><<</code>&nbsp;to write data to a text file
+</li><li>Use extraction operator<code>>></code>&nbsp;to read data from a text file
+</li></ul></div><div class="slide"><h2>File Access</h2><div>Steps for reading from a file</div><ol><li>Open file</li><li>Read/Write to file</li><li>Close file</li></ol></div><div class="slide"><h2>File Access - File Open</h2><div>pre.prettyprint.<fstream>file;</fstream><file filename="filename" mode="mode" class="open">;</file><fail file="file">;</fail></div><ul><li>Mode flags can be combined using the bitwise operator OR (|), e.g. ios::binary | ios::ate</li><li>Use method <code>fail()</code>&nbsp;to check if operation was successful
+</li></ul></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

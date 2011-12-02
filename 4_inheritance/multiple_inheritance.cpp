@@ -9,10 +9,10 @@ public:
 	}
 }; 
 
-class CD : public virtual Article{
+class CD : public Article{
 };
 
-class Book : public virtual Article{
+class Book : public Article{
 };
 
 class BookCD : public Book, public CD{
@@ -30,5 +30,5 @@ struct Rectangle : GraphicsObject{
 int main(){
 	
 	BookCD bookCD;
-	cout << "BookCD Price: " << bookCD.getPrice() << endl;
+	cout << "BookCD Price: " << bookCD.Book::getPrice() << endl;
 }

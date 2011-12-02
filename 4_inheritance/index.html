@@ -76,7 +76,7 @@ public:
 </pre><ul><li><code>Derived</code>&nbsp;inherits from 
 <code>Base1</code>&nbsp;and 
 <code>Base2</code><ul><li>Object contains separate "subobjects" for each base class</li></ul></li><li>Hierarchy is a graph (not a tree)<ul><li>Name conflicts possible</li></ul></li></ul></div><div class="slide"><h2>Multiple Inheritance</h2><p>Name clashes have to be resolved by qualification</p><img src="multiple_inheritance.png"/><div>Resolve ambiguity in <code>C</code>&nbsp;with scope operator
-<code>(A::x, B::x)</code></div></div><div class="slide"><h2>Share base class object - Diamond Problem</h2><div class="span9"><pre class="prettyprint">class Book: public Article {}
+<code>(A::x, B::x)</code></div></div><div class="slide"><h2>Share base class object - Diamond Problem</h2><div class="span7"><pre class="prettyprint">class Book: public Article {}
 class Cd: public Article {}
 class BookCD: public Book, public Cd {}
 
@@ -87,7 +87,7 @@ bookCD.Cd::getPrice();
 
 </pre></div><div class="span7"><img src="multiple_inheritance_shared_base_class.png"/></div><p>Class <code>BookCD</code>&nbsp;contains two separate subobjects of 
 <code>Article</code></p><p>Method <code>getPrice();</code>&nbsp;is available in both super classes
-<div class="note">This situation is sometimes referred to as diamond inheritance because the inheritance diagram is in the shape of a diamond. Virtual inheritance can help to solve this problem.</div></p></div><div class="slide"><h2>Share base class object - Virtual Access Specifier</h2><div class="span9"><pre class="prettyprint">class Book: public virtual Article {}
+<div class="note">This situation is sometimes referred to as diamond inheritance because the inheritance diagram is in the shape of a diamond. Virtual inheritance can help to solve this problem.</div></p></div><div class="slide"><h2>Share base class object - Virtual Access Specifier</h2><div class="span7"><pre class="prettyprint">class Book: public virtual Article {}
 class Cd: public virtual Article {}
 class BookCD: public Book, public Cd {}
 
@@ -109,13 +109,13 @@ Book* pBook; // Static type &quot;Book&quot;
 
 Article* pArticle = new Book(); // Static type &quot;Article&quot;, dynamic type &quot;Book&quot;
 
-</pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable (class needs a virtual function) may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span10"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
+</pre></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div>Static Type</div><ul><li>The type appearing in the declaration</li><li>Is known at compile time</li><li>Determines which members can be accessed</li></ul><div>Dynamic type</div><ul><li>The type of the object stored at runtime (can change)</li><li>May be (directly or indirectly) derived from the static type</li><li>Determines which virtual member functions are called (see later)</li></ul><p>A polymorph variable (class needs a virtual function) may refer to objects of the static type or of any subclass</p></div><div class="slide"><h2>Static vs. Dynamic Types</h2><div class="span8"><pre class="prettyprint">Article* pArticle = new Article(&quot;100&quot;, &quot;Article1&quot;, 9.90);
 Book* pBook = new Book(&quot;200&quot;, &quot;C++&quot;, 24.90, &quot;Stroustrup&quot;, &quot;&quot;, &quot;1-23&quot;);
 
 pArticle-&gt;setTitle(&quot;Basic Article&quot;); // ok
 pBook-&gt;setPublisher(&quot;Addison-Wesley&quot;); // ok
 
-</pre></div><div class="span6"><img src="polymorphism_1.png"/></div><div class="span10"><pre class="prettyprint">pArticle = pBook;
+</pre></div><div class="span6"><img src="polymorphism_1.png"/></div><div class="span8"><pre class="prettyprint">pArticle = pBook;
 pArticle-&gt;setPublisher(&quot;dpunkt&quot;); // compiler error
 pArticle-&gt;setPrice(29.90); // ok
 

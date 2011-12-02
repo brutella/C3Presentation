@@ -244,7 +244,7 @@
 .slide
 	h2 Share base class object - Diamond Problem
 	
-	div.span9
+	div.span7
 		pre.prettyprint.
 			class Book: public Article {}
 			class Cd: public Article {}
@@ -273,7 +273,7 @@
 
 	h2 Share base class object - Virtual Access Specifier
 	
-	div.span9 
+	div.span7
 		pre.prettyprint.
 			class Book: public virtual Article {}
 			class Cd: public virtual Article {}
@@ -341,7 +341,7 @@
 .slide
 	h2 Static vs. Dynamic Types
 	
-	div.span10
+	div.span8
 		pre.prettyprint.
 			Article* pArticle = new Article("100", "Article1", 9.90);
 			Book* pBook = new Book("200", "C++", 24.90, "Stroustrup", "", "1-23");
@@ -353,7 +353,7 @@
 		img(src="polymorphism_1.png")
 	
 	
-	div.span10
+	div.span8
 		pre.prettyprint.
 			pArticle = pBook;
 			pArticle->setPublisher("dpunkt"); // compiler error

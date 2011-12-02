@@ -1,0 +1,71 @@
+.slide
+	h1 Additions to Pointers in C++
+
+.slide
+	h2 Pointers in General
+	
+	ul
+		li pointer references a location in memory
+		li get memory address with reference operator 
+			code &
+		li access memory location with dereference operator 
+			code *
+		li Pointer arithmetic depends on the pointer data type
+		li Precedence of the pointer operations depend on the location: 
+			code *p++ != *++p
+		li data type 
+			code void
+			&nbsp;indicates the absence of type
+		li  pointer of type 
+			code void*
+			&nbsp;has undetermined length and undetermined dereference properties
+
+.slide
+	h2 The Copy Assignment Operator
+	
+	p Copy assignment operator is called in object assignments (not in object initializations!)
+	pre.prettyprint.
+		Rectangle& operator=(const Rectangle& rect){
+			_x = rect._x;
+			_y = rect._y;
+			return *this;
+		}
+		
+	p By dereferncing the 
+		code this
+		&nbsp;pointer, we actually returning the object
+	p Why do we have to specify the return value as 
+		code Rectangle&
+		&nbsp;?
+	
+.slide
+	h2 Call by Value/Reference
+	
+	div Call by Value
+	ul
+		li The values of the variables are copied
+		li Changes are made to the copies
+	
+	div Call by Reference
+	ul
+		li The references to the variables are passed
+		li Changes are made to the variables
+
+.slide
+	h2 Pointers and Arrays
+	
+	p Identifier of an array is equivalent to the address of its first element
+	
+	pre.prettyprint.
+		void read(int numbers[]){
+			// read data from the console
+		}
+		
+		int numbers[2] = {0,0};
+		read(numbers);
+	
+	p Why is it possible write into the argument 
+		code number[]
+		&nbsp;, aren't we using a copy?
+		
+		

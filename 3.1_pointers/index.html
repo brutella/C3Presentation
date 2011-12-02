@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><title>Pointers</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Additions to Pointers in C++</h1></div><div class="slide"><h2>Pointers in General</h2><ul><li>pointer references a location in memory</li><li>get memory address with reference operator <code>&</code></li><li>access memory location with dereference operator <code>*</code></li><li>Pointer arithmetic depends on the pointer data type</li><li>Precedence of the pointer operations depend on the location: <code>*p++ != *++p</code></li><li>data type <code>void</code>&nbsp;indicates the absence of type
+</li><li>pointer of type <code>void*</code>&nbsp;has undetermined length and undetermined dereference properties
+</li></ul></div><div class="slide"><h2>The Copy Assignment Operator</h2><p>Copy assignment operator is called in object assignments (not in object initializations!)</p><pre class="prettyprint">Rectangle&amp; operator=(const Rectangle&amp; rect){
+ _x = rect._x;
+ _y = rect._y;
+ return *this;
+}
+
+</pre><p>By dereferncing the <code>this</code>&nbsp;pointer, we actually returning the object
+</p><p>Why do we have to specify the return value as <code>Rectangle&</code>&nbsp;?
+</p></div><div class="slide"><h2>Call by Value/Reference</h2><div>Call by Value</div><ul><li>The values of the variables are copied</li><li>Changes are made to the copies</li></ul><div>Call by Reference</div><ul><li>The references to the variables are passed</li><li>Changes are made to the variables</li></ul></div><div class="slide"><h2>Pointers and Arrays</h2><p>Identifier of an array is equivalent to the address of its first element</p><pre class="prettyprint">void read(int numbers[]){
+ // read data from the console
+}
+
+int numbers[2] = {0,0};
+read(numbers);
+
+</pre><p>Why is it possible write into the argument <code>number[]</code>&nbsp;, aren't we using a copy?
+</p></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

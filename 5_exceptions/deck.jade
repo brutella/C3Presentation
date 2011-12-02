@@ -5,4 +5,350 @@
 	h2 Overview
 	
 	ul
-		li
+		li Exceptions
+		ul
+			li Syntax
+			li Exceptions in a function/method
+			li Base Class exception
+			li User Defined Exception Classes
+		li File Access
+		ul
+			li Write Data
+			li Read Data
+			
+
+.slide
+	h2 Exceptions
+	
+	ul
+		li Errors may occur within a program at any time in any situation
+		li Handling an error within a function/method is often not appropriate
+		li Caller of a function/method may handle the error
+		li Exceptions automate error propagation
+		ul
+			li As long as an error is not handled it is propagated to the previous caller on the stack
+			li Unhandled errors abort the program
+
+.slide
+	h2 Exceptions
+	
+	div Typical Exceptions
+	ul
+		li Division by 0
+		li Array over/underflow
+		li File I/O errors
+		li Network connection errors
+		li NULL pointer exceptions
+	
+	div New languages have built-in exception handling
+	ul 
+		li Java, C#
+		li C++ has no built-in exception handling but supports exceptions (since 1990)
+
+.slide
+	h2 Exceptions
+	
+	ul 
+		li Exceptions may have any data type
+		li Exceptions are not checked by the compiler
+	pre.prettyprint.
+		try{
+			// Encapsulate critical code that may cause an exception in a try block, 
+		}catch(type name){
+			// Catch an exception of a given type.
+		}
+	
+	p You can throw an exception manually
+	pre.prettyprint.
+		throw exceptionObject;
+
+.slide
+	h2 Exceptions Example
+	
+	pre.prettyprint.
+		int divide (int a, int b){
+			if (b == 0) {
+				throw 0;
+			}
+			return a/b;
+		}
+	
+		int main (){
+			try {
+				cout << divide(10, 0);
+			} catch (int exception) {
+				cout << "Division by Zero.";
+			} catch (...) { // all other exceptions
+				cout << "An error occurred.";
+			}
+		}
+
+.slide
+	h2 Exceptions
+
+	ul
+		li Functions can be restricted
+		li Defines what types of exceptions are thrown
+		li Keyword: 
+			code throw
+		li Different to checked exceptions in Java
+	
+	pre.prettyprint.
+		int divide (int a, int b) throw (int){
+			if (b == 0) {
+				throw 0; // only throwing int allowed
+			}
+			return a/b;
+		}
+		
+		int divide (int a, int b) throw (type){} // throws an exception of type
+		int divide (int a, int b) throw (){} // doesn't throw any exception
+	
+
+.slide
+	h2 Base class 
+		code exception
+	
+	p C++ standard library provides a base class 
+		code exceptions
+	ul
+		li defined in the 
+			code exception
+			&nbsp;header file
+		li under the namespace 
+			code std
+	
+	div It has a
+	ul
+		li default and copy constructors, operators and destructors,
+		li virtual member function 
+			code what()
+			&nbsp;which can be overridden (returns a null-terminated character sequence)
+
+.slide
+	h2 Base class 
+		code exception
+	
+	pre.prettyprint.
+		class exception {
+		public:
+			exception() throw();
+			exception(const exception&) throw();
+			exception& operator=(const exception&) throw();
+			virtual ~exception() throw();
+			virtual const char* what() const throw();
+		private:
+			...
+		};
+
+.slide
+	h2 Class hierarchy
+	
+	div They are defined in the 
+		code stdexcept
+		&nbsp;library
+	pre.prettyprint.
+		#include <stdexcept>
+		using namespace std;
+	img(src="exceptions.png")
+
+.slide
+	h2 Exceptions Example
+	
+	div Check if memory can be allocated
+	ul
+		li Exception of type 
+			code bad_alloc
+			&nbsp;is thrown
+	
+	pre.prettyprint.
+		try{
+			int* array = new int[100];
+		}catch(bad_alloc&){
+			cout << "Error allocating memory" << endl;
+		}
+
+.slide
+	h2 User Defined Exception Class
+	
+	pre.prettyprint.
+		class MyException : public exception{
+			int _errorCode;
+		public:
+			MyException() : exception(){
+				_errorCode = 0;
+			}
+			
+			MyException(int errorCode) : exception(){
+				_errorCode = errorCode;
+			}
+			
+			const char* what() throw(){
+				stringstream sstream;
+				sstream << "exception: " << m_errorCode;
+				string message = sstream.str();
+				
+				return message.c_str();
+			}
+		}
+
+.slide
+	h2 Exceptions
+	
+	ul
+		li Exceptions need not to be catched
+		li Exceptions can be explicitly forwarded to the caller
+		li Exception objects may contain data (see previous slide)
+		li Exceptions may be organized in class hierarchies
+		li Missing compared to Java
+		ul
+			li finally block
+			li Checked exceptions (throws statement)
+			li Built-in exceptions (e.g. for arrays or pointers)
+
+.slide
+	h2 Exceptions Example - 
+		code SaveArray
+	
+	pre.prettyprint.
+		class SaveArray{
+			int _maxSize;
+			int* _array;
+		public:
+			SaveArray(int size);
+			int& operator[](int index);
+		};
+		
+		class RangeException : public exception {
+			int _index;
+		public:
+			RangeException(int index);
+			const char* what() throw();
+		};
+		
+		class SizeException : public exception {
+			int _size;
+		public:
+			SizeException(int size);
+			const char* what() throw();
+		};
+	
+.slide
+	h2 Exceptions Example - 
+		code SaveArray
+	pre.prettyprint.
+		RangeException::RangeException(int index) throw(){
+			_index = index;
+		}
+
+		const char* RangeException::what() const throw(){
+			stringstream sstream;
+			sstream << "range exception for index " << _index;
+			string message = sstream.str();
+
+			return message.c_str();
+		}
+
+		SizeException::SizeException(int size) throw(){
+			_size = size;
+		}
+
+		const char* SizeException::what() const throw(){
+			stringstream sstream;
+			sstream << "size exception for size " << _size;
+			string message = sstream.str();
+
+			return message.c_str();
+		}
+
+.slide
+	h2 Exceptions Example - 
+		code SaveArray
+	
+	p Implementation of 
+		code SaveArray
+	pre.prettyprint.
+		SaveArray::SaveArray(int size){
+			if(size < 0){
+				throw SizeException(size);
+			}
+		}
+		
+		int& SaveArray::operator[](int index){
+			if(index < 0 || index >= _maxSize){
+				throw RangeException(index);
+			}
+			return _array[index];
+		}
+
+.slide
+	h2 Exceptions Example - 
+		code SaveArray
+	
+	div Exception when accessing array element
+	pre.prettyprint.
+		try{
+			SaveArray array(10);
+			array[11] = 0;
+		}catch(RangeException& e){
+			cout << e.what() << endl; // range exception for index 11
+		}
+	
+	div Exception when creating array
+	pre.prettyprint.
+		try{
+			SaveArray array(-1);
+		}catch(SizeException& e){
+			throw e; // Explicitly forward to caller
+		}
+
+.slide
+	h2 File Access
+	
+	div Classes to perform output and input to/from files
+	ul
+		li 
+			code ofstream
+			&nbsp;: stream class to write to files
+		li 
+			code ifstream
+			&nbsp;: stream class to read from files
+		li 
+			code fstream
+			&nbsp;: stream class to both read and write from/to files
+	
+	div Classes are derived from 
+		code istream
+		&nbsp;and 
+		code ostream
+	ul
+		li Use insertion operator 
+			code <<
+			&nbsp;to write data to a text file
+		li Use extraction operator
+			code >>
+			&nbsp;to read data from a text file
+
+.slide
+	h2 File Access
+	
+	div Steps for reading from a file
+	ol
+		li Open file
+		li Read/Write to file
+		li Close file
+
+.slide
+	h2 File Access - File Open
+	
+	div pre.prettyprint.
+		fstream file;
+		file.open(filename, mode);
+		fail(file);
+	ul
+		li Mode flags can be combined using the bitwise operator OR (|), e.g. ios::binary | ios::ate
+		li Use method 
+			code fail()
+			&nbsp;to check if operation was successful
+
+

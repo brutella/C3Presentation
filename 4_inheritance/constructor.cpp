@@ -8,14 +8,25 @@ public:
 	A(){
 		_x = 10;
 	}
+	
+	void print() const{
+		cout << _x << endl;
+	}
+		
 }; 
 
 class B : public A{
 public:
 	int _y;
+	B(){
+		_y = 100;
+	}
+	void print() const{
+		cout << _y << endl;
+	}
 };
 
 int main(){
-	B b;
-	cout << "x: " << b._x << endl;
+	A* b = new B();
+	b->print();
 }
