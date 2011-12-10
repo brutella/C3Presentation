@@ -81,7 +81,7 @@ int main(){
 		//SaveArray array_(-1);
 		SaveArray array(10);
 		array[11] = 0;
-	}catch(RangeException& e){
+	}catch(exception& e){
 		cout << e.what() << endl;
 	}
 	

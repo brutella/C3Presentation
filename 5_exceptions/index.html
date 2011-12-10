@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Inheritance</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Exceptions and Templates</h1></div><div class="slide"><h2>Overview</h2><ul><li>Exceptions</li><ul><li>Syntax</li><li>Exceptions in a function/method</li><li>Base Class exception</li><li>User Defined Exception Classes</li></ul><li>File Access</li><ul><li>Write Data</li><li>Read Data</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Errors may occur within a program at any time in any situation</li><li>Handling an error within a function/method is often not appropriate</li><li>Caller of a function/method may handle the error</li><li>Exceptions automate error propagation</li><ul><li>As long as an error is not handled it is propagated to the previous caller on the stack</li><li>Unhandled errors abort the program</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><div>Typical Exceptions</div><ul><li>Division by 0</li><li>Array over/underflow</li><li>File I/O errors</li><li>Network connection errors</li><li>NULL pointer exceptions</li></ul><div>New languages have built-in exception handling</div><ul><li>Java, C#</li><li>C++ has no built-in exception handling but supports exceptions (since 1990)</li></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Exceptions may have any data type</li><li>Exceptions are not checked by the compiler</li></ul><pre class="prettyprint">try{
+<!DOCTYPE html><html><head><title>Exceptions</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Exceptions and File Access</h1></div><div class="slide"><h2>Overview</h2><ul><li>Exceptions</li><ul><li>Syntax</li><li>Exceptions in a function/method</li><li>Base Class exception</li><li>User Defined Exception Classes</li></ul><li>File Access</li><ul><li>Write Data</li><li>Read Data</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Errors may occur within a program at any time in any situation</li><li>Handling an error within a function/method is often not appropriate</li><li>Caller of a function/method may handle the error</li><li>Exceptions automate error propagation</li><ul><li>As long as an error is not handled it is propagated to the previous caller on the stack</li><li>Unhandled errors abort the program</li></ul></ul></div><div class="slide"><h2>Exceptions</h2><div>Typical Exceptions</div><ul><li>Division by 0</li><li>Array over/underflow</li><li>File I/O errors</li><li>Network connection errors</li><li>NULL pointer exceptions</li></ul><div>New languages have built-in exception handling</div><ul><li>Java, C#</li><li>C++ has no built-in exception handling but supports exceptions (since 1990)</li></ul></div><div class="slide"><h2>Exceptions</h2><ul><li>Exceptions may have any data type</li><li>Exceptions are not checked by the compiler</li></ul><pre class="prettyprint">try{
  // Encapsulate critical code that may cause an exception in a try block, 
 }catch(type name){
  // Catch an exception of a given type.
@@ -155,6 +155,81 @@ int&amp; SaveArray::operator[](int index){
 </li></ul><div>Classes are derived from <code>istream</code>&nbsp;and 
 <code>ostream</code></div><ul><li>Use insertion operator <code><<</code>&nbsp;to write data to a text file
 </li><li>Use extraction operator<code>>></code>&nbsp;to read data from a text file
-</li></ul></div><div class="slide"><h2>File Access</h2><div>Steps for reading from a file</div><ol><li>Open file</li><li>Read/Write to file</li><li>Close file</li></ol></div><div class="slide"><h2>File Access - File Open</h2><div>pre.prettyprint.<fstream>file;</fstream><file filename="filename" mode="mode" class="open">;</file><fail file="file">;</fail></div><ul><li>Mode flags can be combined using the bitwise operator OR (|), e.g. ios::binary | ios::ate</li><li>Use method <code>fail()</code>&nbsp;to check if operation was successful
+</li></ul></div><div class="slide"><h2>File Access</h2><div>Steps for reading from a file</div><ol><li>Open file</li><pre class="prettyprint">fstream file;
+file.open(filename, mode)
+</pre><li>Read/Write to file<div>If you can read or write to a file depends on the opening mode (see next slide)</div></li><li>Close file<div>Close a file to make resource available</div></li><pre class="prettyprint">file.close();
+
+</pre></ol></div><div class="slide"><h2>File Access - File Open</h2><div>Open the file <code>my_text_file.txt</code></div><pre class="prettyprint">fstream file;
+file.open(&quot;my_text_file.txt&quot;, ios::read); // open the file for read access
+fail(file);
+
+</pre><div>Methods to check state of the file stream</div><ul><li><code>is_open()</code>&nbsp;: returns true when the file is open
+</li><li><code>bad()</code>&nbsp;: true if reading or writing operation failed
+</li><li><code>fail()</code>&nbsp;: true for the same cases as 
+<code>bad()</code>&nbsp;but also for format errors (get integer when trying to read a character)
+</li><li><code>eof()</code>&nbsp;: returns true when we reached the end of a file
+</li><li><code>good()</code>&nbsp;returns true when 
+<code>bad(), fail(), eof()</code>&nbsp;returns false
+</li></ul></div><div class="slide"><h2>File Access - File Open Modes</h2><table><tr><th>Mode</th><th>Description</th></tr><tr><td><code>ios::in</code></td><td>Open for input operations (read)</td></tr><tr><td><code>ios::out</code></td><td>Open for output operation (write)</td></tr><tr><td><code>ios::binary</code></td><td>Open in binary mode</td></tr><tr><td><code>ios::ate</code></td><td>Initial position is at the file end, If this flag is not provided, initial position is the beginning at default.</td></tr><tr><td><code>ios::app</code></td><td>Appending data to the end of the file, can only be used for output-only operations.</td></tr><tr><td><code>ios::trunc</code></td><td>If file exists and opened for output operations, it gets replaced by a new one.</td></tr></table></div><div class="slide"><h2>File Access - File Open Modes</h2><p>Mode flags can be combined using the bitwise operator OR</p><pre class="prettyprint">fstream file;
+file.open(&quot;my_text_file.txt&quot;, ios::binary | ios::in);
+
+</pre><p>Use method <code>fail()</code>&nbsp;to check if operation was successful
+</p><pre class="prettyprint">if(file.fail()){
+ cout &lt;&lt; &quot;Couldn't open file&quot; &lt;&lt; endl;
+}
+
+</pre></div><div class="slide"><h2>File Access - File Open Modes</h2><p>ofstream, ifstream and fstream have a default mode when calling <code>open()</code>&nbsp;without second argument
+</p><table><tr><th>Class</th><th>Default mode parameter</th></tr><tr><td><code>ofstream</code></td><td><code>ios::out</code></td></tr><tr><td><code>ifstream</code></td><td><code>ios::in</code></td></tr><tr><td><code>fstream</code></td><td><code>ios::in | ios::out</code></td></tr></table></div><div class="slide"><h2>File Access - Write Data</h2><p>Write binary data in general</p><pre class="prettyprint">ostream&amp; ostream::write(const char* s, streamsize n);
+
+</pre><ul><li><code>s</code>&nbsp;: pointer to the data which should be written
+</li><li><code>n</code>&nbsp;: size (in characters = bytes) of the data to write
+</li></ul><pre class="prettyprint">int arr[4] = { 1, 2, 3, 4 };
+double amount = 12.34;
+
+ofstream file;
+file.open(&quot;medialibrary1.dat&quot;, ios::binary);
+file.write((char*)arr, sizeof(int) * 4);
+file.write((char*) &amp;amount, sizeof(double));
+file.close();
+
+</pre></div><div class="slide"><h2>File Access - Read Data</h2><p>Read binary data in general</p><pre class="prettyprint">istream&amp; istream::read(const char* s, streamsize n);
+
+</pre><ul><li><code>s</code>&nbsp;: pointer to the data where the content read will be stored
+</li><li><code>n</code>&nbsp;: size (in characters = bytes) of the data to be read
+</li></ul><pre class="prettyprint">int arr[4];
+double amount;
+
+ifstream file;
+file.open(&quot;medialibrary1.dat&quot;, ios::binary);
+file.read((char*)arr, sizeof(int) * 4);
+file.read((char*) &amp;amount, sizeof(double));
+file.close();	
+
+</pre></div><div class="slide"><h2>The <code>const</code>&nbsp;Mysterium
+</h2><p>The keyword <code>const</code>&nbsp;can be used mostly everywhere
+</p><pre class="prettyprint">static const Rectangle* const createNew(const Rectangle* const rect){
+ rect-&gt;x = 0; // Error: const Rectangle
+ rect = &amp;Rectangle(); // Error: Rectangle* const
+ ...
+}
+
+int main(){
+ Rectangle rect1;
+ const Rectangle* const rect2 = Rectangle::createNew(&amp;rect1);
+ rect2-&gt;x = 0; // Error: const Rectangle
+
+ Rectangle rect3;
+ rect2 = &rect3; // Error: Rectangle* const
+}
+
+</pre><p>Read from left-to-right</p></div><div class="slide"><h2>The <code>const</code>&nbsp;Mysterium
+</h2><ol><li>What does <code>const int* p</code>&nbsp;mean?
+</li><p class="slide">p is a pointer to a constant int, p can't change the value of the int it's pointing to</p><li>What's the difference between <code>const int* p</code>&nbsp;(1), 
+<code>int* const p</code>&nbsp;(2) and 
+<code>const int* const p</code>&nbsp;(3)?
+</li><p class="slide">(2) p is a constant pointer to an int</p><p class="slide">(3) p is a constant pointer to a constant int</p><li>What does <code>const int& x</code>&nbsp;mean?
+</li><p class="slide">(3) x is a reference to a constant int</p></ol></div><div class="slide"><h2>Reference vs Pointer</h2><ul><li>What is a reference? <code>int& r = i;</code></li></ul><p class="slide">An alias (an alternate name) for an object, In other words, the reference of an object is not a pointer, nor a copy, but the object itself (see call-by-reference)</p><div class="slide">Implementation detail:<ul><li>underneath it's all a reference to the object, calling <code>r++;</code>&nbsp;increments the value, 
+<code>r</code>&nbsp;is kind of a macro like 
+<code>(*i)</code></li></ul></div><ul><li>What's the difference between a reference and a pointer?</li><li>What does <code>int& const x</code>&nbsp;mean?
 </li></ul></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

@@ -1,0 +1,327 @@
+.slide
+	h1 Templates and Misc
+
+.slide
+	h2 Overview
+	
+	ul
+		li Complex Types
+		ul
+			li Enumerations
+			li Data Structures
+		li Friend Functions and Classes
+		li Operator Overloading
+		li Templates
+		ul
+			li Introduction
+			li Function Templates
+			li Class Templates	
+
+.slide
+	h2 Enumerations
+
+	ul
+		li Assigns names to integer values
+		li Enumeration starts with 0
+		li Values may be assigned freely
+		li Double values may be used
+		li Calculations with enums create integer results
+	
+	code enum [enumName] {name[, name]};
+	
+
+.slide
+	h2 Enumerations
+	
+	pre.prettyprint.
+		class Material {
+		public:
+			enum MaterialType { wood, glass, steel, concrete };
+		};
+		
+		void main() {
+			Material::MaterialType mat1;
+			Material::MaterialType mat2;
+			
+			int value;
+			mat1 = Material::wood;
+			mat2 = Material::steel;
+			mat1 = mat2;
+			mat2 = static_cast<Material::MaterialType>(Material::steel + Material::concrete);
+			value = mat1;
+			value = Material::glass;
+		}
+
+.slide
+	h2 Enumerations
+	
+	pre.prettyprint.
+		class Material {
+		public:
+			enum MaterialType { wood = 4, glass, steel = 2, concrete = -1 };
+		};
+		
+		void main() {
+			Material::MaterialType mat1;
+			Material::MaterialType mat2;
+			
+			mat1 = Material::glass;
+			mat2 = Material::steel;
+		}
+
+.slide
+	h2 Friend Functions and Classes
+	
+	ul
+		li Functions and Classes may be friends of another class
+		li Keyword: 
+			code friend
+		li Friends have full access to all members of a class
+		li Explicitly breaks information hiding for certain friends
+		li For special usage (e.g. operator overloading)
+
+.slide
+	h2 Friend Functions
+	
+	pre.prettyprint.
+		class A {
+		private:
+			int m_value;
+		public:
+			void setValue(int val);
+			friend int getValue(A& obj); // not a member!!
+		};
+		
+		int getValue(A& obj) { // doesn't belong to a class!!
+			return obj.m_value;
+		}
+		
+		int main() {
+			A obj;
+			obj.setValue(10);
+			cout << obj.m_value << endl; // error
+			cout << getValue(obj) << endl; // OK
+		}
+
+.slide
+	h2 Friend Classes
+	
+	pre.prettyprint.
+		class A {
+		friend class B;
+		private:
+			int m_value;
+		};
+		
+		class B {
+			public: void Calc(A& obj) {
+				obj.m_value = 10;
+			}
+		};
+
+.slide
+	h2 Operator Overloading
+	
+	ul
+		li Operators are normal methods
+		li Can be virtual
+		li May be statically or dynamically bound
+		li Can be overwritten
+		li Can be overloaded
+		li Definition
+
+	code return-type [class-name::]operator#(arg-list){}
+
+.slide
+	h2 Operator Overloading
+	
+	ul
+		li Allow well known notation for common operations on objects (e.g. mathematical operations)
+		li No new operator tokens may be defined
+		li Operators may be called explicitly
+		li C++ is extensible but not mutable
+		ul
+			li Operators of base types cannot be overwritten
+		li Nearly all operators can be overwritten
+		li Exception: ::, ., .*, ?:
+
+.slide	
+	h2 Operator Overloading
+	
+	p Overloadable operators
+	p +, -, *, /, =, <, >, +=, -=, *=, /=, <<, >>, <<=, >>=, ==, !=, <=, >=, ++, --, %, &, ^, !, |, ~, &=, ^=, |=, &&, ||, %=, [], (), ,, ->*, ->, new, delete, new[],  delete[]
+
+.slide
+	h2 Operator Overloading - Example
+	
+	pre.prettyprint.
+		class Complex {
+		private:
+			double m_real;
+			double m_imaginary;
+		public:
+			Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+			friend Complex operator+(Complex &c1, Complex &c2);
+		};
+		
+		Complex operator+(Complex &c1, Complex &c2) {
+			Complex temp;
+			temp.m_real = c1.m_real + c2.m_real;
+			temp.m_imaginary = c1.m_imaginary + c2.m_imaginary;
+			return temp;
+		}
+
+.slide
+	h2 Operator Overloading - Example
+	
+	pre.prettyprint.
+		class Complex {
+		private:
+			double m_real;
+			double m_imaginary;
+		public:
+			Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+			Complex operator+(Complex &c);
+		};
+		
+		Complex Complex::operator+(Complex &c) {
+			Complex temp;
+			temp.m_real = m_real + c.m_real;
+			temp.m_imaginary = m_imaginary + c2.m_imaginary;
+			return temp;
+		}	
+
+.slide
+	h2 Operator Overloading - Example
+	
+	pre.prettyprint.
+		class Complex {
+		private:
+			double m_real;
+			double m_imaginary;
+		public:
+			Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+			Complex operator+(int value);
+		};
+		
+		Complex Complex::operator+(double value) {
+			Complex temp;
+			temp.m_real = m_real + value;
+			return temp;
+		}
+	
+		int main(){
+			Complex c1(1,2), c2(4,5);
+			c1 = c1 + c2;
+			c1 = c1 + 2;
+			c2 = 2 + c1;
+			return 0;
+		}
+
+.slide
+	h2 Operator Overloading - Assignment Operator
+	
+	pre.prettyprint.
+		class Complex {
+		public:
+			void operator=(Complex &c);
+			void operator=(double value);
+		};
+		
+		void Complex::operator=(Complex &c) {
+			m_real = c.m_real;
+			m_imaginary = c.m_imaginary;
+		}
+		
+		void Complex::operator=(double value) {
+			m_real = value;
+		}
+	
+		int main(){
+			Complex c1(1,2), c2(4,5), c3(6,10);
+			c1 = c2; // Complex::operator=(Complex &c);
+			c1 = c1 + 2; // Complex::operator=(double value);
+			c1 = c2 = c3; // Error
+			return 0;
+		}
+
+.slide
+	h2 Operator Overloading - Relational Operator
+	
+	pre.prettyprint.
+		class Complex {
+		public:
+			bool operator==(Complex &c);
+			void operator>(Complex &c);
+			void operator<(Complex &c);
+		};
+		
+		bool Complex::operator==(Complex &c) {
+			return (c.m_real == m_real && c.m_imaginary == m_imaginary);
+		}
+	
+		int main(){
+			Complex c1(1,2), c2(4,5);
+			if(c1 == c2){}
+			if(c1 > c2){}
+			if(c1 < c2){}
+			if(c1.operator<(c2)){} // Call explicitly
+			
+			return 0;
+		}
+
+.slide
+	h2 Operator Overloading - Arithmetic Operators
+	
+	pre.prettyprint.
+		class Complex{
+		public;
+			Complex operator++() { ... } // prefix ++
+			Complex operator++(int dummy) { ... } // postfix ++
+			Complex operator-(Complex &c) { ... }
+			Complex operator-() { ... }
+		};
+		
+		void main(){
+			Complex c1(1,2), c2(4,5);
+			c1++;
+			c2 = ++c1;
+		}
+
+.slide
+	h2 
+		code []
+		&nbsp;Operator
+	
+	ul
+		li Array access operator, also subscript operator
+		li Considered as binary operator
+		li Typically with parameter of type int
+	
+	div Definition	
+	code type class-name::operator[](int idx) { }
+	
+.slide
+	h2 
+		code []
+		&nbsp;Operator
+	
+	pre.prettyprint.
+		class Stack{
+		public:
+			Stack();
+			~Stack();
+			void push(int value);
+			void pop(int value);
+			int operator[](int index);
+		};
+		
+	pre.prettyprint.
+		Stack st;
+		st.push(10);
+		st.push(20);
+		st[1]; // use subscript operator
+
+.slide
+	h2 Templates
+	

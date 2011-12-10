@@ -1,5 +1,5 @@
 .slide
-	h1 Exceptions and Templates
+	h1 Exceptions and File Access
 
 .slide
 	h2 Overview
@@ -335,20 +335,245 @@
 	div Steps for reading from a file
 	ol
 		li Open file
+		pre.prettyprint.
+			fstream file;
+			file.open(filename, mode)
 		li Read/Write to file
+			div If you can read or write to a file depends on the opening mode (see next slide)
 		li Close file
+			div Close a file to make resource available
+		pre.prettyprint.
+			file.close();
 
 .slide
 	h2 File Access - File Open
 	
-	div pre.prettyprint.
+	div Open the file 
+		code my_text_file.txt
+	pre.prettyprint.
 		fstream file;
-		file.open(filename, mode);
+		file.open("my_text_file.txt", ios::read); // open the file for read access
 		fail(file);
+	
+	div Methods to check state of the file stream
 	ul
-		li Mode flags can be combined using the bitwise operator OR (|), e.g. ios::binary | ios::ate
-		li Use method 
+		li 
+			code is_open()
+			&nbsp;: returns true when the file is open
+		li 
+			code bad()
+			&nbsp;: true if reading or writing operation failed
+		li 
 			code fail()
-			&nbsp;to check if operation was successful
+			&nbsp;: true for the same cases as 
+			code bad()
+			&nbsp;but also for format errors (get integer when trying to read a character)
+		li 
+			code eof()
+			&nbsp;: returns true when we reached the end of a file
+		li
+			code good()
+			&nbsp;returns true when 
+			code bad(), fail(), eof()
+			&nbsp;returns false
+
+.slide
+	h2 File Access - File Open Modes
+	
+	table
+		tr
+			th Mode
+			th Description
+		tr
+			td 
+				code ios::in
+			td Open for input operations (read)
+		tr
+			td 
+				code ios::out
+			td Open for output operation (write)
+		tr
+			td
+				code ios::binary
+			td Open in binary mode
+		tr
+			td 
+				code ios::ate
+			td Initial position is at the file end, If this flag is not provided, initial position is the beginning at default.
+		tr
+			td
+				code ios::app
+			td Appending data to the end of the file, can only be used for output-only operations.
+		tr
+			td
+				code ios::trunc
+			td If file exists and opened for output operations, it gets replaced by a new one.
+
+.slide
+	h2 File Access - File Open Modes
+	p Mode flags can be combined using the bitwise operator OR
+	pre.prettyprint.
+		fstream file;
+		file.open("my_text_file.txt", ios::binary | ios::in);
+			
+	p Use method 
+		code fail()
+		&nbsp;to check if operation was successful
+	
+	pre.prettyprint.
+		if(file.fail()){
+			cout << "Couldn't open file" << endl;
+		}
+
+.slide
+	h2 File Access - File Open Modes
+	
+	p ofstream, ifstream and fstream have a default mode when calling 
+		code open()
+		&nbsp;without second argument
+	table
+		tr
+			th Class
+			th Default mode parameter
+		tr
+			td 
+				code ofstream
+			td 
+				code ios::out
+		tr
+			td 
+				code ifstream
+			td 
+				code ios::in
+		tr
+			td
+				code fstream
+			td
+				code ios::in | ios::out
+
+.slide
+	h2 File Access - Write Data
+	
+	p Write binary data in general
+	pre.prettyprint.
+		ostream& ostream::write(const char* s, streamsize n);
+	
+	ul
+		li 
+			code s
+			&nbsp;: pointer to the data which should be written
+		li 
+			code n
+			&nbsp;: size (in characters = bytes) of the data to write
+
+	pre.prettyprint.
+		int arr[4] = { 1, 2, 3, 4 };
+		double amount = 12.34;
+		
+		ofstream file;
+		file.open("medialibrary1.dat", ios::binary);
+		file.write((char*)arr, sizeof(int) * 4);
+		file.write((char*) &amount, sizeof(double));
+		file.close();
+
+.slide
+	h2 File Access - Read Data
+	
+	p Read binary data in general
+	pre.prettyprint.
+		istream& istream::read(const char* s, streamsize n);
+	
+	ul
+		li 
+			code s
+			&nbsp;: pointer to the data where the content read will be stored
+		li 
+			code n
+			&nbsp;: size (in characters = bytes) of the data to be read
+	pre.prettyprint.
+		int arr[4];
+		double amount;
+		
+		ifstream file;
+		file.open("medialibrary1.dat", ios::binary);
+		file.read((char*)arr, sizeof(int) * 4);
+		file.read((char*) &amount, sizeof(double));
+		file.close();	
+
+.slide
+	h2 The 
+		code const
+		&nbsp;Mysterium
+	
+	p The keyword 
+		code const
+		&nbsp;can be used mostly everywhere
+	pre.prettyprint.
+		static const Rectangle* const createNew(const Rectangle* const rect){
+			rect->x = 0; // Error: const Rectangle
+			rect = &Rectangle(); // Error: Rectangle* const
+			...
+		}
+		
+		int main(){
+			Rectangle rect1;
+			const Rectangle* const rect2 = Rectangle::createNew(&rect1);
+			rect2->x = 0; // Error: const Rectangle
+			
+			Rectangle rect3;
+			rect2 = &rect3; // Error: Rectangle* const
+		}
+	
+	p Read from left-to-right
+
+.slide
+	h2 The 
+		code const
+		&nbsp;Mysterium
+	
+	ol
+		li What does 
+			code const int* p
+			&nbsp;mean?
+		p.slide p is a pointer to a constant int, p can't change the value of the int it's pointing to
+		
+		li What's the difference between 
+			code const int* p
+			&nbsp;(1), 
+			code int* const p
+			&nbsp;(2) and 
+			code const int* const p
+			&nbsp;(3)?
+		
+		p.slide (2) p is a constant pointer to an int
+		p.slide (3) p is a constant pointer to a constant int
+		
+		li What does 
+			code const int& x
+			&nbsp;mean?
+		p.slide (3) x is a reference to a constant int
+
+.slide
+	h2 Reference vs Pointer
+	
+	ul
+		li What is a reference? 
+			code int& r = i;
+			
+	p.slide An alias (an alternate name) for an object, In other words, the reference of an object is not a pointer, nor a copy, but the object itself (see call-by-reference)
+	div.slide Implementation detail:
+		ul
+			li underneath it's all a reference to the object, calling 
+				code r++;
+				&nbsp;increments the value, 
+				code r
+				&nbsp;is kind of a macro like 
+				code (*i)
+	
+	ul
+		li What's the difference between a reference and a pointer?
+		li What does 
+			code int& const x
+			&nbsp;mean?
 
 

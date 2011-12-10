@@ -1,0 +1,193 @@
+<!DOCTYPE html><html><head><title>Misc</title><link rel="stylesheet" href="../deckem.css"><!-- link(rel='stylesheet', href='#{clientpath}stage.css')--><link rel="stylesheet" href="../themes/bootstrap-theme.css"><link rel="stylesheet" href="../extensions/prettify/prettify.css"></head><body><div class="sp-screen"><div class="sp-pane deck-container"><div class="slide"><h1>Templates and Misc</h1></div><div class="slide"><h2>Overview</h2><ul><li>Complex Types</li><ul><li>Enumerations</li><li>Data Structures</li></ul><li>Friend Functions and Classes</li><li>Operator Overloading</li><li>Templates</li><ul><li>Introduction</li><li>Function Templates</li><li>Class Templates	</li></ul></ul></div><div class="slide"><h2>Enumerations</h2><ul><li>Assigns names to integer values</li><li>Enumeration starts with 0</li><li>Values may be assigned freely</li><li>Double values may be used</li><li>Calculations with enums create integer results</li></ul><code>enum [enumName] {name[, name]};</code></div><div class="slide"><h2>Enumerations</h2><pre class="prettyprint">class Material {
+public:
+ enum MaterialType { wood, glass, steel, concrete };
+};
+
+void main() {
+ Material::MaterialType mat1;
+ Material::MaterialType mat2;
+
+ int value;
+ mat1 = Material::wood;
+ mat2 = Material::steel;
+ mat1 = mat2;
+ mat2 = static_cast&lt;Material::MaterialType&gt;(Material::steel + Material::concrete);
+ value = mat1;
+ value = Material::glass;
+}
+
+</pre></div><div class="slide"><h2>Enumerations</h2><pre class="prettyprint">class Material {
+public:
+ enum MaterialType { wood = 4, glass, steel = 2, concrete = -1 };
+};
+
+void main() {
+ Material::MaterialType mat1;
+ Material::MaterialType mat2;
+
+ mat1 = Material::glass;
+ mat2 = Material::steel;
+}
+
+</pre></div><div class="slide"><h2>Friend Functions and Classes</h2><ul><li>Functions and Classes may be friends of another class</li><li>Keyword: <code>friend</code></li><li>Friends have full access to all members of a class</li><li>Explicitly breaks information hiding for certain friends</li><li>For special usage (e.g. operator overloading)</li></ul></div><div class="slide"><h2>Friend Functions</h2><pre class="prettyprint">class A {
+private:
+ int m_value;
+public:
+ void setValue(int val);
+ friend int getValue(A&amp; obj); // not a member!!
+};
+
+int getValue(A&amp; obj) { // doesn't belong to a class!!
+ return obj.m_value;
+}
+
+int main() {
+ A obj;
+ obj.setValue(10);
+ cout &lt;&lt; obj.m_value &lt;&lt; endl; // error
+ cout &lt;&lt; getValue(obj) &lt;&lt; endl; // OK
+}
+
+</pre></div><div class="slide"><h2>Friend Classes</h2><pre class="prettyprint">class A {
+friend class B;
+private:
+ int m_value;
+};
+
+class B {
+ public: void Calc(A&amp; obj) {
+  obj.m_value = 10;
+ }
+};
+
+</pre></div><div class="slide"><h2>Operator Overloading</h2><ul><li>Operators are normal methods</li><li>Can be virtual</li><li>May be statically or dynamically bound</li><li>Can be overwritten</li><li>Can be overloaded</li><li>Definition</li></ul><code>return-type [class-name::]operator#(arg-list){}</code></div><div class="slide"><h2>Operator Overloading</h2><ul><li>Allow well known notation for common operations on objects (e.g. mathematical operations)</li><li>No new operator tokens may be defined</li><li>Operators may be called explicitly</li><li>C++ is extensible but not mutable</li><ul><li>Operators of base types cannot be overwritten</li></ul><li>Nearly all operators can be overwritten</li><li>Exception: ::, ., .*, ?:</li></ul></div><div class="slide"><h2>Operator Overloading</h2><p>Overloadable operators</p><p>+, -, *, /, =, <, >, +=, -=, *=, /=, <<, >>, <<=, >>=, ==, !=, <=, >=, ++, --, %, &, ^, !, |, ~, &=, ^=, |=, &&, ||, %=, [], (), ,, ->*, ->, new, delete, new[],  delete[]</p></div><div class="slide"><h2>Operator Overloading - Example</h2><pre class="prettyprint">class Complex {
+private:
+ double m_real;
+ double m_imaginary;
+public:
+ Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+ friend Complex operator+(Complex &amp;c1, Complex &amp;c2);
+};
+
+Complex operator+(Complex &amp;c1, Complex &amp;c2) {
+ Complex temp;
+ temp.m_real = c1.m_real + c2.m_real;
+ temp.m_imaginary = c1.m_imaginary + c2.m_imaginary;
+ return temp;
+}
+
+</pre></div><div class="slide"><h2>Operator Overloading - Example</h2><pre class="prettyprint">class Complex {
+private:
+ double m_real;
+ double m_imaginary;
+public:
+ Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+ Complex operator+(Complex &amp;c);
+};
+
+Complex Complex::operator+(Complex &amp;c) {
+ Complex temp;
+ temp.m_real = m_real + c.m_real;
+ temp.m_imaginary = m_imaginary + c2.m_imaginary;
+ return temp;
+}	
+
+</pre></div><div class="slide"><h2>Operator Overloading - Example</h2><pre class="prettyprint">class Complex {
+private:
+ double m_real;
+ double m_imaginary;
+public:
+ Complex(double real, double imaginary) : m_real(real), m_imaginary(imaginary) {}
+ Complex operator+(int value);
+};
+
+Complex Complex::operator+(double value) {
+ Complex temp;
+ temp.m_real = m_real + value;
+ return temp;
+}
+
+int main(){
+ Complex c1(1,2), c2(4,5);
+ c1 = c1 + c2;
+ c1 = c1 + 2;
+ c2 = 2 + c1;
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Operator Overloading - Assignment Operator</h2><pre class="prettyprint">class Complex {
+public:
+ void operator=(Complex &amp;c);
+ void operator=(double value);
+};
+
+void Complex::operator=(Complex &amp;c) {
+ m_real = c.m_real;
+ m_imaginary = c.m_imaginary;
+}
+
+void Complex::operator=(double value) {
+ m_real = value;
+}
+
+int main(){
+ Complex c1(1,2), c2(4,5), c3(6,10);
+ c1 = c2; // Complex::operator=(Complex &amp;c);
+ c1 = c1 + 2; // Complex::operator=(double value);
+ c1 = c2 = c3; // Error
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Operator Overloading - Relational Operator</h2><pre class="prettyprint">class Complex {
+public:
+ bool operator==(Complex &amp;c);
+ void operator&gt;(Complex &amp;c);
+ void operator&lt;(Complex &amp;c);
+};
+
+bool Complex::operator==(Complex &amp;c) {
+ return (c.m_real == m_real &amp;&amp; c.m_imaginary == m_imaginary);
+}
+
+int main(){
+ Complex c1(1,2), c2(4,5);
+ if(c1 == c2){}
+ if(c1 &gt; c2){}
+ if(c1 &lt; c2){}
+ if(c1.operator&lt;(c2)){} // Call explicitly
+
+ return 0;
+}
+
+</pre></div><div class="slide"><h2>Operator Overloading - Arithmetic Operators</h2><pre class="prettyprint">class Complex{
+public;
+ Complex operator++() { ... } // prefix ++
+ Complex operator++(int dummy) { ... } // postfix ++
+ Complex operator-(Complex &amp;c) { ... }
+ Complex operator-() { ... }
+};
+
+void main(){
+ Complex c1(1,2), c2(4,5);
+ c1++;
+ c2 = ++c1;
+}
+
+</pre></div><div class="slide"><h2><code>[]</code>&nbsp;Operator
+</h2><ul><li>Array access operator, also subscript operator</li><li>Considered as binary operator</li><li>Typically with parameter of type int</li></ul><div>Definition	</div><code>type class-name::operator[](int idx) { }</code></div><div class="slide"><h2><code>[]</code>&nbsp;Operator
+</h2><pre class="prettyprint">class Stack{
+public:
+ Stack();
+ ~Stack();
+ void push(int value);
+ void pop(int value);
+ int operator[](int index);
+};
+
+</pre><pre class="prettyprint">Stack st;
+st.push(10);
+st.push(20);
+st[1]; // use subscript operator
+
+</pre></div><div class="slide"><h2>Templates</h2></div>
+<p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <exception>
 
 using namespace std;
 
@@ -12,8 +13,10 @@ int divide (int a, int b) throw(int){
 int main (){
 	try{
 		divide(10, 0);
-	}catch(int exceptoin){
+	}catch(int e){
 		cout << "Division by Zero.";
+	}catch(const exception& e ){
+		cout << "Exception";
 	}
 	return 0;
 }
