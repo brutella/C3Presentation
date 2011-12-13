@@ -227,7 +227,7 @@ int main(){
 </li><p class="slide">p is a pointer to a constant int, p can't change the value of the int it's pointing to</p><li>What's the difference between <code>const int* p</code>&nbsp;(1), 
 <code>int* const p</code>&nbsp;(2) and 
 <code>const int* const p</code>&nbsp;(3)?
-</li><p class="slide">(2) p is a constant pointer to an int</p><p class="slide">(3) p is a constant pointer to a constant int</p><li>What does <code>const int& x</code>&nbsp;mean?
+</li><p class="slide">(2) p is a constant pointer to an int</p><p class="slide">(3) p is a constant pointer to a constant int</p><li>What does <code>const int& x</code>&nbspp;mean?
 </li><p class="slide">x is a reference to a constant int</p></ol></div><div class="slide"><h2>Reference vs Pointer</h2><ul><li>What is a reference? <code>int& r = i;</code></li></ul><p class="slide">An alias (an alternate name) for an object, In other words, the reference of an object is not a pointer, nor a copy, but the object itself (see call-by-reference)</p><div class="slide">Implementation detail:<ul><li>underneath it's all a reference to the object, calling <code>r++;</code>&nbsp;increments the value, 
 <code>r</code>&nbsp;is kind of a macro like 
 <code>(*i)</code></li></ul></div><ul><li>What's the difference between a reference and a pointer?</li><li>What does <code>int& const x</code>&nbsp;mean?

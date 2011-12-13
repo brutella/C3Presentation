@@ -189,5 +189,192 @@ st.push(10);
 st.push(20);
 st[1]; // use subscript operator
 
-</pre></div><div class="slide"><h2>Templates</h2></div>
+</pre></div><div class="slide"><h2>Templates</h2><p>Problem: Many classes and functions do the same operations for different data types, e.g. sorters, containers</p><div>Solution</div><ul><li>Copy&Paste Programming<div>No level of abstraction</div></li><li>Dynamic Binding<div>Abstraction level: medium</div></li><li>Templates<div>Abstraction level: high</div></li></ul></div><div class="slide"><h2>Templates - Example</h2><p>Example: Sorted linked list of data (e.g. int, float, char, any object)</p><div>Supported operations</div><ul><li>Sorted add</li><li>Remove</li><li>Find data in the list</li></ul><p>General Form</p><img src="linked_list.png"/></div><div class="slide"><h2>Templates - Example</h2><p>Simple Linked list with Nodes</p><pre class="prettyprint">class LinkedList{
+ Node* first;
+};
+
+class Node{
+public:
+ Node* nextNode;
+ int data;
+};
+
+
+</pre></div><div class="slide"><h2>Templates - Linked List with Copy&Paste Programming</h2><p>Create class for every case</p><img src="linked_list_copy_paste.png"/></div><div class="slide"><h2>Templates - Linked List with Dynamic Binding</h2><p>Create base class, which has to be derived</p><img src="linked_list_dynamic_binding.png"/><pre class="prettyprint">class Node{
+public:
+ Node* nextNode;
+ Object* data;
+};
+
+</pre></div><div class="slide"><h2>Templates - Linked List with Templates</h2><div>Templates enable generic functions and classes</div><ul><li>Function templates</li><li>Class templates</li><li>Define a general set of operations on different types</li><li>Types are template parameters</li><li>Each "instance" of a template results in new code</li><li>Allow overloading and inheritance</li></ul></div><div class="slide"><h2>Function Templates</h2><ul><li>Creates automatically overloaded functions</li><li>Restrictions</li><ul><li>Only C++ linkage</li><li>No virtual functions allowed</li></ul><li>Destructors cannot be template functions</li></ul><p>Definition</p><pre class="prettyprint">template &lt;class identifier&gt; function_declaration;
+template &lt;typename identifier&gt; function_declaration;
+
+</pre></div><div class="slide"><h2>Function Templates - Example</h2><p>Definition of a function template with type parameter <code>T</code></p><pre class="prettyprint">template &lt;class T&gt; T min(T a, T b){
+ T minimum = a;
+ if(a &gt; b){
+  minimum = b;
+ }
+
+ return minimum;
+}
+
+</pre><p>Template T can be of any type, class has to support the required operators</p></div><div class="slide"><h2>Function Templates - Example</h2><p>Instantiation of parameter T by a concrete type</p><ul><li>Instantiated function declaration is generated and compiled</li><li>Compiler is able to automatically deduce the instantiation type</li></ul><pre class="prettyprint">int x = min&lt;int&gt;(10, 20);         // explicit instantiation of min&lt;int&gt;
+float y = min&lt;float&gt;(10.4, 20.3); // explicit instantiation of min&lt;float&gt;
+int z = min(20, 15);              // implicit instantiation of min&lt;int&gt;
+
+</pre></div><div class="slide"><h2>Funtion Templates - Example</h2><pre class="prettyprint">int main() {
+ Rectangle a, b;
+ Rectangle c = min(a, b);  // what happens here?
+}
+
+</pre><div>Generated function</div><pre class="prettyprint">Rectangle min(Rectangle a, Rectangle b) {
+ Rectangle minimum = a;
+ if (a &gt; b){
+  minimum = b;
+ }
+ return minimum;
+}
+
+</pre><p>operator <code><</code>&nbsp;has to be defined for class 
+<code>Rectangle</code>&nbsp;,otherwise compiler error
+</p></div><div class="slide"><h2>Function Templates - Example</h2><p>Generic Sorting function (Bubblesort)</p><pre class="prettyprint">template &lt;class T&gt; void bubblesort(T items[], int n) {
+ T temp;
+ for (int i = 1; i &lt; n; i++) {
+  for (int j = n-1; j &gt;= 1; j--) {
+   if (items[j-1] &gt; items[j]) {
+    temp = items[j-1];
+    items[j-1] = items[j];
+    items[j] = temp;
+   }
+  }
+ }
+}
+
+</pre></div><div class="slide"><h2>Function Templates</h2><div>Where to put the source of a template?</div><pre class="prettyprint">template < class T > T min(T a, T b) { ... }</pre><div>Place it in a header file</div><ul><li>Each source file using the template includes the file</li><li>Each object file contains generated template instantiations</li><li>Linker merges duplicate instantiations in final executable</li><li>Disadvantage: Compilation overhead</li></ul><table><tr><td><pre class="prettyprint">// file1.cpp
+#include &quot;min.h&quot;
+min&lt;int&gt;(...);
+</pre></td><td><pre class="prettyprint">// file2.cpp
+#include &quot;min.h&quot;
+min&lt;int&gt;(...);
+
+</pre></td></tr></table></div><div class="slide"><h2>Class Templates</h2><ul><li>Creates new class on each "instance"</li><li>Defines a set of operations allowed on any data</li><li>Arguments: types, values, functions</li></ul><p>Definition</p><pre class="prettyprint">template <class T, ...> class class-name{...}</pre><p>Usage</p><pre class="prettyprint">classname < datatype > object-name;</pre></div><div class="slide"><h2>Class Templates</h2><pre class="prettyprint">template &lt;class T&gt; class Point{
+ T _x;
+ T _y;
+public:
+ Point(T x, T y) : _x(x), _y(y){ }
+ T getX(){
+  return _x;
+ }
+ void flip(){
+  return Point(-_x, -_y);
+ }
+ static Point copy(Point&amp; p){
+  return Point(p._x, p._y);
+ }
+};
+
+Point&lt;int&gt; p(10,20);
+int x = p.getX();
+Point&lt;int&gt; q = p.flip();
+Point&lt;int&gt; p2 = Point&lt;int&gt;::copy(p);
+
+</pre></div><div class="slide"><h2>Class Templates</h2><p>Explicitly define template outside of class declaration</p><pre class="prettyprint">template&lt;class T&gt; Point&lt;T&gt;::Point(T a, T b) : x(a), y(b) {}
+
+template&lt;class T&gt; T Point&lt;T&gt;::getX() { 
+ return x; 
+}
+
+template&lt;class T&gt; Point&lt;T&gt; Point&lt;T&gt;::flip() {
+ return Point(-x,-y);
+}
+
+template&lt;class T&gt; static Point&lt;T&gt; Point&lt;T&gt;::copy(Point p) {
+ return Point(p._x, p._y);
+}
+
+</pre><p>Inside of class declaration <code>Point</code>&nbsp;is same as 
+<code>Point < T ></code></p></div><div class="slide"><h2>Class Templates</h2><ul><li>Separate multiple template definitions with a comma</li><li>Class templates may provide a default arguments</li></ul><pre class="prettyprint">template &lt;class T=int, class U=double&gt; class Tuple{
+ T _x; U _y;
+public:
+ Tuple(T a, U b) : _x(a), _y(b){}
+ T getX(){
+  return _x;
+ }
+ U getY(){
+  return _y;
+ }
+};
+
+Tuple&lt;int, int&gt; t(120, 130); // T = int, U = int
+Tuple&lt;double&gt; t(120, 130); // T = double, U = double
+Tuple&lt;&gt; t(120, 130); // T = int, U = double
+
+</pre></div><div class="slide"><h2>Templates - Parameter Values</h2><pre class="prettyprint">template &lt;int N=100, class T=int&gt; class Array {
+protected:
+ T a[N];
+public:
+ Array(T x=0) {
+  for (int i=0; i&lt;N; i++){
+   a[i]=x;
+  }
+ }
+
+ virtual ~Array() {}
+ int length() { return N; }
+ T&amp; operator[](int i) {
+  if (i&lt;0 || i&gt;=N) throw out_of_range();
+  return a[i];
+ }
+};
+
+Array&lt;50&gt; a(-1); // Array&lt;50,int&gt;
+a[1] = a[1] + 1;
+Array&lt;&gt; b(-1); // Array&lt;100,int&gt;
+b[1] = b[1] + a[1];
+
+</pre></div><div class="slide"><h2>Class Templates - Linked List</h2><img src="linked_list_template.png"/><pre class="prettyprint">template &lt;class T&gt; class LinkedList{
+public:
+ Node&lt;T&gt; *first;
+ virtual void insert (T element);
+};
+
+template &lt;class T&gt; class Node{
+public:
+ Node *nextNode;
+ T data;
+};
+
+</pre></div><div class="slide"><h2>Class Templates - Linked List Implementation</h2><pre class="prettyprint">template &lt;class T&gt; void insert(T element){
+ Node&lt;T&gt; *newOne = new Node&lt;T&gt;(element);
+ Node&lt;T&gt; *temp = first;
+ if(first == NULL){
+  first = newOne;
+  return;
+ }
+
+ Node&lt;T&gt; *next = temp-&gt;nextNode;
+
+ while((next != NULL) &amp;&amp; element &gt; next-&gt;data ){
+  temp = next;
+  next = temp-&gt;nextNode;
+ }
+
+ temp-&gt;nextNode = element;
+ element-&gt;nextNode = next;
+}
+
+</pre></div><div class="slide"><h2>Templates</h2><p>Template classes support all mechanisms of OOP</p><ul><li>Inheritance</li><li>Dynamic Binding/Polymorphism</li></ul><pre class="prettyprint">template &lt;class T&gt; class CheckedLinkedList : public LinkedList&lt;T&gt;{
+ T _maxElement;
+public:
+ CheckedLinkedList(T maxElement) : LinkedList&lt;T&gt;{
+  _maxElement = maxElement;
+ }
+
+ virtual void insert (T element){
+  if(element &lt; _maxElement){
+   LinkedList&lt;T&gt;::insert(element);
+  }
+ }
+};
+</pre></div><div class="slide"><h2>Templates</h2><div>Pro</div><ul><li>Define common operations on data only once (avoid code duplication)</li><li>Reduce complexity</li><li>Reduce error probabilities</li></ul><div>Contra</div><ul><li>Hidden code size (depends on compiler)</li><li>Sometimes hard to understand</li><li>Implicit requirements on parameter types</li></ul></div>
 <p class="deck-status"><span class="deck-status-current"></span><span>/</span><span class="deck-status-total"></span></p></div></div><div class="sp-stage"><div class="sp-floor"></div></div><div class="sp-audience"></div><script src="../deckem.js"></script><script src="../extensions/prettify/prettify.js"></script><script src="../bridge-deckjs.js"></script></body></html>

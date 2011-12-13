@@ -325,3 +325,386 @@
 .slide
 	h2 Templates
 	
+	p Problem: Many classes and functions do the same operations for different data types, e.g. sorters, containers
+	
+	div Solution
+	ul
+		li Copy&Paste Programming
+			div No level of abstraction
+		li Dynamic Binding
+			div Abstraction level: medium
+		li Templates
+			div Abstraction level: high
+
+.slide
+	h2 Templates - Example
+	
+	p Example: Sorted linked list of data (e.g. int, float, char, any object)
+	
+	div Supported operations
+	ul
+		li Sorted add
+		li Remove
+		li Find data in the list
+	
+	p General Form
+	
+	img(src="linked_list.png")
+
+.slide
+	h2 Templates - Example
+	
+	p Simple Linked list with Nodes
+	pre.prettyprint.
+		class LinkedList{
+			Node* first;
+		};
+		
+		class Node{
+		public:
+			Node* nextNode;
+			int data;
+		};
+
+
+.slide
+	h2 Templates - Linked List with Copy&Paste Programming
+	
+	p Create class for every case
+	
+	img(src="linked_list_copy_paste.png")
+	
+.slide
+	h2 Templates - Linked List with Dynamic Binding
+	
+	p Create base class, which has to be derived
+	
+	img(src="linked_list_dynamic_binding.png")
+
+	pre.prettyprint.
+		class Node{
+		public:
+			Node* nextNode;
+			Object* data;
+		};
+
+.slide
+	h2 Templates - Linked List with Templates
+	
+	div Templates enable generic functions and classes
+	ul
+		li Function templates
+		li Class templates
+		li Define a general set of operations on different types
+		li Types are template parameters
+		li Each "instance" of a template results in new code
+		li Allow overloading and inheritance
+
+.slide
+	h2 Function Templates
+	
+	ul
+		li Creates automatically overloaded functions
+		li Restrictions
+		ul
+			li Only C++ linkage
+			li No virtual functions allowed
+		li  Destructors cannot be template functions
+	p Definition
+	
+	pre.prettyprint.
+		template <class identifier> function_declaration;
+		template <typename identifier> function_declaration;
+
+.slide
+	h2 Function Templates - Example
+	
+	p Definition of a function template with type parameter 
+		code T
+	pre.prettyprint.
+		template <class T> T min(T a, T b){
+			T minimum = a;
+			if(a > b){
+				minimum = b;
+			}
+			
+			return minimum;
+		}
+	
+	p Template T can be of any type, class has to support the required operators
+	
+.slide
+	h2 Function Templates - Example
+	
+	p Instantiation of parameter T by a concrete type
+	ul
+		li Instantiated function declaration is generated and compiled
+		li Compiler is able to automatically deduce the instantiation type
+		
+	pre.prettyprint.
+		int x = min<int>(10, 20);         // explicit instantiation of min<int>
+		float y = min<float>(10.4, 20.3); // explicit instantiation of min<float>
+		int z = min(20, 15);              // implicit instantiation of min<int>
+
+.slide
+	h2 Funtion Templates - Example
+	
+	pre.prettyprint.
+		int main() {
+			Rectangle a, b;
+			Rectangle c = min(a, b);  // what happens here?
+		}
+	
+	div Generated function
+	pre.prettyprint.
+		Rectangle min(Rectangle a, Rectangle b) {
+			Rectangle minimum = a;
+			if (a > b){
+				minimum = b;
+			}
+			return minimum;
+		}
+	
+	p operator 
+		code <
+		&nbsp;has to be defined for class 
+		code Rectangle
+		&nbsp;,otherwise compiler error
+
+.slide
+	h2 Function Templates - Example
+	
+	p Generic Sorting function (Bubblesort)
+	pre.prettyprint.
+		template <class T> void bubblesort(T items[], int n) {
+			T temp;
+			for (int i = 1; i < n; i++) {
+				for (int j = n-1; j >= 1; j--) {
+					if (items[j-1] > items[j]) {
+						temp = items[j-1];
+						items[j-1] = items[j];
+						items[j] = temp;
+					}
+				}
+			}
+		}
+
+.slide
+	h2 Function Templates
+	
+	div Where to put the source of a template?
+	pre.prettyprint template < class T > T min(T a, T b) { ... }
+				
+	div Place it in a header file
+	ul
+		li Each source file using the template includes the file
+		li Each object file contains generated template instantiations
+		li Linker merges duplicate instantiations in final executable
+		li Disadvantage: Compilation overhead
+	
+	table
+		tr
+			td 
+				pre.prettyprint.
+					// file1.cpp
+					#include "min.h"
+					min<int>(...);
+			td 
+				pre.prettyprint.
+					// file2.cpp
+					#include "min.h"
+					min<int>(...);
+
+.slide
+	h2 Class Templates
+	
+	ul
+		li Creates new class on each "instance"
+		li Defines a set of operations allowed on any data
+		li Arguments: types, values, functions
+	
+	p Definition
+	pre.prettyprint template <class T, ...> class class-name{...}
+	
+	
+	p Usage
+	pre.prettyprint classname < datatype > object-name;
+
+.slide
+	h2 Class Templates
+	
+	pre.prettyprint.
+		template <class T> class Point{
+			T _x;
+			T _y;
+		public:
+			Point(T x, T y) : _x(x), _y(y){ }
+			T getX(){
+				return _x;
+			}
+			void flip(){
+				return Point(-_x, -_y);
+			}
+			static Point copy(Point& p){
+				return Point(p._x, p._y);
+			}
+		};
+		
+		Point<int> p(10,20);
+		int x = p.getX();
+		Point<int> q = p.flip();
+		Point<int> p2 = Point<int>::copy(p);
+
+.slide
+	h2 Class Templates
+	
+	p Explicitly define template outside of class declaration
+	
+	pre.prettyprint.
+		template<class T> Point<T>::Point(T a, T b) : x(a), y(b) {}
+
+		template<class T> T Point<T>::getX() { 
+			return x; 
+		}
+
+		template<class T> Point<T> Point<T>::flip() {
+			return Point(-x,-y);
+		}
+
+		template<class T> static Point<T> Point<T>::copy(Point p) {
+			return Point(p._x, p._y);
+		}
+	
+	p Inside of class declaration 
+		code Point
+		&nbsp;is same as 
+		code Point < T >
+
+.slide
+	h2 Class Templates
+	
+	ul
+		li Separate multiple template definitions with a comma
+		li Class templates may provide a default arguments
+	pre.prettyprint.
+		template <class T=int, class U=double> class Tuple{
+			T _x; U _y;
+		public:
+			Tuple(T a, U b) : _x(a), _y(b){}
+			T getX(){
+				return _x;
+			}
+			U getY(){
+				return _y;
+			}
+		};
+		
+		Tuple<int, int> t(120, 130); // T = int, U = int
+		Tuple<double> t(120, 130); // T = double, U = double
+		Tuple<> t(120, 130); // T = int, U = double
+
+.slide
+	h2 Templates - Parameter Values
+	
+	pre.prettyprint.
+		template <int N=100, class T=int> class Array {
+		protected:
+			T a[N];
+		public:
+			Array(T x=0) {
+				for (int i=0; i<N; i++){
+					a[i]=x;
+				}
+			}
+			
+			virtual ~Array() {}
+			int length() { return N; }
+			T& operator[](int i) {
+				if (i<0 || i>=N) throw out_of_range();
+				return a[i];
+			}
+		};
+		
+		Array<50> a(-1); // Array<50,int>
+		a[1] = a[1] + 1;
+		Array<> b(-1); // Array<100,int>
+		b[1] = b[1] + a[1];
+
+.slide
+	h2 Class Templates - Linked List
+	
+	img(src="linked_list_template.png")
+	
+	pre.prettyprint.
+		template <class T> class LinkedList{
+		public:
+			Node<T> *first;
+			virtual void insert (T element);
+		};
+		
+		template <class T> class Node{
+		public:
+			Node *nextNode;
+			T data;
+		};
+
+.slide
+	h2 Class Templates - Linked List Implementation
+	
+	pre.prettyprint.
+		template <class T> void insert(T element){
+			Node<T> *newOne = new Node<T>(element);
+			Node<T> *temp = first;
+			if(first == NULL){
+				first = newOne;
+				return;
+			}
+			
+			Node<T> *next = temp->nextNode;
+			
+			while((next != NULL) && element > next->data ){
+				temp = next;
+				next = temp->nextNode;
+			}
+			
+			temp->nextNode = element;
+			element->nextNode = next;
+		}
+
+.slide
+	h2 Templates
+	
+	p Template classes support all mechanisms of OOP
+	ul
+		li Inheritance
+		li Dynamic Binding/Polymorphism
+	
+	pre.prettyprint.
+		template <class T> class CheckedLinkedList : public LinkedList<T>{
+			T _maxElement;
+		public:
+			CheckedLinkedList(T maxElement) : LinkedList<T>{
+				_maxElement = maxElement;
+			}
+			
+			virtual void insert (T element){
+				if(element < _maxElement){
+					LinkedList<T>::insert(element);
+				}
+			}
+		};
+.slide
+	h2 Templates
+	
+	div Pro
+	ul
+		li Define common operations on data only once (avoid code duplication)
+		li Reduce complexity
+		li Reduce error probabilities
+
+	div Contra
+	ul
+		li Hidden code size (depends on compiler)
+		li Sometimes hard to understand
+		li Implicit requirements on parameter types
+	
