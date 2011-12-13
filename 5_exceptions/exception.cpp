@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int divide (int a, int b) throw(int){
+int divide (int a, int b) throw(){
 	if (b == 0) {
 		throw 0;
 	}

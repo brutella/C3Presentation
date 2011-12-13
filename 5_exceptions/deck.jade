@@ -35,7 +35,7 @@
 	div Typical Exceptions
 	ul
 		li Division by 0
-		li Array over/underflow
+		li Array overflow
 		li File I/O errors
 		li Network connection errors
 		li NULL pointer exceptions
@@ -43,7 +43,7 @@
 	div New languages have built-in exception handling
 	ul 
 		li Java, C#
-		li C++ has no built-in exception handling but supports exceptions (since 1990)
+		li C++ has no built-in exception handling, doesn't throw exception automatically
 
 .slide
 	h2 Exceptions
@@ -91,7 +91,6 @@
 		li Defines what types of exceptions are thrown
 		li Keyword: 
 			code throw
-		li Different to checked exceptions in Java
 	
 	pre.prettyprint.
 		int divide (int a, int b) throw (int){
@@ -550,8 +549,8 @@
 		
 		li What does 
 			code const int& x
-			&nbsp;mean?
-		p.slide (3) x is a reference to a constant int
+			&nbspp;mean?
+		p.slide x is a reference to a constant int
 
 .slide
 	h2 Reference vs Pointer
