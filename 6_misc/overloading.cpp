@@ -14,14 +14,16 @@ public:
 		return temp;
 	}*/
 	
-	Complex operator++() {
+	Complex& operator++() {
 		cout << "operator++()" << endl;
 		return (*this);
 	} 
 	
 	Complex operator++(int dummy) {
 		cout << "operator++(int)" << dummy << endl;
-		return (*this);
+		Complex answer = (*this);
+		this->operator++();
+		return answer;
 	}
 	
 	void operator=(Complex &c) {

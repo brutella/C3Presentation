@@ -161,10 +161,8 @@ int main(){
 
 </pre></div><div class="slide"><h2>Operator Overloading - Arithmetic Operators</h2><pre class="prettyprint">class Complex{
 public;
- Complex operator++() { ... } // prefix ++
+ Complex&amp; operator++() { ... } // prefix ++
  Complex operator++(int dummy) { ... } // postfix ++
- Complex operator-(Complex &amp;c) { ... }
- Complex operator-() { ... }
 };
 
 void main(){
@@ -218,7 +216,8 @@ template &lt;typename identifier&gt; function_declaration;
  return minimum;
 }
 
-</pre><p>Template T can be of any type, class has to support the required operators</p></div><div class="slide"><h2>Function Templates - Example</h2><p>Instantiation of parameter T by a concrete type</p><ul><li>Instantiated function declaration is generated and compiled</li><li>Compiler is able to automatically deduce the instantiation type</li></ul><pre class="prettyprint">int x = min&lt;int&gt;(10, 20);         // explicit instantiation of min&lt;int&gt;
+</pre><p>Template T can be of any type, class has to support the required operators (in this case the <code>></code>&nbsp;operator)
+</p></div><div class="slide"><h2>Function Templates - Example</h2><p>Instantiation of parameter T by a concrete type</p><ul><li>Instantiated function declaration is generated and compiled</li><li>Compiler is able to automatically deduce the instantiation type</li></ul><pre class="prettyprint">int x = min&lt;int&gt;(10, 20);         // explicit instantiation of min&lt;int&gt;
 float y = min&lt;float&gt;(10.4, 20.3); // explicit instantiation of min&lt;float&gt;
 int z = min(20, 15);              // implicit instantiation of min&lt;int&gt;
 
@@ -235,7 +234,7 @@ int z = min(20, 15);              // implicit instantiation of min&lt;int&gt;
  return minimum;
 }
 
-</pre><p>operator <code><</code>&nbsp;has to be defined for class 
+</pre><p>operator <code>></code>&nbsp;has to be defined for class 
 <code>Rectangle</code>&nbsp;,otherwise compiler error
 </p></div><div class="slide"><h2>Function Templates - Example</h2><p>Generic Sorting function (Bubblesort)</p><pre class="prettyprint">template &lt;class T&gt; void bubblesort(T items[], int n) {
  T temp;
@@ -257,7 +256,7 @@ min&lt;int&gt;(...);
 #include &quot;min.h&quot;
 min&lt;int&gt;(...);
 
-</pre></td></tr></table></div><div class="slide"><h2>Class Templates</h2><ul><li>Creates new class on each "instance"</li><li>Defines a set of operations allowed on any data</li><li>Arguments: types, values, functions</li></ul><p>Definition</p><pre class="prettyprint">template <class T, ...> class class-name{...}</pre><p>Usage</p><pre class="prettyprint">classname < datatype > object-name;</pre></div><div class="slide"><h2>Class Templates</h2><pre class="prettyprint">template &lt;class T&gt; class Point{
+</pre></td></tr></table></div><div class="slide"><h2>Class Templates</h2><ul><li>Creates new class on each "instance"</li><li>Defines a set of operations allowed on any data</li><li>Arguments: types, values, functions</li></ul><p>Definition</p><pre class="prettyprint">template < class T, ... > class class-name{...}</pre><p>Usage</p><pre class="prettyprint">classname < datatype > object-name;</pre></div><div class="slide"><h2>Class Templates</h2><pre class="prettyprint">template &lt;class T&gt; class Point{
  T _x;
  T _y;
 public:
@@ -340,27 +339,24 @@ public:
 
 template &lt;class T&gt; class Node{
 public:
- Node *nextNode;
+ Node&lt;T&gt; *nextNode;
  T data;
 };
 
 </pre></div><div class="slide"><h2>Class Templates - Linked List Implementation</h2><pre class="prettyprint">template &lt;class T&gt; void insert(T element){
- Node&lt;T&gt; *newOne = new Node&lt;T&gt;(element);
- Node&lt;T&gt; *temp = first;
- if(first == NULL){
-  first = newOne;
-  return;
+ Node&lt;T&gt; *pCur = _first;
+ Node&lt;T&gt; *pPrev = NULL;
+ Node&lt;T&gt; *pNew = new Node&lt;T&gt;(elem);
+ while ((pCur != NULL) &amp;&amp; (pCur-&gt;data &lt; elem)) {
+  pPrev = pCur;
+  pCur = pCur-&gt;nextNode;
  }
-
- Node&lt;T&gt; *next = temp-&gt;nextNode;
-
- while((next != NULL) &amp;&amp; element &gt; next-&gt;data ){
-  temp = next;
-  next = temp-&gt;nextNode;
+ pNew-&gt;nextNode = pCur;
+ if (pPrev == NULL) {
+  _first = pNew;
+ } else {
+  pPrev-&gt;nextNode = pNew;
  }
-
- temp-&gt;nextNode = element;
- element-&gt;nextNode = next;
 }
 
 </pre></div><div class="slide"><h2>Templates</h2><p>Template classes support all mechanisms of OOP</p><ul><li>Inheritance</li><li>Dynamic Binding/Polymorphism</li></ul><pre class="prettyprint">template &lt;class T&gt; class CheckedLinkedList : public LinkedList&lt;T&gt;{

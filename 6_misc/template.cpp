@@ -37,6 +37,11 @@ public:
 	}
 };
 
+template <class T> 
+void test(T a){
+	cout << a;
+}
+
 int main(){
 	Point<> p(10,20);
 	float x = p.getX();
@@ -46,5 +51,7 @@ int main(){
 	
 	Tuple<double> t(120, 130);
 	cout << t.getY();
+	
+	test(10);
 	return 0;
 }

@@ -8,6 +8,10 @@ public:
 	Material();
 	~Material();	
 };
+typedef enum Type{
+	CD,
+	DVD
+	}Type;
 
 int main() {
 	Material::MaterialType mat1;
@@ -19,7 +23,7 @@ int main() {
 	mat1 = mat2;
 	mat2 = (Material::MaterialType)(Material::steel + Material::concrete);
 	value = mat1;
-	value = Material::g;
+	value = Material::glass;
 	std::cout << value << endl;
 	return 0;
 }

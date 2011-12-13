@@ -276,10 +276,8 @@
 	pre.prettyprint.
 		class Complex{
 		public;
-			Complex operator++() { ... } // prefix ++
+			Complex& operator++() { ... } // prefix ++
 			Complex operator++(int dummy) { ... } // postfix ++
-			Complex operator-(Complex &c) { ... }
-			Complex operator-() { ... }
 		};
 		
 		void main(){
@@ -431,7 +429,9 @@
 			return minimum;
 		}
 	
-	p Template T can be of any type, class has to support the required operators
+	p Template T can be of any type, class has to support the required operators (in this case the 
+		code >
+		&nbsp;operator)
 	
 .slide
 	h2 Function Templates - Example
@@ -466,7 +466,7 @@
 		}
 	
 	p operator 
-		code <
+		code >
 		&nbsp;has to be defined for class 
 		code Rectangle
 		&nbsp;,otherwise compiler error
@@ -524,7 +524,7 @@
 		li Arguments: types, values, functions
 	
 	p Definition
-	pre.prettyprint template <class T, ...> class class-name{...}
+	pre.prettyprint template < class T, ... > class class-name{...}
 	
 	
 	p Usage
@@ -644,7 +644,7 @@
 		
 		template <class T> class Node{
 		public:
-			Node *nextNode;
+			Node<T> *nextNode;
 			T data;
 		};
 
@@ -653,22 +653,19 @@
 	
 	pre.prettyprint.
 		template <class T> void insert(T element){
-			Node<T> *newOne = new Node<T>(element);
-			Node<T> *temp = first;
-			if(first == NULL){
-				first = newOne;
-				return;
+			Node<T> *pCur = _first;
+			Node<T> *pPrev = NULL;
+			Node<T> *pNew = new Node<T>(elem);
+			while ((pCur != NULL) && (pCur->data < elem)) {
+				pPrev = pCur;
+				pCur = pCur->nextNode;
 			}
-			
-			Node<T> *next = temp->nextNode;
-			
-			while((next != NULL) && element > next->data ){
-				temp = next;
-				next = temp->nextNode;
+			pNew->nextNode = pCur;
+			if (pPrev == NULL) {
+				_first = pNew;
+			} else {
+				pPrev->nextNode = pNew;
 			}
-			
-			temp->nextNode = element;
-			element->nextNode = next;
 		}
 
 .slide
